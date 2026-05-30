@@ -1,0 +1,9 @@
+{
+  "name": "gpdi-impact-web",
+  "version": "1.0.0",
+  "description": "Web Info Gereja GPdI Impact Jatinangor",
+  "scripts": {
+    "start": "node api/media.js"
+  },
+  "dependencies": {}
+}

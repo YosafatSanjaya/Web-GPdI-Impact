@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Dashboard | GPdI Impact Jatinangor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    body { background-color: #050B14; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0F172A; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #3B82F6, #8B5CF6); border-radius: 10px; }
+    .glass-card {
+      background: rgba(15, 25, 45, 0.65);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      transition: all 0.3s ease;
+    }
+    .glass-card:hover {
+      border-color: rgba(59, 130, 246, 0.6);
+      background: rgba(20, 35, 60, 0.8);
+      transform: translateY(-4px);
+    }
+    .btn-modern {
+      background: linear-gradient(95deg, #2563EB, #7C3AED);
+      transition: all 0.2s ease;
+    }
+    .btn-modern:hover { transform: scale(1.02); filter: brightness(1.05); }
+    
+    /* Konfigurasi Slideshow */
+    .slideshow-container {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .slideshow-container::-webkit-scrollbar { display: none; }
+    .slide-item {
+      flex: 0 0 100%;
+      scroll-snap-align: start;
+    }
+  </style>
+</head>
+<body class="text-gray-200 antialiased">
+
+  <header class="sticky top-0 z-50 w-full bg-[#0B1120]/80 backdrop-blur-xl border-b border-blue-500/20 shadow-lg">
+    <div class="container mx-auto px-4 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center space-x-3">
+        <div class="w-12 h-12 flex items-center justify-center">
+          <img src="logo_hitam.png" alt="Logo GPdI" class="w-full h-full object-contain" onerror="this.style.display='none'">
+        </div>
+        <div>
+          <h1 class="text-xl font-black tracking-tight bg-gradient-to-r from-white via-blue-300 to-purple-300 bg-clip-text text-transparent">GPdI IMPACT</h1>
+          <p class="text-[10px] font-medium text-blue-300/70 -mt-1">Jatinangor</p>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <a href="https://wa.me/6281324282488" target="_blank" class="btn-modern px-5 py-1.5 rounded-full text-sm font-bold flex items-center gap-2">
+          <i class="fab fa-whatsapp text-lg"></i> <span class="hidden sm:inline">Hubungi Kami</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 lg:px-8 py-8 lg:py-12">
+    <section class="mb-16 lg:mb-24">
+      <div class="relative rounded-3xl overflow-hidden shadow-2xl group">
+        <div class="aspect-video md:aspect-[21/9] w-full flex flex-col items-center justify-center text-center relative bg-cover bg-center" style="background-image: linear-gradient(135deg, #0f172a 0%, #020617 100%), url('https://images.unsplash.com/photo-1438032008730-f2b7bdf0b24e?q=80&w=2070&auto=format'); background-blend-mode: overlay;">
+          <div class="relative z-10 text-center max-w-2xl px-4 flex flex-col items-center">
+            <img src="logo_putih.jpeg" alt="Logo GPdI Putih" class="h-20 md:h-28 mb-4 object-contain opacity-90 rounded-xl" onerror="this.style.display='none'">
+            <h2 class="text-3xl md:text-5xl font-black mt-2 text-white">Selamat Datang di <br>GPdI Impact Jatinangor</h2>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <h2 class="text-2xl font-bold mb-6 border-l-4 border-blue-500 pl-3">Wadah Ibadah & Kegiatan</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+      
+      <div class="glass-card rounded-2xl overflow-hidden flex flex-col">
+        <div id="slider-ibadah-raya" class="h-56 bg-gray-800 relative slideshow-container">
+            <div class="flex items-center justify-center w-full h-full text-gray-500 text-sm">Memuat media...</div>
+        </div>
+        <div class="p-5 flex-grow">
+          <h3 class="text-xl font-bold mb-2">Ibadah Raya</h3>
+          <p class="text-gray-400 text-sm mb-3">Ibadah raya umum untuk seluruh jemaat.</p>
+          <div class="bg-white/5 rounded-lg p-3">
+            <p class="text-blue-300 text-sm font-semibold"><i class="fas fa-calendar-day"></i> Setiap Hari Minggu</p>
+            <p class="text-gray-300 text-xs mt-1">Ibadah I: 07.30 WIB | Ibadah II: 10.00 WIB</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card rounded-2xl overflow-hidden flex flex-col">
+        <div id="slider-impact-kids" class="h-56 bg-gray-800 relative slideshow-container">
+             <div class="flex items-center justify-center w-full h-full text-gray-500 text-sm">Memuat media...</div>
+        </div>
+        <div class="p-5 flex-grow">
+          <h3 class="text-xl font-bold mb-2">IMPACT KIDS</h3>
+          <p class="text-gray-400 text-sm mb-3">Ibadah Sekolah Minggu untuk anak-anak.</p>
+          <div class="bg-white/5 rounded-lg p-3">
+            <p class="text-yellow-300 text-sm font-semibold"><i class="fas fa-calendar-day"></i> Setiap Hari Minggu</p>
+            <p class="text-gray-300 text-xs mt-1">Ibadah I: 07.30 WIB | Ibadah II: 10.00 WIB</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card rounded-2xl overflow-hidden flex flex-col">
+        <div id="slider-komsel-sukacita" class="h-56 bg-gray-800 relative slideshow-container">
+             <div class="flex items-center justify-center w-full h-full text-gray-500 text-sm">Memuat media...</div>
+        </div>
+        <div class="p-5 flex-grow">
+          <h3 class="text-xl font-bold mb-2">Komsel Sukacita</h3>
+          <p class="text-gray-400 text-sm mb-3">Wadah persekutuan khusus ibu-ibu.</p>
+          <div class="bg-white/5 rounded-lg p-3">
+            <p class="text-pink-300 text-sm font-semibold"><i class="fas fa-calendar-day"></i> Setiap Hari Selasa (17.30 WIB)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card rounded-2xl overflow-hidden flex flex-col">
+        <div id="slider-impact-generation" class="h-56 bg-gray-800 relative slideshow-container">
+             <div class="flex items-center justify-center w-full h-full text-gray-500 text-sm">Memuat media...</div>
+        </div>
+        <div class="p-5 flex-grow">
+          <h3 class="text-xl font-bold mb-2">IMPACT GENERATION</h3>
+          <p class="text-gray-400 text-sm mb-3">Komsel pemuda dan remaja.</p>
+          <div class="bg-white/5 rounded-lg p-3">
+            <p class="text-purple-300 text-sm font-semibold"><i class="fas fa-calendar-day"></i> Setiap Hari Jumat (18.00 WIB)</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="flex items-center gap-3 mb-6 border-l-4 border-emerald-500 pl-3">
+      <h2 class="text-2xl font-bold">Layanan & Pendaftaran</h2>
+      <img src="logo_diakonia.png" alt="Layanan" class="h-8 w-8 object-contain" onerror="this.style.display='none'">
+    </div>
+    
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-20">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeSsNr6tErD72I_hVEANuslLU5skHHHN_fCfcRtc5dbuMDbJQ/viewform?usp=header" target="_blank" class="bg-white/5 border border-white/10 p-4 rounded-xl text-center hover:bg-emerald-500/20 transition group">
+        <i class="fas fa-water text-3xl text-emerald-400 mb-3 group-hover:scale-110 transition"></i><h4 class="font-semibold text-sm">Baptisan Air</h4>
+      </a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeRT7ajwYK4YGNjt0MpUGHFHH1ehzNBuyAGOdkODzKsnNoLOw/viewform?usp=header" target="_blank" class="bg-white/5 border border-white/10 p-4 rounded-xl text-center hover:bg-emerald-500/20 transition group">
+        <i class="fas fa-baby text-3xl text-emerald-400 mb-3 group-hover:scale-110 transition"></i><h4 class="font-semibold text-sm">Penyerahan Anak</h4>
+      </a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSe3iKP7YEtV3f966je244leSt2jple_7TGcBtUSFMG-rhnhKA/viewform?usp=header" target="_blank" class="bg-white/5 border border-white/10 p-4 rounded-xl text-center hover:bg-emerald-500/20 transition group">
+        <i class="fas fa-rings-wedding text-3xl text-emerald-400 mb-3 group-hover:scale-110 transition"></i><h4 class="font-semibold text-sm">Pernikahan</h4>
+      </a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScdHyyNx0hmxYBOVc1izovqX5_1JXFVinlTcnVDfSbO5FU0yA/viewform?usp=header" target="_blank" class="bg-white/5 border border-white/10 p-4 rounded-xl text-center hover:bg-emerald-500/20 transition group">
+        <i class="fas fa-user-plus text-3xl text-emerald-400 mb-3 group-hover:scale-110 transition"></i><h4 class="font-semibold text-sm">Jemaat Baru</h4>
+      </a>
+    </div>
+
+  </main>
+
+  <script>
+    async function fetchMedia(namaFolder, elementId) {
+      const container = document.getElementById(elementId);
+      try {
+        // Panggil endpoint API Vercel kita
+        const response = await fetch(`/api/media?wadah=${namaFolder}`);
+        const files = await response.json();
+        
+        if (files.length > 0) {
+          container.innerHTML = ''; // Hapus teks "Memuat media..."
+          
+          files.forEach(file => {
+            const ext = file.split('.').pop().toLowerCase();
+            const filePath = `wadah_ibadah/${namaFolder}/${file}`;
+            
+            if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
+              // Jika file gambar
+              container.innerHTML += `<div class="slide-item h-full w-full bg-cover bg-center shrink-0" style="background-image: url('${filePath}');"></div>`;
+            } else if (['mp4', 'webm'].includes(ext)) {
+              // Jika file video
+              container.innerHTML += `<video src="${filePath}" class="slide-item h-full w-full object-cover shrink-0" autoplay loop muted></video>`;
+            }
+          });
+        } else {
+            container.innerHTML = '<div class="flex items-center justify-center w-full h-full text-gray-500 text-sm">Belum ada media</div>';
+        }
+      } catch (error) {
+        console.error('Error fetching media:', error);
+        container.innerHTML = '<div class="flex items-center justify-center w-full h-full text-red-400 text-sm">Gagal memuat media</div>';
+      }
+    }
+
+    // Jalankan fungsi saat web pertama kali dibuka
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchMedia('ibadah_raya', 'slider-ibadah-raya');
+      fetchMedia('impact_kids', 'slider-impact-kids');
+      fetchMedia('komsel_sukacita', 'slider-komsel-sukacita');
+      fetchMedia('impact_generation', 'slider-impact-generation');
+    });
+  </script>
+</body>
+</html>
