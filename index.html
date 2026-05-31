@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
@@ -69,7 +69,7 @@
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       scrollbar-width: none;
-      scroll-behavior: smooth; /* Penting untuk animasi geser halus */
+      scroll-behavior: smooth; 
     }
     .slideshow-container::-webkit-scrollbar { display: none; }
     .slide-item {
@@ -104,24 +104,46 @@
 </head>
 <body class="antialiased selection:bg-gold-500 selection:text-black">
 
-  <header class="sticky top-0 z-50 w-full bg-dark-900/80 backdrop-blur-xl border-b border-gold-500/20 shadow-lg shadow-gold-900/5">
+  <header class="sticky top-0 z-50 w-full bg-dark-900/90 backdrop-blur-xl border-b border-gold-500/20 shadow-lg shadow-gold-900/5">
     <div class="container mx-auto px-4 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3">
+      
       <div class="flex items-center space-x-3">
-        <div class="w-12 h-12 flex items-center justify-center">
+        <a href="#" class="w-16 h-16 md:w-20 md:h-20 flex items-center justify-center cursor-pointer transition hover:scale-105">
           <img src="logo_hitam.png" alt="Logo GPdI" class="w-full h-full object-contain drop-shadow-md" onerror="this.style.display='none'">
-        </div>
-      </div>
-      <div class="flex gap-2">
-        <a href="https://wa.me/6281324282488" target="_blank" class="btn-modern px-6 py-2 rounded-full text-sm font-bold flex items-center gap-2">
-          <i class="fab fa-whatsapp text-lg"></i> <span class="hidden sm:inline">Hubungi Kami</span>
         </a>
       </div>
+
+      <nav class="hidden md:flex items-center gap-6 font-semibold text-sm text-gray-300">
+        <a href="#wadah-ibadah" class="hover:text-gold-500 hover:-translate-y-0.5 transition-all duration-300">Wadah Ibadah</a>
+        <a href="#komsel-sukacita" class="hover:text-gold-500 hover:-translate-y-0.5 transition-all duration-300">Komsel Sukacita</a>
+        <a href="#layanan-diakonia" class="hover:text-gold-500 hover:-translate-y-0.5 transition-all duration-300">Layanan & Diakonia</a>
+        <a href="#lokasi-gereja" class="hover:text-gold-500 hover:-translate-y-0.5 transition-all duration-300">Lokasi</a>
+        <a href="#kontak-gereja" class="hover:text-gold-500 hover:-translate-y-0.5 transition-all duration-300">Kontak</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="https://wa.me/6281324282488" target="_blank" class="btn-modern px-5 py-2 md:px-6 md:py-2.5 rounded-full text-xs md:text-sm font-bold flex items-center gap-2">
+          <i class="fab fa-whatsapp text-lg"></i> <span class="hidden sm:inline">Hubungi Kami</span>
+        </a>
+        
+        <button id="mobile-menu-btn" class="md:hidden text-gold-500 text-2xl focus:outline-none ml-2">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
     </div>
+
+    <nav id="mobile-menu" class="hidden flex-col w-full bg-dark-900 border-t border-gold-500/20 py-4 gap-4 text-center md:hidden shadow-xl">
+      <a href="#wadah-ibadah" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition">Wadah Ibadah</a>
+      <a href="#komsel-sukacita" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition">Komsel Sukacita</a>
+      <a href="#layanan-diakonia" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition">Layanan & Diakonia</a>
+      <a href="#lokasi-gereja" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition">Lokasi</a>
+      <a href="#kontak-gereja" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition">Kontak</a>
+    </nav>
   </header>
 
   <main class="container mx-auto px-4 lg:px-8 py-8 lg:py-12">
     
-    <section class="mb-16 lg:mb-24">
+    <section class="mb-16 lg:mb-24 pt-4">
       <div class="relative rounded-3xl overflow-hidden shadow-2xl shadow-gold-900/20 group h-64 md:h-[400px]">
         <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover">
           <source src="wadah_ibadah/IBADAH_RAYA_MINGGU/ibr-3.mp4" type="video/mp4">
@@ -138,7 +160,7 @@
       </div>
     </section>
 
-    <h2 class="text-2xl font-bold mb-6 border-l-4 border-gold-500 pl-3 text-white">Wadah Ibadah & Kegiatan</h2>
+    <h2 id="wadah-ibadah" class="scroll-mt-24 text-2xl font-bold mb-6 border-l-4 border-gold-500 pl-3 text-white">Wadah Ibadah & Kegiatan</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
       
       <div class="glass-card rounded-2xl overflow-hidden flex flex-col relative group">
@@ -177,7 +199,7 @@
         </div>
       </div>
 
-      <div class="glass-card rounded-2xl overflow-hidden flex flex-col relative group">
+      <div id="komsel-sukacita" class="scroll-mt-24 glass-card rounded-2xl overflow-hidden flex flex-col relative group">
         <div class="relative h-56 bg-dark-800">
           <button onclick="geserSlide('slider-komsel-sukacita', -1)" class="slider-nav-btn nav-left"><i class="fas fa-chevron-left"></i></button>
           <div id="slider-komsel-sukacita" class="slideshow-container w-full h-full">
@@ -212,11 +234,11 @@
           </div>
         </div>
       </div>
-
     </div>
 
-    <div class="flex items-center gap-3 mb-6 border-l-4 border-gold-500 pl-3">
+    <div id="layanan-diakonia" class="scroll-mt-24 flex items-center gap-3 mb-6 border-l-4 border-gold-500 pl-3">
       <h2 class="text-2xl font-bold text-white">Layanan & Pendaftaran</h2>
+      <img src="logo_diakonia.png" alt="Layanan" class="h-8 w-8 object-contain" onerror="this.style.display='none'">
     </div>
     
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-20">
@@ -232,7 +254,12 @@
         </div>
         <h4 class="font-semibold text-sm text-gray-200 group-hover:text-white">Penyerahan Anak</h4>
       </a>
-      
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSe3iKP7YEtV3f966je244leSt2jple_7TGcBtUSFMG-rhnhKA/viewform?usp=header" target="_blank" class="bg-dark-800 border border-white/5 p-5 rounded-2xl text-center hover:bg-gold-500/10 hover:border-gold-500/30 transition-all duration-300 group shadow-lg">
+        <div class="w-14 h-14 mx-auto rounded-full bg-gold-500/10 flex items-center justify-center mb-3 group-hover:bg-gold-500 transition-colors">
+          <i class="fas fa-rings-wedding text-2xl text-gold-500 group-hover:text-dark-900 transition-colors"></i>
+        </div>
+        <h4 class="font-semibold text-sm text-gray-200 group-hover:text-white">Pernikahan</h4>
+      </a>
       <a href="https://docs.google.com/forms/d/e/1FAIpQLScdHyyNx0hmxYBOVc1izovqX5_1JXFVinlTcnVDfSbO5FU0yA/viewform?usp=header" target="_blank" class="bg-dark-800 border border-white/5 p-5 rounded-2xl text-center hover:bg-gold-500/10 hover:border-gold-500/30 transition-all duration-300 group shadow-lg">
         <div class="w-14 h-14 mx-auto rounded-full bg-gold-500/10 flex items-center justify-center mb-3 group-hover:bg-gold-500 transition-colors">
           <i class="fas fa-user-plus text-2xl text-gold-500 group-hover:text-dark-900 transition-colors"></i>
@@ -243,7 +270,6 @@
 
     <div class="glass-card rounded-3xl p-6 md:p-10 flex flex-col md:flex-row gap-8 items-center mb-16 border-gold-500/20 shadow-2xl relative overflow-hidden">
       <div class="absolute top-0 right-0 w-64 h-64 bg-gold-500/5 rounded-full blur-3xl"></div>
-      
       <div class="w-36 h-36 rounded-full bg-dark-900 flex items-center justify-center overflow-hidden border-2 border-gold-500 shadow-xl shrink-0 relative z-10 p-1">
         <div class="w-full h-full bg-dark-800 rounded-full flex items-center justify-center">
             <i class="fas fa-user text-5xl text-gold-600/50"></i> 
@@ -258,7 +284,7 @@
 
     <footer class="mt-12 pt-12 border-t border-white/5">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
-        <div>
+        <div id="lokasi-gereja" class="scroll-mt-24">
           <div class="flex items-center gap-3 mb-5">
             <div class="w-8 h-8 rounded bg-gold-500/10 flex items-center justify-center"><i class="fas fa-map-marker-alt text-gold-500"></i></div>
             <h4 class="font-bold text-white text-lg">Lokasi Kami</h4>
@@ -268,7 +294,7 @@
           </p>
         </div>
         
-        <div>
+        <div id="kontak-gereja" class="scroll-mt-24">
           <div class="flex items-center gap-3 mb-5">
             <div class="w-8 h-8 rounded bg-gold-500/10 flex items-center justify-center"><i class="fas fa-phone-alt text-gold-500"></i></div>
             <h4 class="font-bold text-white text-lg">Kontak</h4>
@@ -295,14 +321,31 @@
         </div>
       </div>
       <div class="text-center text-gray-500 text-sm py-8 border-t border-white/5 flex flex-col items-center gap-3">
-        <img src="logo_hitam.png" alt="Logo GPdI" class="h-8 object-contain opacity-30 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300" onerror="this.style.display='none'">
+        <img src="logo_hitam.png" alt="Logo GPdI" class="h-10 object-contain opacity-30 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300" onerror="this.style.display='none'">
         <p>&copy; 2026 GPdI Impact Jatinangor.</p>
       </div>
     </footer>
   </main>
 
   <script>
-    // State Manager untuk Auto Slider
+    // === LOGIKA MENU MOBILE TAMPIL/SEMBUNYI ===
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      mobileMenu.classList.toggle('flex');
+    });
+
+    // Menutup menu mobile otomatis saat salah satu link diklik
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        mobileMenu.classList.remove('flex');
+      });
+    });
+
+    // === LOGIKA SLIDESHOW & VIDEO (TETAP SAMA) ===
     const sliderStates = {};
 
     async function fetchMedia(namaFolder, elementId) {
@@ -320,13 +363,12 @@
             if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
               htmlContent += `<div class="slide-item h-full w-full bg-cover bg-center shrink-0" style="background-image: url('${filePath}');"></div>`;
             } else if (['mp4', 'webm'].includes(ext)) {
-              // Video dipasang dengan playsinline agar support di iOS
               htmlContent += `<video src="${filePath}" class="slide-item h-full w-full object-cover shrink-0" playsinline muted></video>`;
             }
           });
           
           container.innerHTML = htmlContent;
-          initSlider(elementId); // Inisialisasi logika auto-slide
+          initSlider(elementId);
         } else {
           container.innerHTML = '<div class="flex items-center justify-center w-full h-full text-gray-600 text-sm font-medium">Belum ada media</div>';
         }
@@ -336,7 +378,6 @@
       }
     }
 
-    // Fungsi Menginisialisasi Slider
     function initSlider(sliderId) {
       const container = document.getElementById(sliderId);
       const slides = container.querySelectorAll('.slide-item');
@@ -351,7 +392,6 @@
       putarSlideAktif(sliderId);
     }
 
-    // Fungsi Utama Logika Auto-Slide
     function putarSlideAktif(sliderId) {
       const state = sliderStates[sliderId];
       if(!state) return;
@@ -360,49 +400,40 @@
       const container = document.getElementById(sliderId);
       const currentSlide = state.slides[state.currentIndex];
       
-      // Pause semua video di dalam slider ini terlebih dahulu
       state.slides.forEach(slide => {
         if(slide.tagName.toLowerCase() === 'video') {
           slide.pause();
         }
       });
 
-      // Geser (Scroll) kontainer ke slide aktif
       container.scrollTo({
         left: currentSlide.offsetLeft,
         behavior: 'smooth'
       });
 
-      // Cek apakah slide aktif adalah video atau gambar
       if (currentSlide.tagName.toLowerCase() === 'video') {
         currentSlide.currentTime = 0;
         let playPromise = currentSlide.play();
         
         if (playPromise !== undefined) {
           playPromise.catch(error => {
-            console.log("Autoplay dicegah oleh browser, lanjut ke slide berikutnya dalam 7 detik");
             state.timeoutId = setTimeout(() => geserSlide(sliderId, 1), 7000);
           });
         }
         
-        // Ketika video selesai, langsung geser ke slide selanjutnya
         currentSlide.onended = () => {
           geserSlide(sliderId, 1);
         };
       } else {
-        // Jika gambar, tahan selama 7 detik (7000 ms) lalu geser
         state.timeoutId = setTimeout(() => {
           geserSlide(sliderId, 1);
         }, 7000);
       }
     }
 
-    // Fungsi untuk Tombol Next/Prev (Bisa digeser manual)
     window.geserSlide = function(sliderId, direction) {
       const state = sliderStates[sliderId];
       if(!state || state.slides.length <= 1) return;
-
-      // Hitung index baru (looping)
       state.currentIndex = (state.currentIndex + direction + state.slides.length) % state.slides.length;
       putarSlideAktif(sliderId);
     };
