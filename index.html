@@ -3,32 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Dashboard | GPdI Impact </title>
+  <title>Dashboard | GPdI Impact</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gold: {
+              400: '#FBBF24',
+              500: '#F59E0B',
+              600: '#D97706',
+              700: '#B45309',
+            },
+            dark: {
+              900: '#050505',
+              800: '#111111',
+              700: '#1A1A1A'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
     * { font-family: 'Inter', sans-serif; }
-    body { background-color: #050B14; }
+    body { background-color: #050505; color: #E5E5E5; }
+    
     ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0F172A; }
-    ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #3B82F6, #8B5CF6); border-radius: 10px; }
+    ::-webkit-scrollbar-track { background: #111; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #D97706, #F59E0B); border-radius: 10px; }
+    
     .glass-card {
-      background: rgba(15, 25, 45, 0.65);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(59, 130, 246, 0.25);
-      transition: all 0.3s ease;
+      background: rgba(20, 20, 20, 0.7);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .glass-card:hover {
-      border-color: rgba(59, 130, 246, 0.6);
-      background: rgba(20, 35, 60, 0.8);
-      transform: translateY(-4px);
+      border-color: rgba(245, 158, 11, 0.5);
+      background: rgba(30, 30, 30, 0.85);
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px -10px rgba(245, 158, 11, 0.15);
     }
+    
     .btn-modern {
-      background: linear-gradient(95deg, #2563EB, #7C3AED);
-      transition: all 0.2s ease;
+      background: linear-gradient(135deg, #B45309, #F59E0B);
+      color: #fff;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
     }
-    .btn-modern:hover { transform: scale(1.02); filter: brightness(1.05); }
+    .btn-modern:hover { 
+      transform: scale(1.03); 
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+      filter: brightness(1.1); 
+    }
     
     /* Konfigurasi Slideshow */
     .slideshow-container {
@@ -36,28 +69,50 @@
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       scrollbar-width: none;
+      scroll-behavior: smooth; /* Penting untuk animasi geser halus */
     }
     .slideshow-container::-webkit-scrollbar { display: none; }
     .slide-item {
       flex: 0 0 100%;
       scroll-snap-align: start;
     }
+
+    /* Tombol Navigasi Slider */
+    .slider-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 32px;
+      height: 32px;
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 20;
+      opacity: 0;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .glass-card:hover .slider-nav-btn { opacity: 1; }
+    .slider-nav-btn:hover { background: #F59E0B; color: black; border-color: #F59E0B; }
+    .nav-left { left: 8px; }
+    .nav-right { right: 8px; }
   </style>
 </head>
-<body class="text-gray-200 antialiased">
+<body class="antialiased selection:bg-gold-500 selection:text-black">
 
-  <header class="sticky top-0 z-50 w-full bg-[#0B1120]/80 backdrop-blur-xl border-b border-blue-500/20 shadow-lg">
+  <header class="sticky top-0 z-50 w-full bg-dark-900/80 backdrop-blur-xl border-b border-gold-500/20 shadow-lg shadow-gold-900/5">
     <div class="container mx-auto px-4 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center space-x-3">
         <div class="w-12 h-12 flex items-center justify-center">
-          <img src="logo_hitam.png" alt="Logo GPdI" class="w-full h-full object-contain" onerror="this.style.display='none'">
-        </div>
-        <div>
-          <h1 class="text-xl font-black tracking-tight bg-gradient-to-r from-white via-blue-300 to-purple-300 bg-clip-text text-transparent">GPdI IMPACT</h1>
+          <img src="logo_hitam.png" alt="Logo GPdI" class="w-full h-full object-contain drop-shadow-md" onerror="this.style.display='none'">
         </div>
       </div>
       <div class="flex gap-2">
-        <a href="https://wa.me/6281324282488" target="_blank" class="btn-modern px-5 py-1.5 rounded-full text-sm font-bold flex items-center gap-2">
+        <a href="https://wa.me/6281324282488" target="_blank" class="btn-modern px-6 py-2 rounded-full text-sm font-bold flex items-center gap-2">
           <i class="fab fa-whatsapp text-lg"></i> <span class="hidden sm:inline">Hubungi Kami</span>
         </a>
       </div>
@@ -65,172 +120,299 @@
   </header>
 
   <main class="container mx-auto px-4 lg:px-8 py-8 lg:py-12">
+    
     <section class="mb-16 lg:mb-24">
-      <div class="relative rounded-3xl overflow-hidden shadow-2xl group">
-        <div class="aspect-video md:aspect-[21/9] w-full flex flex-col items-center justify-center text-center relative bg-cover bg-center" style="background-image: linear-gradient(135deg, #0f172a 0%, #020617 100%), url('https://images.unsplash.com/photo-1438032008730-f2b7bdf0b24e?q=80&w=2070&auto=format'); background-blend-mode: overlay;">
-          <div class="relative z-10 text-center max-w-2xl px-4 flex flex-col items-center">
-            <img src="logo_putih.jpeg" alt="Logo GPdI Putih" class="h-20 md:h-28 mb-4 object-contain opacity-90 rounded-xl" onerror="this.style.display='none'">
-            <h2 class="text-3xl md:text-5xl font-black mt-2 text-white">Selamat Datang di <br>GPdI Impact</h2>
-          </div>
+      <div class="relative rounded-3xl overflow-hidden shadow-2xl shadow-gold-900/20 group h-64 md:h-[400px]">
+        <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover">
+          <source src="wadah_ibadah/IBADAH_RAYA_MINGGU/ibr-3.mp4" type="video/mp4">
+        </video>
+        <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-black/50 to-black/30 z-10"></div>
+        
+        <div class="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-4">
+          <img src="logo_putih.jpeg" alt="Logo GPdI Putih" class="h-24 md:h-32 mb-4 object-contain opacity-95 rounded-xl shadow-2xl" onerror="this.style.display='none'">
+          <h2 class="text-4xl md:text-6xl font-black mt-2 tracking-tight bg-gradient-to-b from-white to-gray-300 bg-clip-text text-transparent drop-shadow-lg">
+            Welcome Home <br>
+            <span class="bg-gradient-to-r from-gold-300 via-gold-500 to-yellow-600 bg-clip-text text-transparent">GPdI Impact</span>
+          </h2>
         </div>
       </div>
     </section>
 
-    <h2 class="text-2xl font-bold mb-6 border-l-4 border-blue-500 pl-3">Wadah Ibadah & Kegiatan</h2>
+    <h2 class="text-2xl font-bold mb-6 border-l-4 border-gold-500 pl-3 text-white">Wadah Ibadah & Kegiatan</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
       
-      <div class="glass-card rounded-2xl overflow-hidden flex flex-col">
-        <div id="slider-ibadah-raya" class="h-56 bg-gray-800 relative slideshow-container">
+      <div class="glass-card rounded-2xl overflow-hidden flex flex-col relative group">
+        <div class="relative h-56 bg-dark-800">
+          <button onclick="geserSlide('slider-ibadah-raya', -1)" class="slider-nav-btn nav-left"><i class="fas fa-chevron-left"></i></button>
+          <div id="slider-ibadah-raya" class="slideshow-container w-full h-full">
             <div class="flex items-center justify-center w-full h-full text-gray-500 text-sm">Memuat media...</div>
+          </div>
+          <button onclick="geserSlide('slider-ibadah-raya', 1)" class="slider-nav-btn nav-right"><i class="fas fa-chevron-right"></i></button>
         </div>
-        <div class="p-5 flex-grow">
-          <h3 class="text-xl font-bold mb-2">Ibadah Raya</h3>
-          <p class="text-gray-400 text-sm mb-3">Ibadah Raya umum untuk seluruh jemaat.</p>
-          <div class="bg-white/5 rounded-lg p-3">
-            <p class="text-blue-300 text-sm font-semibold"><i class="fas fa-calendar-day"></i> Setiap Hari Minggu</p>
-            <p class="text-gray-300 text-xs mt-1">Ibadah I: 07.30 WIB | Ibadah II: 10.00 WIB</p>
+        <div class="p-6 flex-grow">
+          <h3 class="text-xl font-bold mb-2 text-gold-400">Ibadah Raya</h3>
+          <p class="text-gray-400 text-sm mb-4">Ibadah Raya umum untuk seluruh jemaat.</p>
+          <div class="bg-white/5 border border-white/5 rounded-xl p-3 flex flex-col gap-1">
+            <p class="text-white text-sm font-semibold"><i class="fas fa-calendar-day text-gold-500 w-5"></i> Setiap Hari Minggu</p>
+            <p class="text-gray-400 text-xs pl-6">Ibadah I: 07.30 WIB | Ibadah II: 10.00 WIB</p>
           </div>
         </div>
       </div>
 
-      <div class="glass-card rounded-2xl overflow-hidden flex flex-col">
-        <div id="slider-impact-kids" class="h-56 bg-gray-800 relative slideshow-container">
-             <div class="flex items-center justify-center w-full h-full text-gray-500 text-sm">Memuat media...</div>
+      <div class="glass-card rounded-2xl overflow-hidden flex flex-col relative group">
+        <div class="relative h-56 bg-dark-800">
+          <button onclick="geserSlide('slider-impact-kids', -1)" class="slider-nav-btn nav-left"><i class="fas fa-chevron-left"></i></button>
+          <div id="slider-impact-kids" class="slideshow-container w-full h-full">
+            <div class="flex items-center justify-center w-full h-full text-gray-500 text-sm">Memuat media...</div>
+          </div>
+          <button onclick="geserSlide('slider-impact-kids', 1)" class="slider-nav-btn nav-right"><i class="fas fa-chevron-right"></i></button>
         </div>
-        <div class="p-5 flex-grow">
-          <h3 class="text-xl font-bold mb-2">IMPACT KIDS</h3>
-          <p class="text-gray-400 text-sm mb-3">Ibadah Sekolah Minggu untuk anak-anak.</p>
-          <div class="bg-white/5 rounded-lg p-3">
-            <p class="text-yellow-300 text-sm font-semibold"><i class="fas fa-calendar-day"></i> Setiap Hari Minggu</p>
-            <p class="text-gray-300 text-xs mt-1">Ibadah I: 07.30 WIB | Ibadah II: 10.00 WIB</p>
+        <div class="p-6 flex-grow">
+          <h3 class="text-xl font-bold mb-2 text-gold-400">IMPACT KIDS</h3>
+          <p class="text-gray-400 text-sm mb-4">Ibadah Sekolah Minggu untuk anak-anak.</p>
+          <div class="bg-white/5 border border-white/5 rounded-xl p-3 flex flex-col gap-1">
+            <p class="text-white text-sm font-semibold"><i class="fas fa-calendar-day text-gold-500 w-5"></i> Setiap Hari Minggu</p>
+            <p class="text-gray-400 text-xs pl-6">Ibadah I: 07.30 WIB | Ibadah II: 10.00 WIB</p>
           </div>
         </div>
       </div>
 
-      <div class="glass-card rounded-2xl overflow-hidden flex flex-col">
-        <div id="slider-komsel-sukacita" class="h-56 bg-gray-800 relative slideshow-container">
-             <div class="flex items-center justify-center w-full h-full text-gray-500 text-sm">Memuat media...</div>
+      <div class="glass-card rounded-2xl overflow-hidden flex flex-col relative group">
+        <div class="relative h-56 bg-dark-800">
+          <button onclick="geserSlide('slider-komsel-sukacita', -1)" class="slider-nav-btn nav-left"><i class="fas fa-chevron-left"></i></button>
+          <div id="slider-komsel-sukacita" class="slideshow-container w-full h-full">
+            <div class="flex items-center justify-center w-full h-full text-gray-500 text-sm">Memuat media...</div>
+          </div>
+          <button onclick="geserSlide('slider-komsel-sukacita', 1)" class="slider-nav-btn nav-right"><i class="fas fa-chevron-right"></i></button>
         </div>
-        <div class="p-5 flex-grow">
-          <h3 class="text-xl font-bold mb-2">Komsel Sukacita</h3>
-          <p class="text-gray-400 text-sm mb-3">Wadah persekutuan khusus ibu-ibu.</p>
-          <div class="bg-white/5 rounded-lg p-3">
-            <p class="text-pink-300 text-sm font-semibold"><i class="fas fa-calendar-day"></i> Setiap Hari Selasa (17.30 WIB)</p>
+        <div class="p-6 flex-grow">
+          <h3 class="text-xl font-bold mb-2 text-gold-400">Komsel Sukacita</h3>
+          <p class="text-gray-400 text-sm mb-4">Wadah persekutuan khusus ibu-ibu.</p>
+          <div class="bg-white/5 border border-white/5 rounded-xl p-3 flex flex-col gap-1">
+            <p class="text-white text-sm font-semibold"><i class="fas fa-calendar-day text-gold-500 w-5"></i> Setiap Hari Selasa</p>
+            <p class="text-gray-400 text-xs pl-6">Pukul 17.30 WIB</p>
           </div>
         </div>
       </div>
 
-      <div class="glass-card rounded-2xl overflow-hidden flex flex-col">
-        <div id="slider-impact-generation" class="h-56 bg-gray-800 relative slideshow-container">
-             <div class="flex items-center justify-center w-full h-full text-gray-500 text-sm">Memuat media...</div>
+      <div class="glass-card rounded-2xl overflow-hidden flex flex-col relative group">
+        <div class="relative h-56 bg-dark-800">
+          <button onclick="geserSlide('slider-impact-generation', -1)" class="slider-nav-btn nav-left"><i class="fas fa-chevron-left"></i></button>
+          <div id="slider-impact-generation" class="slideshow-container w-full h-full">
+            <div class="flex items-center justify-center w-full h-full text-gray-500 text-sm">Memuat media...</div>
+          </div>
+          <button onclick="geserSlide('slider-impact-generation', 1)" class="slider-nav-btn nav-right"><i class="fas fa-chevron-right"></i></button>
         </div>
-        <div class="p-5 flex-grow">
-          <h3 class="text-xl font-bold mb-2">IMPACT GENERATION</h3>
-          <p class="text-gray-400 text-sm mb-3">Komsel pemuda dan remaja.</p>
-          <div class="bg-white/5 rounded-lg p-3">
-            <p class="text-purple-300 text-sm font-semibold"><i class="fas fa-calendar-day"></i> Setiap Hari Jumat (18.00 WIB)</p>
+        <div class="p-6 flex-grow">
+          <h3 class="text-xl font-bold mb-2 text-gold-400">IMPACT GENERATION</h3>
+          <p class="text-gray-400 text-sm mb-4">Komsel pemuda dan remaja.</p>
+          <div class="bg-white/5 border border-white/5 rounded-xl p-3 flex flex-col gap-1">
+            <p class="text-white text-sm font-semibold"><i class="fas fa-calendar-day text-gold-500 w-5"></i> Setiap Hari Jumat</p>
+            <p class="text-gray-400 text-xs pl-6">Pukul 18.00 WIB</p>
           </div>
         </div>
       </div>
 
     </div>
 
-    <div class="flex items-center gap-3 mb-6 border-l-4 border-emerald-500 pl-3">
-      <h2 class="text-2xl font-bold">Layanan & Pendaftaran</h2>
+    <div class="flex items-center gap-3 mb-6 border-l-4 border-gold-500 pl-3">
+      <h2 class="text-2xl font-bold text-white">Layanan & Pendaftaran</h2>
       <img src="logo_diakonia.png" alt="Layanan" class="h-8 w-8 object-contain" onerror="this.style.display='none'">
     </div>
     
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-20">
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeSsNr6tErD72I_hVEANuslLU5skHHHN_fCfcRtc5dbuMDbJQ/viewform?usp=header" target="_blank" class="bg-white/5 border border-white/10 p-4 rounded-xl text-center hover:bg-emerald-500/20 transition group">
-        <i class="fas fa-water text-3xl text-emerald-400 mb-3 group-hover:scale-110 transition"></i><h4 class="font-semibold text-sm">Baptisan Air</h4>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeSsNr6tErD72I_hVEANuslLU5skHHHN_fCfcRtc5dbuMDbJQ/viewform?usp=header" target="_blank" class="bg-dark-800 border border-white/5 p-5 rounded-2xl text-center hover:bg-gold-500/10 hover:border-gold-500/30 transition-all duration-300 group shadow-lg">
+        <div class="w-14 h-14 mx-auto rounded-full bg-gold-500/10 flex items-center justify-center mb-3 group-hover:bg-gold-500 transition-colors">
+          <i class="fas fa-water text-2xl text-gold-500 group-hover:text-dark-900 transition-colors"></i>
+        </div>
+        <h4 class="font-semibold text-sm text-gray-200 group-hover:text-white">Baptisan Air</h4>
       </a>
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeRT7ajwYK4YGNjt0MpUGHFHH1ehzNBuyAGOdkODzKsnNoLOw/viewform?usp=header" target="_blank" class="bg-white/5 border border-white/10 p-4 rounded-xl text-center hover:bg-emerald-500/20 transition group">
-        <i class="fas fa-baby text-3xl text-emerald-400 mb-3 group-hover:scale-110 transition"></i><h4 class="font-semibold text-sm">Penyerahan Anak</h4>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeRT7ajwYK4YGNjt0MpUGHFHH1ehzNBuyAGOdkODzKsnNoLOw/viewform?usp=header" target="_blank" class="bg-dark-800 border border-white/5 p-5 rounded-2xl text-center hover:bg-gold-500/10 hover:border-gold-500/30 transition-all duration-300 group shadow-lg">
+        <div class="w-14 h-14 mx-auto rounded-full bg-gold-500/10 flex items-center justify-center mb-3 group-hover:bg-gold-500 transition-colors">
+          <i class="fas fa-baby text-2xl text-gold-500 group-hover:text-dark-900 transition-colors"></i>
+        </div>
+        <h4 class="font-semibold text-sm text-gray-200 group-hover:text-white">Penyerahan Anak</h4>
       </a>
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLScdHyyNx0hmxYBOVc1izovqX5_1JXFVinlTcnVDfSbO5FU0yA/viewform?usp=header" target="_blank" class="bg-white/5 border border-white/10 p-4 rounded-xl text-center hover:bg-emerald-500/20 transition group">
-        <i class="fas fa-user-plus text-3xl text-emerald-400 mb-3 group-hover:scale-110 transition"></i><h4 class="font-semibold text-sm">Jemaat Baru</h4>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSe3iKP7YEtV3f966je244leSt2jple_7TGcBtUSFMG-rhnhKA/viewform?usp=header" target="_blank" class="bg-dark-800 border border-white/5 p-5 rounded-2xl text-center hover:bg-gold-500/10 hover:border-gold-500/30 transition-all duration-300 group shadow-lg">
+        <div class="w-14 h-14 mx-auto rounded-full bg-gold-500/10 flex items-center justify-center mb-3 group-hover:bg-gold-500 transition-colors">
+          <i class="fas fa-rings-wedding text-2xl text-gold-500 group-hover:text-dark-900 transition-colors"></i>
+        </div>
+        <h4 class="font-semibold text-sm text-gray-200 group-hover:text-white">Pernikahan</h4>
+      </a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScdHyyNx0hmxYBOVc1izovqX5_1JXFVinlTcnVDfSbO5FU0yA/viewform?usp=header" target="_blank" class="bg-dark-800 border border-white/5 p-5 rounded-2xl text-center hover:bg-gold-500/10 hover:border-gold-500/30 transition-all duration-300 group shadow-lg">
+        <div class="w-14 h-14 mx-auto rounded-full bg-gold-500/10 flex items-center justify-center mb-3 group-hover:bg-gold-500 transition-colors">
+          <i class="fas fa-user-plus text-2xl text-gold-500 group-hover:text-dark-900 transition-colors"></i>
+        </div>
+        <h4 class="font-semibold text-sm text-gray-200 group-hover:text-white">Jemaat Baru</h4>
       </a>
     </div>
 
-    <div class="glass-card rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-6 items-center mb-16 border-blue-500/30">
-      <div class="w-32 h-32 rounded-full bg-gray-800 flex items-center justify-center overflow-hidden border-2 border-blue-500 shadow-xl shrink-0">
-        <i class="fas fa-user text-5xl text-gray-500"></i> 
+    <div class="glass-card rounded-3xl p-6 md:p-10 flex flex-col md:flex-row gap-8 items-center mb-16 border-gold-500/20 shadow-2xl relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-64 h-64 bg-gold-500/5 rounded-full blur-3xl"></div>
+      
+      <div class="w-36 h-36 rounded-full bg-dark-900 flex items-center justify-center overflow-hidden border-2 border-gold-500 shadow-xl shrink-0 relative z-10 p-1">
+        <div class="w-full h-full bg-dark-800 rounded-full flex items-center justify-center">
+            <i class="fas fa-user text-5xl text-gold-600/50"></i> 
+        </div>
       </div>
-      <div class="text-center md:text-left">
-        <p class="text-blue-300 text-sm font-semibold tracking-wider uppercase">Gembala Sidang</p>
-        <h3 class="text-2xl font-black mt-1">Pdt. Corry Maukar</h3>
-        <p class="text-gray-400 text-sm mt-3 leading-relaxed max-w-2xl">Membawa visi dan misi Tuhan untuk memberkati Rancaekek-Jatinangor dan sekitarnya melalui pengajaran firman dan komunitas yang membangun.</p>
+      <div class="text-center md:text-left relative z-10">
+        <p class="text-gold-500 text-sm font-bold tracking-[0.2em] uppercase">Gembala Sidang</p>
+        <h3 class="text-3xl font-black mt-2 text-white">Pdt. Corry Maukar</h3>
+        <p class="text-gray-400 text-base mt-4 leading-relaxed max-w-2xl">Membawa visi dan misi Tuhan untuk memberkati Rancaekek-Jatinangor dan sekitarnya melalui pengajaran firman dan komunitas yang membangun.</p>
       </div>
     </div>
 
-    <footer class="mt-12 pt-10 border-t border-white/10">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+    <footer class="mt-12 pt-12 border-t border-white/5">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
         <div>
-          <div class="flex items-center gap-2 mb-4">
-            <i class="fas fa-map-marker-alt text-blue-400 text-xl"></i>
-            <h4 class="font-bold text-white">Lokasi Kami</h4>
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-8 h-8 rounded bg-gold-500/10 flex items-center justify-center"><i class="fas fa-map-marker-alt text-gold-500"></i></div>
+            <h4 class="font-bold text-white text-lg">Lokasi Kami</h4>
           </div>
-          <p class="text-gray-400 text-sm leading-relaxed">
+          <p class="text-gray-400 text-sm leading-relaxed pl-11">
             Jl. Rancaekek No.219, Mekargalih, <br>Kec. Jatinangor, Kabupaten Sumedang, <br>Jawa Barat 45363, Indonesia
           </p>
         </div>
         
         <div>
-          <h4 class="font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-phone-alt text-blue-400"></i> Kontak</h4>
-          <p class="text-gray-400 text-sm"><i class="fas fa-mobile-alt w-5 text-blue-400"></i> 0813-2428-2488</p>
-          <p class="text-gray-400 text-sm mt-2"><i class="fab fa-whatsapp w-5 text-green-400"></i> 0813-2428-2488</p>
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-8 h-8 rounded bg-gold-500/10 flex items-center justify-center"><i class="fas fa-phone-alt text-gold-500"></i></div>
+            <h4 class="font-bold text-white text-lg">Kontak</h4>
+          </div>
+          <div class="pl-11 space-y-3">
+            <p class="text-gray-400 text-sm flex items-center gap-2 hover:text-white transition"><i class="fas fa-mobile-alt w-4 text-gold-500/70"></i> 0813-2428-2488</p>
+            <p class="text-gray-400 text-sm flex items-center gap-2 hover:text-white transition"><i class="fab fa-whatsapp w-4 text-green-500"></i> 0813-2428-2488</p>
+          </div>
         </div>
 
         <div>
-          <h4 class="font-bold text-white mb-4">Media Sosial</h4>
-          <div class="flex flex-col gap-3">
-            <a href="https://instagram.com/gpdiimpactjatinangor" target="_blank" class="text-gray-400 hover:text-pink-400 text-sm transition flex items-center gap-2">
-              <i class="fab fa-instagram text-xl"></i> @gpdiimpactjatinangor
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-8 h-8 rounded bg-gold-500/10 flex items-center justify-center"><i class="fas fa-share-alt text-gold-500"></i></div>
+            <h4 class="font-bold text-white text-lg">Media Sosial</h4>
+          </div>
+          <div class="pl-11 space-y-3">
+            <a href="https://instagram.com/gpdiimpactjatinangor" target="_blank" class="text-gray-400 hover:text-gold-400 text-sm transition flex items-center gap-2">
+              <i class="fab fa-instagram text-lg"></i> @gpdiimpactjatinangor
             </a>
             <a href="https://youtube.com/@GPdIRancaekek-Jatinangor" target="_blank" class="text-gray-400 hover:text-red-500 text-sm transition flex items-center gap-2">
-              <i class="fab fa-youtube text-xl"></i> GPdI Impact
+              <i class="fab fa-youtube text-lg"></i> GPdI Impact
             </a>
           </div>
         </div>
       </div>
-      <div class="text-center text-gray-500 text-xs py-6 border-t border-white/5 flex flex-col items-center gap-2">
-        <img src="logo_hitam.png" alt="Logo GPdI" class="h-6 object-contain opacity-50" onerror="this.style.display='none'">
-        &copy; 2026 GPdI Impact Jatinangor.
+      <div class="text-center text-gray-500 text-sm py-8 border-t border-white/5 flex flex-col items-center gap-3">
+        <img src="logo_hitam.png" alt="Logo GPdI" class="h-8 object-contain opacity-30 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300" onerror="this.style.display='none'">
+        <p>&copy; 2026 GPdI Impact Jatinangor.</p>
       </div>
     </footer>
   </main>
 
   <script>
+    // State Manager untuk Auto Slider
+    const sliderStates = {};
+
     async function fetchMedia(namaFolder, elementId) {
       const container = document.getElementById(elementId);
       try {
-        // Panggil endpoint API Vercel
         const response = await fetch(`/api/media?wadah=${namaFolder}`);
         const files = await response.json();
         
         if (files.length > 0) {
-          container.innerHTML = ''; // Hapus teks "Memuat media..."
-          
+          let htmlContent = '';
           files.forEach(file => {
             const ext = file.split('.').pop().toLowerCase();
             const filePath = `wadah_ibadah/${namaFolder}/${file}`;
             
             if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
-              container.innerHTML += `<div class="slide-item h-full w-full bg-cover bg-center shrink-0" style="background-image: url('${filePath}');"></div>`;
+              htmlContent += `<div class="slide-item h-full w-full bg-cover bg-center shrink-0" style="background-image: url('${filePath}');"></div>`;
             } else if (['mp4', 'webm'].includes(ext)) {
-              container.innerHTML += `<video src="${filePath}" class="slide-item h-full w-full object-cover shrink-0" autoplay loop muted></video>`;
+              // Video dipasang dengan playsinline agar support di iOS
+              htmlContent += `<video src="${filePath}" class="slide-item h-full w-full object-cover shrink-0" playsinline muted></video>`;
             }
           });
+          
+          container.innerHTML = htmlContent;
+          initSlider(elementId); // Inisialisasi logika auto-slide
         } else {
-            container.innerHTML = '<div class="flex items-center justify-center w-full h-full text-gray-500 text-sm">Belum ada media</div>';
+          container.innerHTML = '<div class="flex items-center justify-center w-full h-full text-gray-600 text-sm font-medium">Belum ada media</div>';
         }
       } catch (error) {
         console.error('Error fetching media:', error);
-        container.innerHTML = '<div class="flex items-center justify-center w-full h-full text-red-400 text-sm">Gagal memuat media</div>';
+        container.innerHTML = '<div class="flex items-center justify-center w-full h-full text-red-500/50 text-sm">Gagal memuat media</div>';
       }
     }
 
-    
+    // Fungsi Menginisialisasi Slider
+    function initSlider(sliderId) {
+      const container = document.getElementById(sliderId);
+      const slides = container.querySelectorAll('.slide-item');
+      if(slides.length === 0) return;
+
+      sliderStates[sliderId] = {
+        currentIndex: 0,
+        slides: Array.from(slides),
+        timeoutId: null
+      };
+
+      putarSlideAktif(sliderId);
+    }
+
+    // Fungsi Utama Logika Auto-Slide
+    function putarSlideAktif(sliderId) {
+      const state = sliderStates[sliderId];
+      if(!state) return;
+
+      clearTimeout(state.timeoutId);
+      const container = document.getElementById(sliderId);
+      const currentSlide = state.slides[state.currentIndex];
+      
+      // Pause semua video di dalam slider ini terlebih dahulu
+      state.slides.forEach(slide => {
+        if(slide.tagName.toLowerCase() === 'video') {
+          slide.pause();
+        }
+      });
+
+      // Geser (Scroll) kontainer ke slide aktif
+      container.scrollTo({
+        left: currentSlide.offsetLeft,
+        behavior: 'smooth'
+      });
+
+      // Cek apakah slide aktif adalah video atau gambar
+      if (currentSlide.tagName.toLowerCase() === 'video') {
+        currentSlide.currentTime = 0;
+        let playPromise = currentSlide.play();
+        
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.log("Autoplay dicegah oleh browser, lanjut ke slide berikutnya dalam 7 detik");
+            state.timeoutId = setTimeout(() => geserSlide(sliderId, 1), 7000);
+          });
+        }
+        
+        // Ketika video selesai, langsung geser ke slide selanjutnya
+        currentSlide.onended = () => {
+          geserSlide(sliderId, 1);
+        };
+      } else {
+        // Jika gambar, tahan selama 7 detik (7000 ms) lalu geser
+        state.timeoutId = setTimeout(() => {
+          geserSlide(sliderId, 1);
+        }, 7000);
+      }
+    }
+
+    // Fungsi untuk Tombol Next/Prev (Bisa digeser manual)
+    window.geserSlide = function(sliderId, direction) {
+      const state = sliderStates[sliderId];
+      if(!state || state.slides.length <= 1) return;
+
+      // Hitung index baru (looping)
+      state.currentIndex = (state.currentIndex + direction + state.slides.length) % state.slides.length;
+      putarSlideAktif(sliderId);
+    };
+
     document.addEventListener("DOMContentLoaded", () => {
       fetchMedia('IBADAH_RAYA_MINGGU', 'slider-ibadah-raya');
       fetchMedia('IMPACT_KIDS', 'slider-impact-kids');
