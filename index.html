@@ -104,9 +104,38 @@
     .delay-100 { transition-delay: 100ms; }
     .delay-200 { transition-delay: 200ms; }
     .delay-300 { transition-delay: 300ms; }
+
+    /* ================= TEMA DINAMIS (NATAL, PASKAH, AGUSTUSAN) ================= */
+    .theme-overlay {
+      position: fixed; inset: 0; pointer-events: none; z-index: 9999; overflow: hidden;
+    }
+    .ornament {
+      position: absolute; top: -10px; width: 60px; transform-origin: top center;
+      animation: swing 3s ease-in-out infinite alternate;
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
+    }
+    .ornament-left { left: 5%; animation-delay: 0s; }
+    .ornament-right { right: 5%; animation-delay: 1.5s; width: 50px; }
+    @keyframes swing {
+      0% { transform: rotate(10deg); }
+      100% { transform: rotate(-10deg); }
+    }
+    .snowflake {
+      position: absolute; top: -10px;
+      background: white; border-radius: 50%;
+      opacity: 0.8; filter: blur(1px);
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-10px) translateX(0); opacity: 1; }
+      100% { transform: translateY(100vh) translateX(20px); opacity: 0; }
+    }
   </style>
 </head>
 <body class="antialiased selection:bg-gold-500 selection:text-black">
+
+  <!-- ================= TEMA OVERLAY (JANGAN DIHAPUS) ================= -->
+  <div id="theme-container" class="theme-overlay"></div>
 
   <header class="sticky top-0 z-50 w-full bg-dark-900/85 backdrop-blur-2xl border-b border-gold-500/20 shadow-lg shadow-gold-900/10 transition-all duration-300">
     <div class="container mx-auto px-4 lg:px-8 py-2 md:py-1 flex flex-wrap items-center justify-between gap-3">
@@ -486,6 +515,87 @@
     };
 
     /* ---------------------------------------------------
+       4. THEME MANAGER (SISTEM TEMA GEREJAWI & NASIONAL)
+    --------------------------------------------------- */
+    const TEMA_AKTIF = 'agustusan'; // Ubah ke 'natal', 'paskah', 'agustusan', atau 'otomatis'
+
+    function terapkanTema() {
+      const container = document.getElementById('theme-container');
+      if(!container) return;
+      let tema = TEMA_AKTIF;
+
+      if (tema === 'otomatis') {
+        const bulanSekarang = new Date().getMonth() + 1; // 1-12
+        if (bulanSekarang === 12) tema = 'natal';
+        else if (bulanSekarang === 4) tema = 'paskah';
+        else if (bulanSekarang === 8) tema = 'agustusan';
+        else tema = 'default';
+      }
+
+      if (tema === 'natal') {
+        container.innerHTML += `
+          <img src="https://cdn-icons-png.flaticon.com/512/2360/2360930.png" class="ornament ornament-left" alt="Bola Natal Merah">
+          <img src="https://cdn-icons-png.flaticon.com/512/2360/2360918.png" class="ornament ornament-right" alt="Bola Natal Hijau">
+        `;
+        for (let i = 0; i < 50; i++) {
+          let salju = document.createElement('div');
+          salju.classList.add('snowflake');
+          let size = Math.random() * 6 + 2; 
+          salju.style.width = size + 'px';
+          salju.style.height = size + 'px';
+          salju.style.left = Math.random() * 100 + 'vw';
+          salju.style.animationDuration = Math.random() * 3 + 2 + 's';
+          salju.style.animationDelay = Math.random() * 5 + 's';
+          container.appendChild(salju);
+        }
+      } 
+      else if (tema === 'paskah') {
+        container.innerHTML += `
+          <img src="https://cdn-icons-png.flaticon.com/512/384/384065.png" class="ornament ornament-left" style="width: 45px;" alt="Salib">
+          <img src="https://cdn-icons-png.flaticon.com/512/2099/2099187.png" class="ornament ornament-right" style="width: 55px;" alt="Telur Paskah">
+        `;
+        const warnaPaskah = ['#FFB6C1', '#87CEFA', '#98FB98', '#FFFACD', '#DDA0DD'];
+        for (let i = 0; i < 30; i++) {
+          let telur = document.createElement('div');
+          telur.classList.add('snowflake');
+          let size = Math.random() * 8 + 6; 
+          telur.style.width = size + 'px';
+          telur.style.height = (size * 1.3) + 'px'; 
+          telur.style.borderRadius = '50% 50% 50% 50% / 60% 60% 40% 40%';
+          telur.style.background = warnaPaskah[Math.floor(Math.random() * warnaPaskah.length)];
+          telur.style.opacity = '0.85';
+          telur.style.filter = 'none'; 
+          telur.style.left = Math.random() * 100 + 'vw';
+          telur.style.animationDuration = Math.random() * 4 + 3 + 's';
+          telur.style.animationDelay = Math.random() * 5 + 's';
+          container.appendChild(telur);
+        }
+      }
+      else if (tema === 'agustusan') {
+        container.innerHTML += `
+          <img src="https://cdn-icons-png.flaticon.com/512/323/323321.png" class="ornament ornament-left" style="width: 55px;" alt="Bendera">
+          <img src="https://cdn-icons-png.flaticon.com/512/323/323321.png" class="ornament ornament-right" style="width: 55px; transform: scaleX(-1);" alt="Bendera">
+        `;
+        for (let i = 0; i < 60; i++) {
+          let confetti = document.createElement('div');
+          confetti.classList.add('snowflake');
+          let size = Math.random() * 6 + 4; 
+          confetti.style.width = size + 'px';
+          confetti.style.height = (size * 2) + 'px'; 
+          confetti.style.borderRadius = '2px';
+          confetti.style.background = Math.random() > 0.5 ? '#EF4444' : '#FFFFFF'; 
+          confetti.style.boxShadow = '0 1px 3px rgba(0,0,0,0.2)';
+          confetti.style.opacity = '0.9';
+          confetti.style.filter = 'none';
+          confetti.style.left = Math.random() * 100 + 'vw';
+          confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+          confetti.style.animationDelay = Math.random() * 5 + 's';
+          container.appendChild(confetti);
+        }
+      }
+    }
+
+    /* ---------------------------------------------------
        3. INITIALIZATION ON LOAD
     --------------------------------------------------- */
     document.addEventListener("DOMContentLoaded", () => {
@@ -496,6 +606,9 @@
       fetchMedia('IMPACT_KIDS', 'slider-impact-kids');
       fetchMedia('KOMSEL_SUKACITA', 'slider-komsel-sukacita');
       fetchMedia('IMPACT_GENERATION', 'slider-impact-generation');
+      
+      // Terapkan Tema Dinamis
+      terapkanTema();
     });
   </script>
 </body>
