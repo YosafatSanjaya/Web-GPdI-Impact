@@ -134,7 +134,6 @@
 </head>
 <body class="antialiased selection:bg-gold-500 selection:text-black">
 
-  <!-- ================= TEMA OVERLAY (JANGAN DIHAPUS) ================= -->
   <div id="theme-container" class="theme-overlay"></div>
 
   <header class="sticky top-0 z-50 w-full bg-dark-900/85 backdrop-blur-2xl border-b border-gold-500/20 shadow-lg shadow-gold-900/10 transition-all duration-300">
@@ -151,7 +150,7 @@
           Wadah Ibadah
           <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold-500 transition-all duration-300 group-hover:w-full"></span>
         </a>
-        <a href="#lokasi-gereja" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition tracking-wide py-2">Media Sosial</a>
+        <a href="#lokasi-gereja" class="relative group hover:text-gold-500 transition-colors duration-300">Media Sosial
           <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold-500 transition-all duration-300 group-hover:w-full"></span>
         </a>
         <a href="#layanan-diakonia" class="relative group hover:text-gold-500 transition-colors duration-300">
@@ -180,7 +179,7 @@
 
     <nav id="mobile-menu" class="hidden flex-col w-full bg-dark-900 border-t border-gold-500/20 py-4 gap-4 text-center md:hidden shadow-2xl absolute top-full left-0">
       <a href="#wadah-ibadah" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition tracking-wide py-2">Wadah Ibadah</a>
-      <a href="#media-sosial"class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition tracking-wide py-2">Media Sosial</a>
+      <a href="#media-sosial" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition tracking-wide py-2">Media Sosial</a>
       <a href="#layanan-diakonia" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition tracking-wide py-2">Layanan & Pendaftaran</a>
       <a href="https://alamdamai.vercel.app/public.html" target="_blank" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition tracking-wide py-2">Diakonia</a>
       <a href="#lokasi-gereja" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition tracking-wide py-2">Lokasi & Kontak</a>
@@ -296,12 +295,12 @@
         <h4 class="font-bold text-sm md:text-base text-gray-300 group-hover:text-white">Penyerahan Anak</h4>
       </a>
       
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSe3iKP7YEtV3f966je244leSt2jple_7TGcBtUSFMG-rhnhKA/viewform?usp=header" target="_blank" class="glass-card p-6 rounded-3xl text-center flex flex-col items-center group">
+      <button onclick="bukaFormPendaftaran('Pendaftaran Pelayan')" class="glass-card p-6 rounded-3xl text-center flex flex-col items-center group w-full cursor-pointer outline-none">
         <div class="w-16 h-16 rounded-full bg-gold-500/10 flex items-center justify-center mb-4 group-hover:bg-gold-500 transition-colors duration-300 shadow-inner">
           <i class="fas fa-hands text-2xl text-gold-500 group-hover:text-dark-900 transition-colors duration-300"></i>
         </div>
         <h4 class="font-bold text-sm md:text-base text-gray-300 group-hover:text-white">Pendaftaran Pelayan</h4>
-      </a>
+      </button>
       
       <a href="https://docs.google.com/forms/d/e/1FAIpQLScdHyyNx0hmxYBOVc1izovqX5_1JXFVinlTcnVDfSbO5FU0yA/viewform?usp=header" target="_blank" class="glass-card p-6 rounded-3xl text-center flex flex-col items-center group">
         <div class="w-16 h-16 rounded-full bg-gold-500/10 flex items-center justify-center mb-4 group-hover:bg-gold-500 transition-colors duration-300 shadow-inner">
@@ -328,56 +327,149 @@
       </div>
     </div>
 
-    <footer class="mt-16 pt-16 border-t border-white/10 reveal">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
-        
-        <div id="lokasi-gereja" class="scroll-mt-32">
-          <div class="flex items-center gap-4 mb-6">
-            <div class="w-10 h-10 rounded-xl bg-gold-500/10 flex items-center justify-center border border-gold-500/20"><i class="fas fa-map-marker-alt text-gold-500 text-xl"></i></div>
-            <h4 class="font-bold text-white text-xl">Lokasi Kami</h4>
-          </div>
-          <p class="text-gray-400 text-base leading-relaxed pl-14">
-            Jl. Rancaekek No.219, Mekargalih, <br>Kec. Jatinangor, Kabupaten Sumedang, <br>Jawa Barat 45363, Indonesia
-          </p>
-        </div>
-        
-        <div id="kontak-gereja" class="scroll-mt-32">
-          <div class="flex items-center gap-4 mb-6">
-            <div class="w-10 h-10 rounded-xl bg-gold-500/10 flex items-center justify-center border border-gold-500/20"><i class="fas fa-phone-alt text-gold-500 text-xl"></i></div>
-            <h4 class="font-bold text-white text-xl">Kontak</h4>
-          </div>
-          <div class="pl-14 space-y-4 font-medium">
-            <a href="tel:081324282488" class="text-gray-400 text-base flex items-center gap-3 hover:text-white transition-colors group">
-              <i class="fas fa-mobile-alt w-5 text-center text-gold-500/70 group-hover:text-gold-500"></i> 0813-2428-2488
-            </a>
-            <a href="https://wa.me/6281324282488" target="_blank" class="text-gray-400 text-base flex items-center gap-3 hover:text-white transition-colors group">
-              <i class="fab fa-whatsapp w-5 text-center text-green-500/80 group-hover:text-green-500"></i> 0813-2428-2488
-            </a>
-          </div>
-        </div>
+  </main>
 
-        <div>
-          <div class="flex items-center gap-4 mb-6">
-            <div class="w-10 h-10 rounded-xl bg-gold-500/10 flex items-center justify-center border border-gold-500/20"><i class="fas fa-share-alt text-gold-500 text-xl"></i></div>
-            <h4 class="font-bold text-white text-xl">Media Sosial</h4>
-          </div>
-          <div class="pl-14 space-y-4 font-medium">
-            <a href="https://instagram.com/gpdiimpactjatinangor" target="_blank" class="text-gray-400 hover:text-gold-400 text-base transition-colors flex items-center gap-3">
-              <i class="fab fa-instagram text-xl w-5 text-center"></i> @gpdiimpactjatinangor
-            </a>
-            <a href="https://www.youtube.com/@GPdI-IMPACT" target="_blank" class="text-gray-400 hover:text-red-500 text-base transition-colors flex items-center gap-3">
-              <i class="fab fa-youtube text-xl w-5 text-center"></i> GPdI Impact
-            </a>
-          </div>
-        </div>
+  <div id="modalPendaftaran" class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+    <div class="bg-dark-900 border border-gold-500/30 rounded-3xl shadow-2xl shadow-gold-500/10 w-full max-w-xl h-[85vh] flex flex-col transform scale-95 transition-transform duration-300" id="modalBox">
+      
+      <div class="bg-gradient-to-r from-dark-800 to-dark-900 border-b border-gold-500/20 p-5 flex justify-between items-center shrink-0">
+        <h3 class="text-xl font-black text-white" id="modalTitle">Form Pendaftaran</h3>
+        <button onclick="tutupFormPendaftaran()" class="text-gray-400 hover:text-red-500 transition-colors text-3xl leading-none">&times;</button>
       </div>
       
-      <div class="text-center text-gray-500 text-sm py-10 border-t border-white/5 flex flex-col items-center gap-4">
-        <img src="logo_hitam.png" alt="Logo GPdI" class="h-14 object-contain opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500 cursor-pointer hover:scale-110" onerror="this.style.display='none'">
-        <p class="tracking-wide">&copy; 1999 GPdI Impact. </p>
+      <div class="overflow-y-auto flex-1 p-6 custom-scrollbar">
+        <div class="bg-gold-500/10 border border-gold-500/20 rounded-xl p-4 mb-6">
+          <h4 class="text-gold-400 font-bold mb-1">Pelayan GPdI Impact</h4>
+          <p class="text-sm text-gray-300 flex items-center gap-2"><i class="fab fa-whatsapp text-green-400"></i> Contact - Cindy Veronica - 0813-2433-5610</p>
+          <p class="text-xs text-red-400 mt-2">* Menunjukkan pertanyaan yang wajib diisi</p>
+        </div>
+
+        <form id="formPendaftaran" class="space-y-5" onsubmit="submitDataPendaftaran(event)">
+          <input type="hidden" id="inputJenisLayanan" name="jenisLayanan">
+          
+          <div>
+            <label class="block text-gray-300 text-sm font-semibold mb-2">Email <span class="text-red-500">*</span></label>
+            <input type="email" id="inputEmail" required class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="email.anda@gmail.com">
+          </div>
+
+          <div>
+            <label class="block text-gray-300 text-sm font-semibold mb-2">Nama <span class="text-red-500">*</span></label>
+            <input type="text" id="inputNama" required class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="Jawaban Anda">
+          </div>
+
+          <div>
+            <label class="block text-gray-300 text-sm font-semibold mb-2">Umur <span class="text-red-500">*</span></label>
+            <input type="number" id="inputUmur" required min="1" class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="Jawaban Anda">
+          </div>
+
+          <div>
+            <label class="block text-gray-300 text-sm font-semibold mb-2">Alamat <span class="text-red-500">*</span></label>
+            <textarea id="inputAlamat" required rows="2" class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="Jawaban Anda"></textarea>
+          </div>
+
+          <div>
+            <label class="block text-gray-300 text-sm font-semibold mb-2">No telepon / WA yang dapat dihubungi <span class="text-red-500">*</span></label>
+            <input type="tel" id="inputWA" required class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="Jawaban Anda">
+          </div>
+
+          <div>
+            <label class="block text-gray-300 text-sm font-semibold mb-2">Sudah pernah melayani? (Jika pernah, mohon isi di bidang apa) <span class="text-red-500">*</span></label>
+            <input type="text" id="inputPengalaman" required class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="Jawaban Anda (Ketik 'Belum' jika belum pernah)">
+          </div>
+
+          <div>
+            <label class="block text-gray-300 text-sm font-semibold mb-1">Bidang Pelayanan <span class="text-red-500">*</span></label>
+            <p class="text-xs text-gray-500 mb-3">Isi bidang pelayanan yang anda minati.</p>
+            
+            <div class="space-y-3">
+              <label class="flex items-center gap-3 cursor-pointer group">
+                <input type="radio" name="bidang" value="FOH (Multimedia & Sound Engineer)" required class="w-4 h-4 accent-gold-500" onchange="toggleBidangLainnya(false)">
+                <span class="text-gray-300 group-hover:text-white transition-colors text-sm">FOH (Multimedia & Sound Engineer)</span>
+              </label>
+              
+              <label class="flex items-center gap-3 cursor-pointer group">
+                <input type="radio" name="bidang" value="Pemain Musik (Keyboard,Guitar,Bass, Drum)" required class="w-4 h-4 accent-gold-500" onchange="toggleBidangLainnya(false)">
+                <span class="text-gray-300 group-hover:text-white transition-colors text-sm">Pemain Musik (Keyboard, Guitar, Bass, Drum)</span>
+              </label>
+
+              <label class="flex items-center gap-3 cursor-pointer group">
+                <input type="radio" name="bidang" value="WL / Singer" required class="w-4 h-4 accent-gold-500" onchange="toggleBidangLainnya(false)">
+                <span class="text-gray-300 group-hover:text-white transition-colors text-sm">WL / Singer</span>
+              </label>
+
+              <label class="flex items-center gap-3 cursor-pointer group">
+                <input type="radio" name="bidang" value="Usher & Kolektan" required class="w-4 h-4 accent-gold-500" onchange="toggleBidangLainnya(false)">
+                <span class="text-gray-300 group-hover:text-white transition-colors text-sm">Usher & Kolektan</span>
+              </label>
+
+              <label class="flex items-start gap-3 cursor-pointer group">
+                <input type="radio" name="bidang" value="Lainnya" id="radioLainnya" required class="w-4 h-4 mt-1 accent-gold-500" onchange="toggleBidangLainnya(true)">
+                <div class="w-full">
+                  <span class="text-gray-300 group-hover:text-white transition-colors text-sm">Yang lain:</span>
+                  <input type="text" id="inputBidangLainnya" class="hidden mt-2 w-full bg-dark-900 border-b-2 border-white/20 px-2 py-1 text-white text-sm focus:outline-none focus:border-gold-500 transition-colors" placeholder="Ketik bidang lainnya...">
+                </div>
+              </label>
+            </div>
+          </div>
+          
+          <div class="pt-4 border-t border-white/10 pb-4">
+            <button type="submit" id="btnSubmitForm" class="w-full btn-modern font-bold text-white rounded-xl py-3 flex items-center justify-center gap-2">
+              <span>Kirim Formulir</span> <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </form>
       </div>
-    </footer>
-  </main>
+    </div>
+  </div>
+  <footer class="mt-16 pt-16 border-t border-white/10 reveal">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
+      
+      <div id="lokasi-gereja" class="scroll-mt-32">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-10 h-10 rounded-xl bg-gold-500/10 flex items-center justify-center border border-gold-500/20"><i class="fas fa-map-marker-alt text-gold-500 text-xl"></i></div>
+          <h4 class="font-bold text-white text-xl">Lokasi Kami</h4>
+        </div>
+        <p class="text-gray-400 text-base leading-relaxed pl-14">
+          Jl. Rancaekek No.219, Mekargalih, <br>Kec. Jatinangor, Kabupaten Sumedang, <br>Jawa Barat 45363, Indonesia
+        </p>
+      </div>
+      
+      <div id="kontak-gereja" class="scroll-mt-32">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-10 h-10 rounded-xl bg-gold-500/10 flex items-center justify-center border border-gold-500/20"><i class="fas fa-phone-alt text-gold-500 text-xl"></i></div>
+          <h4 class="font-bold text-white text-xl">Kontak</h4>
+        </div>
+        <div class="pl-14 space-y-4 font-medium">
+          <a href="tel:081324282488" class="text-gray-400 text-base flex items-center gap-3 hover:text-white transition-colors group">
+            <i class="fas fa-mobile-alt w-5 text-center text-gold-500/70 group-hover:text-gold-500"></i> 0813-2428-2488
+          </a>
+          <a href="https://wa.me/6281324282488" target="_blank" class="text-gray-400 text-base flex items-center gap-3 hover:text-white transition-colors group">
+            <i class="fab fa-whatsapp w-5 text-center text-green-500/80 group-hover:text-green-500"></i> 0813-2428-2488
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-10 h-10 rounded-xl bg-gold-500/10 flex items-center justify-center border border-gold-500/20"><i class="fas fa-share-alt text-gold-500 text-xl"></i></div>
+          <h4 class="font-bold text-white text-xl">Media Sosial</h4>
+        </div>
+        <div class="pl-14 space-y-4 font-medium">
+          <a href="https://instagram.com/gpdiimpactjatinangor" target="_blank" class="text-gray-400 hover:text-gold-400 text-base transition-colors flex items-center gap-3">
+            <i class="fab fa-instagram text-xl w-5 text-center"></i> @gpdiimpactjatinangor
+          </a>
+          <a href="https://www.youtube.com/@GPdI-IMPACT" target="_blank" class="text-gray-400 hover:text-red-500 text-base transition-colors flex items-center gap-3">
+            <i class="fab fa-youtube text-xl w-5 text-center"></i> GPdI Impact
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="text-center text-gray-500 text-sm py-10 border-t border-white/5 flex flex-col items-center gap-4">
+      <img src="logo_hitam.png" alt="Logo GPdI" class="h-14 object-contain opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500 cursor-pointer hover:scale-110" onerror="this.style.display='none'">
+      <p class="tracking-wide">&copy; 1999 GPdI Impact. </p>
+    </div>
+  </footer>
 
   <script>
     /* ---------------------------------------------------
@@ -386,13 +478,11 @@
     const menuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
     
-    // Toggle Mobile Menu
     menuBtn.addEventListener('click', () => {
       mobileMenu.classList.toggle('hidden');
       mobileMenu.classList.toggle('flex');
     });
 
-    // Close Mobile Menu on Click
     document.querySelectorAll('.mobile-link').forEach(link => {
       link.addEventListener('click', () => {
         mobileMenu.classList.add('hidden');
@@ -400,14 +490,12 @@
       });
     });
 
-    // Intersection Observer for Smooth Reveal Animations
     function initScrollAnimations() {
       const reveals = document.querySelectorAll('.reveal');
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('active');
-            // Optional: observer.unobserve(entry.target) jika ingin animasi hanya sekali
           }
         });
       }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
@@ -461,7 +549,7 @@
     function initSlider(sliderId) {
       const container = document.getElementById(sliderId);
       const slides = container.querySelectorAll('.slide-item');
-      if(slides.length <= 1) return; // Jika cuma 1 file, matikan auto-slide
+      if(slides.length <= 1) return;
 
       sliderStates[sliderId] = {
         currentIndex: 0,
@@ -479,33 +567,27 @@
       const container = document.getElementById(sliderId);
       const currentSlide = state.slides[state.currentIndex];
       
-      // Pause semua video sebelum pindah
       state.slides.forEach(slide => {
         if(slide.tagName.toLowerCase() === 'video') slide.pause();
       });
 
-      // Scroll mulus ke slide yang dituju
       container.scrollTo({ left: currentSlide.offsetLeft, behavior: 'smooth' });
 
-      // Cek durasi penahan
       if (currentSlide.tagName.toLowerCase() === 'video') {
         currentSlide.currentTime = 0;
         let playPromise = currentSlide.play();
         
         if (playPromise !== undefined) {
           playPromise.catch(() => {
-            // Jika Autoplay diblokir browser, skip dalam 7 detik
             state.timeoutId = setTimeout(() => geserSlide(sliderId, 1), 7000);
           });
         }
         currentSlide.onended = () => geserSlide(sliderId, 1);
       } else {
-        // Jika Gambar, tunggu 7 Detik
         state.timeoutId = setTimeout(() => geserSlide(sliderId, 1), 7000);
       }
     }
 
-    // Fungsi Global agar bisa dipanggil tombol HTML
     window.geserSlide = function(sliderId, direction) {
       const state = sliderStates[sliderId];
       if(!state || state.slides.length <= 1) return;
@@ -517,7 +599,7 @@
     /* ---------------------------------------------------
        4. THEME MANAGER (SISTEM TEMA GEREJAWI & NASIONAL)
     --------------------------------------------------- */
-    const TEMA_AKTIF = 'otomatis'; // Ubah ke 'natal', 'paskah', 'agustusan', atau 'otomatis'
+    const TEMA_AKTIF = 'agustusan';
 
     function terapkanTema() {
       const container = document.getElementById('theme-container');
@@ -525,7 +607,7 @@
       let tema = TEMA_AKTIF;
 
       if (tema === 'otomatis') {
-        const bulanSekarang = new Date().getMonth() + 1; // 1-12
+        const bulanSekarang = new Date().getMonth() + 1; 
         if (bulanSekarang === 12) tema = 'natal';
         else if (bulanSekarang === 4) tema = 'paskah';
         else if (bulanSekarang === 8) tema = 'agustusan';
@@ -596,18 +678,115 @@
     }
 
     /* ---------------------------------------------------
+       5. SISTEM FORM PENDAFTARAN (KE GOOGLE SHEETS)
+    --------------------------------------------------- */
+    // === URL API YANG SUDAH DIBERIKAN ===
+    const GOOGLE_SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbw4JON7PZiv2e8qKVqIyJzeNCD1DowBfy7KLKOz0O-wNzrO7kHYFivEuA4ai-m6MpiVnQ/exec'; 
+
+    const modalForm = document.getElementById('modalPendaftaran');
+    const modalBox = document.getElementById('modalBox');
+
+    // Fungsi membuka Form
+    function bukaFormPendaftaran(jenisLayanan) {
+      document.getElementById('modalTitle').innerText = jenisLayanan;
+      document.getElementById('inputJenisLayanan').value = jenisLayanan;
+      
+      modalForm.classList.remove('hidden');
+      setTimeout(() => {
+        modalForm.classList.remove('opacity-0');
+        modalBox.classList.remove('scale-95');
+        modalBox.classList.add('scale-100');
+      }, 10);
+    }
+
+    // Fungsi tutup Form
+    function tutupFormPendaftaran() {
+      modalForm.classList.add('opacity-0');
+      modalBox.classList.remove('scale-100');
+      modalBox.classList.add('scale-95');
+      setTimeout(() => {
+        modalForm.classList.add('hidden');
+        document.getElementById('formPendaftaran').reset(); 
+        toggleBidangLainnya(false); 
+      }, 300);
+    }
+
+    // Fungsi memunculkan isian "Yang lain"
+    function toggleBidangLainnya(show) {
+      const inputLainnya = document.getElementById('inputBidangLainnya');
+      if (show) {
+        inputLainnya.classList.remove('hidden');
+        inputLainnya.setAttribute('required', 'true'); 
+      } else {
+        inputLainnya.classList.add('hidden');
+        inputLainnya.removeAttribute('required');
+        inputLainnya.value = ""; 
+      }
+    }
+
+    // Fungsi Submit ke Google Sheet
+    async function submitDataPendaftaran(event) {
+      event.preventDefault(); 
+      
+      const btnSubmit = document.getElementById('btnSubmitForm');
+      btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+      btnSubmit.disabled = true;
+      btnSubmit.classList.add('opacity-70');
+
+      const radioPilihan = document.querySelector('input[name="bidang"]:checked').value;
+      let bidangFinal = radioPilihan;
+      
+      if (radioPilihan === "Lainnya") {
+        bidangFinal = document.getElementById('inputBidangLainnya').value;
+      }
+
+      const dataPayload = {
+        jenisLayanan: document.getElementById('inputJenisLayanan').value,
+        email: document.getElementById('inputEmail').value,
+        namaLengkap: document.getElementById('inputNama').value,
+        umur: document.getElementById('inputUmur').value,
+        alamat: document.getElementById('inputAlamat').value,
+        nomorWA: document.getElementById('inputWA').value,
+        pengalaman: document.getElementById('inputPengalaman').value,
+        bidangDiminati: bidangFinal
+      };
+
+      try {
+        const response = await fetch(GOOGLE_SHEETS_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+          body: JSON.stringify(dataPayload)
+        });
+
+        const result = await response.json();
+        
+        if(result.status === 'success') {
+          alert("Puji Tuhan! Formulir atas nama " + dataPayload.namaLengkap + " berhasil dikirim ke Admin GPdI Impact.");
+          tutupFormPendaftaran();
+        } else {
+          alert("Gagal mengirim data. Silakan coba lagi.");
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert("Terjadi kendala jaringan. Pastikan internet stabil.");
+      } finally {
+        btnSubmit.innerHTML = '<span>Kirim Formulir</span> <i class="fas fa-paper-plane"></i>';
+        btnSubmit.disabled = false;
+        btnSubmit.classList.remove('opacity-70');
+      }
+    }
+
+    /* ---------------------------------------------------
        3. INITIALIZATION ON LOAD
     --------------------------------------------------- */
     document.addEventListener("DOMContentLoaded", () => {
       initScrollAnimations();
       
-      // Panggil Fetch API
       fetchMedia('IBADAH_RAYA_MINGGU', 'slider-ibadah-raya');
       fetchMedia('IMPACT_KIDS', 'slider-impact-kids');
       fetchMedia('KOMSEL_SUKACITA', 'slider-komsel-sukacita');
       fetchMedia('IMPACT_GENERATION', 'slider-impact-generation');
       
-      // Terapkan Tema Dinamis
       terapkanTema();
     });
   </script>
