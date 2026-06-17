@@ -13,8 +13,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
   <script>
     tailwind.config = {
       theme: {
@@ -33,10 +31,12 @@
     * { font-family: 'Inter', sans-serif; }
     body { background-color: #050505; color: #E5E5E5; overflow-x: hidden; }
     
+    /* Scrollbar Modern */
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: #0a0a0a; }
     ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #D97706, #F59E0B); border-radius: 10px; }
     
+    /* Efek Kartu Glassmorphism Elegan */
     .glass-card {
       background: rgba(20, 20, 20, 0.6);
       backdrop-filter: blur(20px);
@@ -50,6 +50,7 @@
       box-shadow: 0 20px 40px -10px rgba(245, 158, 11, 0.2);
     }
     
+    /* Tombol Utama */
     .btn-modern {
       background: linear-gradient(135deg, #B45309, #F59E0B);
       color: #fff;
@@ -62,6 +63,7 @@
       filter: brightness(1.15); 
     }
     
+    /* Konfigurasi Slideshow */
     .slideshow-container {
       display: flex;
       overflow-x: auto;
@@ -72,6 +74,7 @@
     .slideshow-container::-webkit-scrollbar { display: none; }
     .slide-item { flex: 0 0 100%; scroll-snap-align: start; }
 
+    /* Tombol Navigasi Slider */
     .slider-nav-btn {
       position: absolute;
       top: 50%;
@@ -88,20 +91,51 @@
     .slider-nav-btn:hover { background: #F59E0B; color: black; border-color: #F59E0B; transform: translateY(-50%) scale(1.1) !important; }
     .nav-left { left: 12px; } .nav-right { right: 12px; }
 
-    .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
-    .reveal.active { opacity: 1; transform: translateY(0); }
+    /* Animasi Scroll Reveal (Elegan & Modern) */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
     .delay-100 { transition-delay: 100ms; }
     .delay-200 { transition-delay: 200ms; }
-    
-    /* Dekorasi Tiket Edge */
-    .ticket-edge {
-      mask-image: radial-gradient(circle at 10px 50%, transparent 10px, black 11px);
-      mask-position: -10px 0;
-      mask-size: 100% 100%;
+    .delay-300 { transition-delay: 300ms; }
+
+    /* ================= TEMA DINAMIS (NATAL, PASKAH, AGUSTUSAN) ================= */
+    .theme-overlay {
+      position: fixed; inset: 0; pointer-events: none; z-index: 9999; overflow: hidden;
+    }
+    .ornament {
+      position: absolute; top: -10px; width: 60px; transform-origin: top center;
+      animation: swing 3s ease-in-out infinite alternate;
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
+    }
+    .ornament-left { left: 5%; animation-delay: 0s; }
+    .ornament-right { right: 5%; animation-delay: 1.5s; width: 50px; }
+    @keyframes swing {
+      0% { transform: rotate(10deg); }
+      100% { transform: rotate(-10deg); }
+    }
+    .snowflake {
+      position: absolute; top: -10px;
+      background: white; border-radius: 50%;
+      opacity: 0.8; filter: blur(1px);
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-10px) translateX(0); opacity: 1; }
+      100% { transform: translateY(100vh) translateX(20px); opacity: 0; }
     }
   </style>
 </head>
 <body class="antialiased selection:bg-gold-500 selection:text-black">
+
+  <!-- ================= TEMA OVERLAY (JANGAN DIHAPUS) ================= -->
+  <div id="theme-container" class="theme-overlay"></div>
 
   <header class="sticky top-0 z-50 w-full bg-dark-900/85 backdrop-blur-2xl border-b border-gold-500/20 shadow-lg shadow-gold-900/10 transition-all duration-300">
     <div class="container mx-auto px-4 lg:px-8 py-2 md:py-1 flex flex-wrap items-center justify-between gap-3">
@@ -112,18 +146,17 @@
         </a>
       </div>
 
-      <nav class="hidden md:flex items-center gap-6 font-medium text-sm text-gray-300">
+      <nav class="hidden md:flex items-center gap-7 font-medium text-sm text-gray-300">
         <a href="#wadah-ibadah" class="relative group hover:text-gold-500 transition-colors duration-300">
           Wadah Ibadah
+          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold-500 transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a href="#lokasi-gereja" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition tracking-wide py-2">Media Sosial</a>
           <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold-500 transition-all duration-300 group-hover:w-full"></span>
         </a>
         <a href="#layanan-diakonia" class="relative group hover:text-gold-500 transition-colors duration-300">
           Layanan & Pendaftaran
           <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold-500 transition-all duration-300 group-hover:w-full"></span>
-        </a>
-        <a href="#daftar-natal" class="relative group hover:text-red-500 text-gold-400 font-bold transition-colors duration-300">
-          Daftar Ibadah Natal
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
         </a>
         <a href="https://alamdamai.vercel.app/public.html" target="_blank" class="relative group hover:text-gold-500 transition-colors duration-300">
           Diakonia
@@ -147,8 +180,8 @@
 
     <nav id="mobile-menu" class="hidden flex-col w-full bg-dark-900 border-t border-gold-500/20 py-4 gap-4 text-center md:hidden shadow-2xl absolute top-full left-0">
       <a href="#wadah-ibadah" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition tracking-wide py-2">Wadah Ibadah</a>
+      <a href="#media-sosial"class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition tracking-wide py-2">Media Sosial</a>
       <a href="#layanan-diakonia" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition tracking-wide py-2">Layanan & Pendaftaran</a>
-      <a href="#daftar-natal" class="mobile-link text-gold-400 hover:text-red-500 font-bold transition tracking-wide py-2">Daftar Ibadah Natal</a>
       <a href="https://alamdamai.vercel.app/public.html" target="_blank" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition tracking-wide py-2">Diakonia</a>
       <a href="#lokasi-gereja" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition tracking-wide py-2">Lokasi & Kontak</a>
     </nav>
@@ -162,6 +195,7 @@
           <source src="wadah_ibadah/IBADAH_RAYA_MINGGU/ibr-7.mp4" type="video/mp4">
         </video>
         <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-black/60 to-black/30 z-10"></div>
+        
         <div class="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-4">
           <img src="logo_putih.jpeg" alt="Logo GPdI Putih" class="h-28 md:h-36 mb-6 object-contain opacity-95 rounded-xl shadow-2xl animate-pulse" onerror="this.style.display='none'">
           <h2 class="text-4xl md:text-7xl font-black mt-2 tracking-tighter bg-gradient-to-b from-white to-gray-400 bg-clip-text text-transparent drop-shadow-2xl">
@@ -209,6 +243,37 @@
         </div>
       </div>
 
+      <div id="komsel-sukacita" class="scroll-mt-32 glass-card reveal delay-100 rounded-3xl overflow-hidden flex flex-col relative group">
+        <div class="relative h-60 bg-dark-800 overflow-hidden">
+          <button onclick="geserSlide('slider-komsel-sukacita', -1)" class="slider-nav-btn nav-left"><i class="fas fa-chevron-left"></i></button>
+          <div id="slider-komsel-sukacita" class="slideshow-container w-full h-full"></div>
+          <button onclick="geserSlide('slider-komsel-sukacita', 1)" class="slider-nav-btn nav-right"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="p-8 flex-grow">
+          <h3 class="text-2xl font-black mb-2 text-gold-400 group-hover:text-gold-300 transition-colors">Komsel Sukacita</h3>
+          <p class="text-gray-400 text-sm mb-5 leading-relaxed">Wadah persekutuan khusus ibu-ibu untuk saling mendoakan, berbagi, dan bertumbuh bersama dalam firman.</p>
+          <div class="bg-dark-900/50 border border-white/5 rounded-2xl p-4 flex flex-col gap-2 group-hover:border-gold-500/20 transition-colors">
+            <p class="text-white text-sm font-bold flex items-center gap-2"><i class="fas fa-calendar-day text-gold-500 w-5 text-lg"></i> Setiap Hari Selasa</p>
+            <p class="text-gray-400 text-sm pl-7 font-medium">Pukul 17.30 WIB</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card reveal delay-200 rounded-3xl overflow-hidden flex flex-col relative group">
+        <div class="relative h-60 bg-dark-800 overflow-hidden">
+          <button onclick="geserSlide('slider-impact-generation', -1)" class="slider-nav-btn nav-left"><i class="fas fa-chevron-left"></i></button>
+          <div id="slider-impact-generation" class="slideshow-container w-full h-full"></div>
+          <button onclick="geserSlide('slider-impact-generation', 1)" class="slider-nav-btn nav-right"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="p-8 flex-grow">
+          <h3 class="text-2xl font-black mb-2 text-gold-400 group-hover:text-gold-300 transition-colors">IMPACT GENERATION</h3>
+          <p class="text-gray-400 text-sm mb-5 leading-relaxed">Persekutuan dinamis para pemuda dan remaja yang berapi-api untuk membawa dampak positif bagi generasi ini.</p>
+          <div class="bg-dark-900/50 border border-white/5 rounded-2xl p-4 flex flex-col gap-2 group-hover:border-gold-500/20 transition-colors">
+            <p class="text-white text-sm font-bold flex items-center gap-2"><i class="fas fa-calendar-day text-gold-500 w-5 text-lg"></i> Setiap Hari Jumat</p>
+            <p class="text-gray-400 text-sm pl-7 font-medium">Pukul 18.00 WIB</p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div id="layanan-diakonia" class="scroll-mt-32 flex items-center gap-4 mb-8 border-l-4 border-gold-500 pl-4 reveal">
@@ -231,7 +296,7 @@
         <h4 class="font-bold text-sm md:text-base text-gray-300 group-hover:text-white">Penyerahan Anak</h4>
       </a>
       
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSe3iKP7YEtV3f966je244leSt2jple_7TGcBtUSFMG-rhnhKA/viewform" target="_blank" class="glass-card p-6 rounded-3xl text-center flex flex-col items-center group">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSe3iKP7YEtV3f966je244leSt2jple_7TGcBtUSFMG-rhnhKA/viewform?usp=header" target="_blank" class="glass-card p-6 rounded-3xl text-center flex flex-col items-center group">
         <div class="w-16 h-16 rounded-full bg-gold-500/10 flex items-center justify-center mb-4 group-hover:bg-gold-500 transition-colors duration-300 shadow-inner">
           <i class="fas fa-hands text-2xl text-gold-500 group-hover:text-dark-900 transition-colors duration-300"></i>
         </div>
@@ -247,291 +312,303 @@
 
     </div>
 
-    <div id="daftar-natal" class="scroll-mt-32 flex items-center gap-4 mb-8 border-l-4 border-red-600 pl-4 reveal">
-      <h2 class="text-3xl font-black text-white">Daftar Ibadah Natal</h2>
-    </div>
-    
-    <div class="glass-card rounded-[2.5rem] p-8 md:p-12 mb-16 border-red-600/30 shadow-2xl relative overflow-hidden reveal text-center bg-gradient-to-b from-dark-900 to-dark-800">
-      <div class="absolute top-0 right-0 w-64 h-64 bg-red-600/10 rounded-full blur-3xl mix-blend-screen"></div>
-      <div class="absolute bottom-0 left-0 w-64 h-64 bg-gold-600/10 rounded-full blur-3xl mix-blend-screen"></div>
+    <div class="glass-card rounded-[2.5rem] p-8 md:p-12 flex flex-col md:flex-row gap-8 items-center mb-16 border-gold-500/30 shadow-2xl relative overflow-hidden reveal">
+      <div class="absolute top-0 right-0 w-72 h-72 bg-gold-500/10 rounded-full blur-3xl mix-blend-screen"></div>
+      <div class="absolute bottom-0 left-0 w-64 h-64 bg-gold-600/5 rounded-full blur-3xl mix-blend-screen"></div>
       
-      <i class="fas fa-holly-berry text-5xl text-red-500 mb-4 animate-pulse"></i>
-      <h3 class="text-3xl font-black text-white mb-2">Reservasi Tiket Ibadah Natal</h3>
-      <p class="text-gray-400 mb-10 max-w-xl mx-auto">Silakan pastikan tempat Anda dan keluarga untuk merayakan kasih Natal bersama GPdI Impact.</p>
-      
-      <div class="flex flex-col md:flex-row justify-center gap-6 mb-10 relative z-10">
-         <div class="bg-dark-900/80 backdrop-blur-md border border-red-500/30 p-6 rounded-3xl w-full md:w-1/3 shadow-xl">
-            <h4 class="text-red-400 font-bold mb-3 uppercase tracking-wider text-sm">Ibadah Pagi (08.00)</h4>
-            <div class="flex items-center justify-center gap-3">
-              <i class="fas fa-ticket-alt text-2xl text-gray-500"></i>
-              <p class="text-6xl font-black text-white" id="kuotaPagiLuar">275</p>
-            </div>
-            <p class="text-xs font-semibold text-gray-500 mt-2 uppercase">Sisa Kuota Kursi</p>
-         </div>
-         <div class="bg-dark-900/80 backdrop-blur-md border border-gold-500/30 p-6 rounded-3xl w-full md:w-1/3 shadow-xl">
-            <h4 class="text-gold-400 font-bold mb-3 uppercase tracking-wider text-sm">Ibadah Sore (17.00)</h4>
-            <div class="flex items-center justify-center gap-3">
-              <i class="fas fa-ticket-alt text-2xl text-gray-500"></i>
-              <p class="text-6xl font-black text-white" id="kuotaSoreLuar">275</p>
-            </div>
-            <p class="text-xs font-semibold text-gray-500 mt-2 uppercase">Sisa Kuota Kursi</p>
-         </div>
-      </div>
-      
-      <button onclick="bukaFormNatal()" class="btn-modern bg-gradient-to-r from-red-700 to-red-500 hover:from-red-600 hover:to-red-400 px-10 py-4 rounded-full text-lg font-black shadow-red-500/30 relative z-10 transform hover:scale-105 transition duration-300">
-        <i class="fas fa-calendar-check mr-2"></i> DAFTAR SEKARANG
-      </button>
-    </div>
-
-    <div class="glass-card rounded-[2.5rem] p-8 md:p-12 flex flex-col md:flex-row gap-8 items-center mb-16 border-gold-500/30 shadow-2xl relative overflow-hidden reveal mt-12">
-      <div class="w-40 h-40 rounded-full bg-dark-900 flex items-center justify-center overflow-hidden border-[3px] border-gold-500 shadow-2xl shrink-0 relative z-10 p-1">
-        <div class="w-full h-full bg-dark-800 rounded-full flex items-center justify-center">
+      <div class="w-40 h-40 rounded-full bg-dark-900 flex items-center justify-center overflow-hidden border-[3px] border-gold-500 shadow-2xl shadow-gold-500/20 shrink-0 relative z-10 p-1 group">
+        <div class="w-full h-full bg-dark-800 rounded-full flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
           <i class="fas fa-user text-6xl text-gold-600/50"></i> 
         </div>
       </div>
       <div class="text-center md:text-left relative z-10">
         <p class="text-gold-500 text-sm font-black tracking-[0.25em] uppercase mb-1 drop-shadow-md">Gembala Sidang</p>
         <h3 class="text-3xl md:text-4xl font-black mt-2 text-white">Pdt. Corry Maukar</h3>
-        <p class="text-gray-400 text-base mt-3 max-w-2xl font-medium">Membawa visi dan misi Tuhan untuk memberkati Rancaekek-Jatinangor dan sekitarnya melalui pengajaran firman dan komunitas yang membangun.</p>
+        <p class="text-gray-400 text-base md:text-lg mt-5 leading-relaxed max-w-2xl font-medium">Membawa visi dan misi Tuhan untuk memberkati Rancaekek-Jatinangor dan sekitarnya melalui pengajaran firman dan komunitas yang membangun.</p>
       </div>
     </div>
 
-  </main>
-
-  <div id="modalNatal" class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-    <div class="bg-dark-900 border border-red-600/30 rounded-3xl shadow-2xl shadow-red-500/20 w-full max-w-lg h-[85vh] flex flex-col transform scale-95 transition-transform duration-300" id="boxNatal">
-      
-      <div class="bg-gradient-to-r from-dark-800 to-dark-900 border-b border-red-600/30 p-5 flex justify-between items-center shrink-0">
-        <h3 class="text-xl font-black text-white"><i class="fas fa-tree text-red-500 mr-2"></i> Pendaftaran Natal</h3>
-        <button onclick="tutupFormNatal()" class="text-gray-400 hover:text-red-500 transition-colors text-3xl leading-none">&times;</button>
-      </div>
-      
-      <div class="overflow-y-auto flex-1 p-6 custom-scrollbar">
-        <form id="formNatal" class="space-y-5" onsubmit="submitNatal(event)">
-          
-          <div>
-            <label class="block text-gray-300 text-sm font-semibold mb-2">Pilihan Ibadah *</label>
-            <select id="inputSesiNatal" required class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 appearance-none">
-              <option value="" disabled selected>-- Pilih Sesi Ibadah --</option>
-              <option value="Pagi">Ibadah Pagi (08.00)</option>
-              <option value="Sore">Ibadah Sore (17.00)</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-gray-300 text-sm font-semibold mb-2">Nomor Telepon / WA *</label>
-            <input type="number" id="inputWANatal" required class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500" placeholder="08123456789">
-          </div>
-
-          <div>
-            <label class="block text-gray-300 text-sm font-semibold mb-2">Nama Pendaftar Utama *</label>
-            <input type="text" id="inputNamaNatal" required class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500" placeholder="Nama Anda">
-          </div>
-
-          <div>
-            <label class="block text-gray-300 text-sm font-semibold mb-2">Jumlah Tiket / Orang *</label>
-            <input type="number" id="inputJumlahNatal" required min="1" max="10" class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500" placeholder="Contoh: 3">
-            <p class="text-xs text-gray-500 mt-1">Maksimal 10 orang per pendaftaran.</p>
-          </div>
-
-          <div>
-            <label class="block text-gray-300 text-sm font-semibold mb-2">Nama Anggota (Jika lebih dari 1)</label>
-            <textarea id="inputAnggotaNatal" rows="2" class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500" placeholder="Sebutkan nama keluarga/teman yang diajak..."></textarea>
-          </div>
-          
-          <div class="pt-4 border-t border-white/10 pb-4">
-            <button type="submit" id="btnSubmitNatal" class="w-full bg-red-600 hover:bg-red-700 font-bold text-white rounded-xl py-3 flex items-center justify-center gap-2 transition-all">
-              <span>Ambil Tiket</span> <i class="fas fa-ticket-alt"></i>
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <div id="modalTiket" class="fixed inset-0 z-[110] bg-black/95 hidden flex flex-col items-center justify-center p-4 opacity-0 transition-opacity duration-500">
-    
-    <p class="text-green-400 font-bold mb-4 animate-bounce"><i class="fas fa-check-circle"></i> Pendaftaran Berhasil!</p>
-    
-    <div id="areaPrintTiket" class="bg-white rounded-2xl w-full max-w-sm p-6 text-center shadow-2xl relative overflow-hidden ticket-edge">
-      <img src="logo_hitam.png" class="absolute inset-0 m-auto w-32 opacity-5 pointer-events-none" alt="Watermark" onerror="this.style.display='none'">
-      
-      <h2 class="text-2xl font-black text-red-600 mb-1 tracking-tighter">IBADAH NATAL</h2>
-      <p class="text-xs font-bold text-gray-500 mb-4 uppercase tracking-widest">GPdI Impact Jatinangor</p>
-      
-      <div class="border-t-2 border-dashed border-gray-300 my-4 relative">
-        <div class="absolute -left-8 -top-3 w-6 h-6 bg-black rounded-full"></div>
-        <div class="absolute -right-8 -top-3 w-6 h-6 bg-black rounded-full"></div>
-      </div>
-      
-      <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-2">NO URUT</p>
-      <h1 class="text-7xl font-black text-dark-900 mb-2" id="tiketNoUrut">000</h1>
-      
-      <div class="bg-dark-900 text-white py-2 px-4 rounded-lg inline-block font-bold tracking-widest mb-6" id="tiketSesi">
-        SESI PAGI (08.00)
-      </div>
-
-      <div class="bg-gray-50 border border-gray-200 p-4 rounded-xl text-left relative z-10">
-        <p class="text-[10px] text-gray-500 font-bold uppercase">Pendaftar Utama</p>
-        <p class="font-black text-dark-900 mb-3 text-lg" id="tiketNama">John Doe</p>
+    <footer class="mt-16 pt-16 border-t border-white/10 reveal">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
         
-        <div class="flex justify-between border-t border-gray-200 pt-3 mb-3">
-          <div>
-            <p class="text-[10px] text-gray-500 font-bold uppercase">Jumlah Kursi</p>
-            <p class="font-black text-red-600 text-lg" id="tiketJumlah">3 Orang</p>
+        <div id="lokasi-gereja" class="scroll-mt-32">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-10 h-10 rounded-xl bg-gold-500/10 flex items-center justify-center border border-gold-500/20"><i class="fas fa-map-marker-alt text-gold-500 text-xl"></i></div>
+            <h4 class="font-bold text-white text-xl">Lokasi Kami</h4>
           </div>
-          <div class="text-right">
-            <p class="text-[10px] text-gray-500 font-bold uppercase">Tanggal</p>
-            <p class="font-bold text-dark-900 text-sm">25 Des 2026</p>
+          <p class="text-gray-400 text-base leading-relaxed pl-14">
+            Jl. Rancaekek No.219, Mekargalih, <br>Kec. Jatinangor, Kabupaten Sumedang, <br>Jawa Barat 45363, Indonesia
+          </p>
+        </div>
+        
+        <div id="kontak-gereja" class="scroll-mt-32">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-10 h-10 rounded-xl bg-gold-500/10 flex items-center justify-center border border-gold-500/20"><i class="fas fa-phone-alt text-gold-500 text-xl"></i></div>
+            <h4 class="font-bold text-white text-xl">Kontak</h4>
+          </div>
+          <div class="pl-14 space-y-4 font-medium">
+            <a href="tel:081324282488" class="text-gray-400 text-base flex items-center gap-3 hover:text-white transition-colors group">
+              <i class="fas fa-mobile-alt w-5 text-center text-gold-500/70 group-hover:text-gold-500"></i> 0813-2428-2488
+            </a>
+            <a href="https://wa.me/6281324282488" target="_blank" class="text-gray-400 text-base flex items-center gap-3 hover:text-white transition-colors group">
+              <i class="fab fa-whatsapp w-5 text-center text-green-500/80 group-hover:text-green-500"></i> 0813-2428-2488
+            </a>
           </div>
         </div>
 
-        <p class="text-[10px] text-gray-500 font-bold uppercase">Anggota Lainnya</p>
-        <p class="font-semibold text-dark-900 text-xs italic" id="tiketAnggota">Jane, Mike</p>
+        <div>
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-10 h-10 rounded-xl bg-gold-500/10 flex items-center justify-center border border-gold-500/20"><i class="fas fa-share-alt text-gold-500 text-xl"></i></div>
+            <h4 class="font-bold text-white text-xl">Media Sosial</h4>
+          </div>
+          <div class="pl-14 space-y-4 font-medium">
+            <a href="https://instagram.com/gpdiimpactjatinangor" target="_blank" class="text-gray-400 hover:text-gold-400 text-base transition-colors flex items-center gap-3">
+              <i class="fab fa-instagram text-xl w-5 text-center"></i> @gpdiimpactjatinangor
+            </a>
+            <a href="https://www.youtube.com/@GPdI-IMPACT" target="_blank" class="text-gray-400 hover:text-red-500 text-base transition-colors flex items-center gap-3">
+              <i class="fab fa-youtube text-xl w-5 text-center"></i> GPdI Impact
+            </a>
+          </div>
+        </div>
       </div>
       
-      <p class="text-[10px] text-gray-400 mt-4 font-medium">* Tunjukkan tiket ini (Screenshot/Download) kepada Usher saat memasuki gereja.</p>
-    </div>
-
-    <div class="w-full max-w-sm mt-6 flex flex-col gap-3">
-      <button onclick="downloadTiketAsImage()" class="bg-gold-500 hover:bg-gold-600 text-black font-black py-4 px-6 rounded-xl w-full flex items-center justify-center gap-2 shadow-lg transition-transform active:scale-95">
-        <i class="fas fa-download"></i> DOWNLOAD TIKET
-      </button>
-      <button onclick="tutupTiket()" class="bg-dark-800 text-gray-300 font-bold py-3 px-6 rounded-xl w-full hover:bg-dark-700 transition-colors">
-        Tutup
-      </button>
-    </div>
-
-  </div>
-
-  <footer class="mt-16 pt-16 border-t border-white/10 reveal">
-    <div class="text-center text-gray-500 text-sm py-10 flex flex-col items-center gap-4">
-      <img src="logo_hitam.png" alt="Logo GPdI" class="h-14 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500" onerror="this.style.display='none'">
-      <p>&copy; 1999 GPdI Impact.</p>
-    </div>
-  </footer>
+      <div class="text-center text-gray-500 text-sm py-10 border-t border-white/5 flex flex-col items-center gap-4">
+        <img src="logo_hitam.png" alt="Logo GPdI" class="h-14 object-contain opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500 cursor-pointer hover:scale-110" onerror="this.style.display='none'">
+        <p class="tracking-wide">&copy; 1999 GPdI Impact. </p>
+      </div>
+    </footer>
+  </main>
 
   <script>
     /* ---------------------------------------------------
-       1. UI INTERACTION (Mobile Menu & Scroll)
+       1. UI INTERACTION (Mobile Menu & Scroll Animation)
     --------------------------------------------------- */
     const menuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
-    menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); mobileMenu.classList.toggle('flex'); });
-    document.querySelectorAll('.mobile-link').forEach(link => { link.addEventListener('click', () => { mobileMenu.classList.add('hidden'); mobileMenu.classList.remove('flex'); }); });
+    
+    // Toggle Mobile Menu
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      mobileMenu.classList.toggle('flex');
+    });
 
+    // Close Mobile Menu on Click
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        mobileMenu.classList.remove('flex');
+      });
+    });
+
+    // Intersection Observer for Smooth Reveal Animations
     function initScrollAnimations() {
       const reveals = document.querySelectorAll('.reveal');
       const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            // Optional: observer.unobserve(entry.target) jika ingin animasi hanya sekali
+          }
+        });
       }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+      
       reveals.forEach(reveal => observer.observe(reveal));
     }
 
     /* ---------------------------------------------------
-       2. PENDAFTARAN NATAL (LIVE COUNT LOKAL & API)
+       2. SLIDER LOGIC & API FETCH
     --------------------------------------------------- */
-    // === MASUKKAN URL APPS SCRIPT-MU DI BAWAH INI ===
-    const API_URL_NATAL = 'https://script.google.com/macros/s/AKfycbzxbDqjf8-iV4csTkHa8xmXx2hu-A7QkntyuJJ8vfLIdmj8YHKz7KUy9WxPYOkM-gBXVA/exec'; 
+    const sliderStates = {};
 
-    // Variabel Live Count Lokal
-    let kuotaPagi = 275;
-    let kuotaSore = 275;
-    let urutPagi = 1;
-    let urutSore = 1;
-
-    const modalNatal = document.getElementById('modalNatal');
-    const boxNatal = document.getElementById('boxNatal');
-    const modalTiket = document.getElementById('modalTiket');
-
-    function bukaFormNatal() {
-      modalNatal.classList.remove('hidden');
-      setTimeout(() => { modalNatal.classList.remove('opacity-0'); boxNatal.classList.remove('scale-95'); boxNatal.classList.add('scale-100'); }, 10);
-    }
-
-    function tutupFormNatal() {
-      modalNatal.classList.add('opacity-0'); boxNatal.classList.remove('scale-100'); boxNatal.classList.add('scale-95');
-      setTimeout(() => { modalNatal.classList.add('hidden'); document.getElementById('formNatal').reset(); }, 300);
-    }
-
-    // Fungsi Submit & Tampilkan Tiket
-    async function submitNatal(e) {
-      e.preventDefault();
-      
-      const sesi = document.getElementById('inputSesiNatal').value;
-      const wa = document.getElementById('inputWANatal').value;
-      const nama = document.getElementById('inputNamaNatal').value;
-      const jumlah = parseInt(document.getElementById('inputJumlahNatal').value);
-      const anggota = document.getElementById('inputAnggotaNatal').value || "-";
-
-      // Validasi Kuota
-      if (sesi === 'Pagi' && (kuotaPagi - jumlah < 0)) return alert("Maaf, Kuota Ibadah Pagi tidak mencukupi untuk " + jumlah + " orang.");
-      if (sesi === 'Sore' && (kuotaSore - jumlah < 0)) return alert("Maaf, Kuota Ibadah Sore tidak mencukupi untuk " + jumlah + " orang.");
-
-      // Efek Loading UI
-      const btn = document.getElementById('btnSubmitNatal');
-      btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Memproses...';
-      btn.disabled = true;
-
-      // 1. GENERATE NO URUT LOKAL SEKETIKA (Agar bebas error jaringan UI)
-      let tiketUrut = sesi === 'Pagi' ? urutPagi : urutSore;
-      
-      // 2. TAMPILKAN KE TIKET HTML
-      document.getElementById('tiketNoUrut').innerText = tiketUrut.toString().padStart(3, '0');
-      document.getElementById('tiketSesi').innerText = "SESI " + sesi.toUpperCase();
-      document.getElementById('tiketNama').innerText = nama;
-      document.getElementById('tiketJumlah').innerText = jumlah + " Orang";
-      document.getElementById('tiketAnggota').innerText = anggota;
-
-      // 3. UPDATE KUOTA LOKAL (Efek Visual Instan)
-      if (sesi === 'Pagi') { kuotaPagi -= jumlah; urutPagi++; document.getElementById('kuotaPagiLuar').innerText = kuotaPagi; } 
-      else { kuotaSore -= jumlah; urutSore++; document.getElementById('kuotaSoreLuar').innerText = kuotaSore; }
-
-      // 4. KIRIM DATA KE GOOGLE SPREADSHEET (Di Latar Belakang)
-      const payload = { sesi: sesi, nama: nama, wa: wa, jumlah: jumlah, anggota: anggota, noUrut: tiketUrut };
+    async function fetchMedia(namaFolder, elementId) {
+      const container = document.getElementById(elementId);
       try {
-        fetch(API_URL_NATAL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
-      } catch (err) { console.log("Gagal sync ke server, tapi tiket tetap dicetak."); }
-
-      // 5. MUNCULKAN TIKET E-TICKET KE LAYAR
-      tutupFormNatal();
-      setTimeout(() => {
-        modalTiket.classList.remove('hidden');
-        setTimeout(() => { modalTiket.classList.remove('opacity-0'); }, 10);
-      }, 350);
-
-      // Kembalikan Tombol Form
-      btn.innerHTML = '<span>Ambil Tiket</span> <i class="fas fa-ticket-alt"></i>';
-      btn.disabled = false;
+        const response = await fetch(`/api/media?wadah=${namaFolder}`);
+        const files = await response.json();
+        
+        if (files.length > 0) {
+          let htmlContent = '';
+          files.forEach(file => {
+            const ext = file.split('.').pop().toLowerCase();
+            const filePath = `wadah_ibadah/${namaFolder}/${file}`;
+            
+            if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
+              htmlContent += `<div class="slide-item h-full w-full bg-cover bg-center shrink-0 transition-transform duration-1000 hover:scale-105" style="background-image: url('${filePath}');"></div>`;
+            } else if (['mp4', 'webm'].includes(ext)) {
+              htmlContent += `<video src="${filePath}" class="slide-item h-full w-full object-cover shrink-0" playsinline muted></video>`;
+            }
+          });
+          
+          container.innerHTML = htmlContent;
+          initSlider(elementId);
+        } else {
+          showPlaceholder(container, 'Belum ada media');
+        }
+      } catch (error) {
+        console.error('Error fetching media:', error);
+        showPlaceholder(container, 'Gagal memuat media');
+      }
     }
 
-    // Fungsi Tutup Tiket
-    function tutupTiket() {
-      modalTiket.classList.add('opacity-0');
-      setTimeout(() => { modalTiket.classList.add('hidden'); }, 500);
+    function showPlaceholder(container, message) {
+      container.innerHTML = `
+        <div class="flex flex-col items-center justify-center w-full h-full text-gray-500/50">
+          <i class="fas fa-image text-3xl mb-2 opacity-50"></i>
+          <span class="text-sm font-medium tracking-wide">${message}</span>
+        </div>`;
     }
 
-    // FUNGSI SCREENSHOT & DOWNLOAD TIKET (html2canvas)
-    function downloadTiketAsImage() {
-      const areaPrint = document.getElementById('areaPrintTiket');
-      // Naikkan resolusi render agar gambar HD
-      html2canvas(areaPrint, { scale: 3, backgroundColor: "#ffffff" }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = `Tiket_Natal_${document.getElementById('tiketNama').innerText.replace(/\s+/g, '_')}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-      }).catch(err => {
-        alert("Gagal mendownload tiket perangkat ini. Silakan screenshot layar secara manual.");
+    function initSlider(sliderId) {
+      const container = document.getElementById(sliderId);
+      const slides = container.querySelectorAll('.slide-item');
+      if(slides.length <= 1) return; // Jika cuma 1 file, matikan auto-slide
+
+      sliderStates[sliderId] = {
+        currentIndex: 0,
+        slides: Array.from(slides),
+        timeoutId: null
+      };
+      putarSlideAktif(sliderId);
+    }
+
+    function putarSlideAktif(sliderId) {
+      const state = sliderStates[sliderId];
+      if(!state) return;
+
+      clearTimeout(state.timeoutId);
+      const container = document.getElementById(sliderId);
+      const currentSlide = state.slides[state.currentIndex];
+      
+      // Pause semua video sebelum pindah
+      state.slides.forEach(slide => {
+        if(slide.tagName.toLowerCase() === 'video') slide.pause();
       });
+
+      // Scroll mulus ke slide yang dituju
+      container.scrollTo({ left: currentSlide.offsetLeft, behavior: 'smooth' });
+
+      // Cek durasi penahan
+      if (currentSlide.tagName.toLowerCase() === 'video') {
+        currentSlide.currentTime = 0;
+        let playPromise = currentSlide.play();
+        
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {
+            // Jika Autoplay diblokir browser, skip dalam 7 detik
+            state.timeoutId = setTimeout(() => geserSlide(sliderId, 1), 7000);
+          });
+        }
+        currentSlide.onended = () => geserSlide(sliderId, 1);
+      } else {
+        // Jika Gambar, tunggu 7 Detik
+        state.timeoutId = setTimeout(() => geserSlide(sliderId, 1), 7000);
+      }
+    }
+
+    // Fungsi Global agar bisa dipanggil tombol HTML
+    window.geserSlide = function(sliderId, direction) {
+      const state = sliderStates[sliderId];
+      if(!state || state.slides.length <= 1) return;
+      
+      state.currentIndex = (state.currentIndex + direction + state.slides.length) % state.slides.length;
+      putarSlideAktif(sliderId);
+    };
+
+    /* ---------------------------------------------------
+       4. THEME MANAGER (SISTEM TEMA GEREJAWI & NASIONAL)
+    --------------------------------------------------- */
+    const TEMA_AKTIF = 'otomatis'; // Ubah ke 'natal', 'paskah', 'agustusan', atau 'otomatis'
+
+    function terapkanTema() {
+      const container = document.getElementById('theme-container');
+      if(!container) return;
+      let tema = TEMA_AKTIF;
+
+      if (tema === 'otomatis') {
+        const bulanSekarang = new Date().getMonth() + 1; // 1-12
+        if (bulanSekarang === 12) tema = 'natal';
+        else if (bulanSekarang === 4) tema = 'paskah';
+        else if (bulanSekarang === 8) tema = 'agustusan';
+        else tema = 'default';
+      }
+
+      if (tema === 'natal') {
+        container.innerHTML += `
+          <img src="https://cdn-icons-png.flaticon.com/512/2360/2360930.png" class="ornament ornament-left" alt="Bola Natal Merah">
+          <img src="https://cdn-icons-png.flaticon.com/512/2360/2360918.png" class="ornament ornament-right" alt="Bola Natal Hijau">
+        `;
+        for (let i = 0; i < 50; i++) {
+          let salju = document.createElement('div');
+          salju.classList.add('snowflake');
+          let size = Math.random() * 6 + 2; 
+          salju.style.width = size + 'px';
+          salju.style.height = size + 'px';
+          salju.style.left = Math.random() * 100 + 'vw';
+          salju.style.animationDuration = Math.random() * 3 + 2 + 's';
+          salju.style.animationDelay = Math.random() * 5 + 's';
+          container.appendChild(salju);
+        }
+      } 
+      else if (tema === 'paskah') {
+        container.innerHTML += `
+          <img src="https://cdn-icons-png.flaticon.com/512/384/384065.png" class="ornament ornament-left" style="width: 45px;" alt="Salib">
+          <img src="https://cdn-icons-png.flaticon.com/512/2099/2099187.png" class="ornament ornament-right" style="width: 55px;" alt="Telur Paskah">
+        `;
+        const warnaPaskah = ['#FFB6C1', '#87CEFA', '#98FB98', '#FFFACD', '#DDA0DD'];
+        for (let i = 0; i < 30; i++) {
+          let telur = document.createElement('div');
+          telur.classList.add('snowflake');
+          let size = Math.random() * 8 + 6; 
+          telur.style.width = size + 'px';
+          telur.style.height = (size * 1.3) + 'px'; 
+          telur.style.borderRadius = '50% 50% 50% 50% / 60% 60% 40% 40%';
+          telur.style.background = warnaPaskah[Math.floor(Math.random() * warnaPaskah.length)];
+          telur.style.opacity = '0.85';
+          telur.style.filter = 'none'; 
+          telur.style.left = Math.random() * 100 + 'vw';
+          telur.style.animationDuration = Math.random() * 4 + 3 + 's';
+          telur.style.animationDelay = Math.random() * 5 + 's';
+          container.appendChild(telur);
+        }
+      }
+      else if (tema === 'agustusan') {
+        container.innerHTML += `
+          <img src="https://cdn-icons-png.flaticon.com/512/323/323321.png" class="ornament ornament-left" style="width: 55px;" alt="Bendera">
+          <img src="https://cdn-icons-png.flaticon.com/512/323/323321.png" class="ornament ornament-right" style="width: 55px; transform: scaleX(-1);" alt="Bendera">
+        `;
+        for (let i = 0; i < 60; i++) {
+          let confetti = document.createElement('div');
+          confetti.classList.add('snowflake');
+          let size = Math.random() * 6 + 4; 
+          confetti.style.width = size + 'px';
+          confetti.style.height = (size * 2) + 'px'; 
+          confetti.style.borderRadius = '2px';
+          confetti.style.background = Math.random() > 0.5 ? '#EF4444' : '#FFFFFF'; 
+          confetti.style.boxShadow = '0 1px 3px rgba(0,0,0,0.2)';
+          confetti.style.opacity = '0.9';
+          confetti.style.filter = 'none';
+          confetti.style.left = Math.random() * 100 + 'vw';
+          confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+          confetti.style.animationDelay = Math.random() * 5 + 's';
+          container.appendChild(confetti);
+        }
+      }
     }
 
     /* ---------------------------------------------------
-       3. INIT & SLIDER MEDIA
+       3. INITIALIZATION ON LOAD
     --------------------------------------------------- */
     document.addEventListener("DOMContentLoaded", () => {
       initScrollAnimations();
-      // Panggil Fetch API dummy/asli (jika ada file mp4/jpg)
-      // fetchMedia('IBADAH_RAYA_MINGGU', 'slider-ibadah-raya');
+      
+      // Panggil Fetch API
+      fetchMedia('IBADAH_RAYA_MINGGU', 'slider-ibadah-raya');
+      fetchMedia('IMPACT_KIDS', 'slider-impact-kids');
+      fetchMedia('KOMSEL_SUKACITA', 'slider-komsel-sukacita');
+      fetchMedia('IMPACT_GENERATION', 'slider-impact-generation');
+      
+      // Terapkan Tema Dinamis
+      terapkanTema();
     });
   </script>
 </body>
