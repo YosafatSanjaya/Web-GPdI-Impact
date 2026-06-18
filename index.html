@@ -531,7 +531,7 @@
     /* ---------------------------------------------------
        2. FITUR NATAL (LIVE COUNT, DINAMIS FORM & E-TICKET)
     --------------------------------------------------- */
-    const API_URL_NATAL = 'https://script.google.com/macros/s/AKfycbzx1kY8Eufk1doGJfIYPg9X8gm3I1EqsSDFvHbFRxzwVQUBXtoiu_TdErtI15uhkfXkmA/exec'; 
+    const API_URL_NATAL = 'https://script.google.com/macros/s/AKfycbziUeqUHVUaFNB1h-NpV4yLFQ2PxYd8UFbNcdOPSczx-y-DLShMxlggh2p-dHeIf24jog/exec'; 
 
     let kuotaPagi = 275;
     let kuotaSore = 275;
@@ -617,10 +617,17 @@
       if (sesi === 'Pagi') { kuotaPagi -= jumlah; urutPagi++; document.getElementById('kuotaPagiLuar').innerText = kuotaPagi; } 
       else { kuotaSore -= jumlah; urutSore++; document.getElementById('kuotaSoreLuar').innerText = kuotaSore; }
 
-      // 4. KIRIM KE SPREADSHEET (Latar Belakang)
-      const payload = { sesi: sesi, nama: nama, wa: wa, jumlah: jumlah, anggota: stringAnggota, noUrut: tiketUrut };
+      // 4. KIRIM KE SPREADSHEET MENGGUNAKAN FORM DATA 
+      const formData = new FormData();
+      formData.append("sesi", sesi);
+      formData.append("nama", nama);
+      formData.append("wa", wa);
+      formData.append("jumlah", jumlah);
+      formData.append("anggota", stringAnggota);
+      formData.append("noUrut", tiketUrut);
+
       try {
-        fetch(API_URL_NATAL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
+        fetch(API_URL_NATAL, { method: 'POST', body: formData });
       } catch (err) { console.log("Gagal sync ke server, tapi tiket dicetak."); }
 
       // 5. MUNCULKAN TIKET E-TICKET
