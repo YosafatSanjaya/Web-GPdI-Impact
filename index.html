@@ -442,7 +442,7 @@
     </div>
   </div>
 
-  <!-- ================= E-TICKET (MODE PRO: ANTI-HANCUR SAAT DOWNLOAD & SCROLLABLE DI MOBILE) ================= -->
+  <!-- ================= E-TICKET ================= -->
   <div id="modalTiket" class="fixed inset-0 z-[110] bg-black/95 hidden flex-col items-center justify-start overflow-y-auto py-12 px-4 opacity-0 transition-opacity duration-500 custom-scrollbar">
     
     <!-- Wrapper utama agar responsif dan bisa di-scroll bila perlu -->
@@ -541,8 +541,8 @@
     function initNatalFeature() {
       const today = new Date();
       // getMonth() = 0 untuk Januari, jadi 9 = Oktober.
-      // UBAH ANGKA 9 DI BAWAH JADI 5 UNTUK MENGETESNYA SEKARANG (KARENA SEKARANG BULAN JUNI / 5).
-      if (today.getMonth() >= 5) { 
+      // UBAH ANGKA 9 DI BAWAH .
+      if (today.getMonth() >= 9) { 
         document.getElementById('nav-natal-desktop').classList.remove('hidden');
         document.getElementById('nav-natal-mobile').classList.remove('hidden');
         document.getElementById('daftar-natal-section').classList.remove('hidden');
