@@ -65,6 +65,13 @@
       cursor: not-allowed;
     }
     
+    /* Menghilangkan logo reCAPTCHA */
+    .grecaptcha-badge    {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    }
+    
     .slideshow-container {
       display: flex;
       overflow-x: auto;
@@ -414,6 +421,9 @@
             <button type="submit" id="btnSubmitNatal" class="btn-modern w-full font-bold text-white rounded-xl py-3 flex items-center justify-center gap-2 transition-all">
               <span>Ambil Tiket</span> <i class="fas fa-ticket-alt"></i>
             </button>
+            <p class="text-[10px] text-gray-600 mt-2 text-center">
+              This site is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy" class="underline">Privacy Policy</a> and <a href="https://policies.google.com/terms" class="underline">Terms of Service</a> apply.
+            </p>
           </div>
         </form>
       </div>
