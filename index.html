@@ -672,44 +672,41 @@
       setTimeout(() => { modalTiket.classList.add('hidden'); modalTiket.classList.remove('flex'); }, 500);
     }
 
-    async function downloadTiketAsImage() {
+    function downloadTiketAsImage() {
       const btn = document.querySelector('button[onclick="downloadTiketAsImage()"]');
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
       btn.disabled = true;
 
       const areaPrint = document.getElementById('areaPrintTiket');
-
-      try {
-        // Render canvas
-        const canvas = await html2canvas(areaPrint, { 
-          scale: 3, 
-          backgroundColor: "#ffffff",
-          logging: false,
-          useCORS: true 
-        });
-
-        // Konversi ke blob agar browser mengenali sebagai file yang sah untuk di-download
-        canvas.toBlob(function(blob) {
-          const link = document.createElement('a');
-          link.download = `Tiket_Natal_${document.getElementById('tiketNama').innerText.replace(/\s+/g, '_')}.png`;
-          link.href = URL.createObjectURL(blob);
-          
-          // Trigger klik otomatis
-          link.click();
-          
-          // Bersihkan memory
-          URL.revokeObjectURL(link.href);
-          
-          btn.innerHTML = '<i class="fas fa-download"></i> DOWNLOAD TIKET';
-          btn.disabled = false;
-        }, 'image/png');
-
-      } catch (err) {
-        console.error(err);
-        alert("Gagal mendownload. Pastikan browser kamu mengizinkan akses download.");
+      
+      // Pakai library html2canvas untuk merender
+      html2canvas(areaPrint, { 
+        scale: 3, 
+        backgroundColor: "#ffffff",
+        useCORS: true,
+        logging: false
+      }).then(canvas => {
+        // Trik: Langsung konversi ke URL gambar
+        const imageURL = canvas.toDataURL("image/png");
+        
+        // Buat link download manual
+        const link = document.createElement('a');
+        link.href = imageURL;
+        link.download = `Tiket_Natal_${document.getElementById('tiketNama').innerText.replace(/\s+/g, '_')}.png`;
+        
+        // Klik otomatis
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
         btn.innerHTML = '<i class="fas fa-download"></i> DOWNLOAD TIKET';
         btn.disabled = false;
-      }
+      }).catch(err => {
+        console.error(err);
+        alert("Browser memblokir download otomatis. Klik kanan pada gambar/tiket lalu pilih 'Save Image As'.");
+        btn.innerHTML = '<i class="fas fa-download"></i> DOWNLOAD TIKET';
+        btn.disabled = false;
+      });
     }
 
     /* ---------------------------------------------------
