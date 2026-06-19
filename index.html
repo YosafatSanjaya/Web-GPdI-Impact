@@ -683,39 +683,15 @@
     }
 
     function downloadTiketAsImage() {
-      const btn = document.querySelector('button[onclick="downloadTiketAsImage()"]');
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
-      btn.disabled = true;
-
       const areaPrint = document.getElementById('areaPrintTiket');
-      
-      // Pakai library html2canvas untuk merender
-      html2canvas(areaPrint, { 
-        scale: 3, 
-        backgroundColor: "#ffffff",
-        useCORS: true,
-        logging: false
-      }).then(canvas => {
-        // Trik: Langsung konversi ke URL gambar
-        const imageURL = canvas.toDataURL("image/png");
-        
-        // Buat link download manual
+      // Setting backgroundColor biar html2canvas tidak transparan
+      html2canvas(areaPrint, { scale: 3, backgroundColor: "#ffffff" }).then(canvas => {
         const link = document.createElement('a');
-        link.href = imageURL;
         link.download = `Tiket_Natal_${document.getElementById('tiketNama').innerText.replace(/\s+/g, '_')}.png`;
-        
-        // Klik otomatis
-        document.body.appendChild(link);
+        link.href = canvas.toDataURL('image/png');
         link.click();
-        document.body.removeChild(link);
-        
-        btn.innerHTML = '<i class="fas fa-download"></i> DOWNLOAD TIKET';
-        btn.disabled = false;
       }).catch(err => {
-        console.error(err);
-        alert("Browser memblokir download otomatis. Klik kanan pada gambar/tiket lalu pilih 'Save Image As'.");
-        btn.innerHTML = '<i class="fas fa-download"></i> DOWNLOAD TIKET';
-        btn.disabled = false;
+        alert("Gagal mendownload tiket dari browser ini. Silakan screenshot layar manual.");
       });
     }
 
