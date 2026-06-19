@@ -684,51 +684,43 @@
 
     async function downloadTiketAsImage() {
   try {
-    const areaPrint = document.getElementById('areaPrintTiket');
 
-    const canvas = await html2canvas(areaPrint, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: "#ffffff"
-    });
+    const areaPrint =
+      document.getElementById('areaPrintTiket');
 
-    const fileName =
-      `Tiket_Natal_${document.getElementById('tiketNama').innerText.replace(/\s+/g, '_')}.png`;
+    await new Promise(resolve =>
+      setTimeout(resolve, 200)
+    );
 
-    canvas.toBlob((blob) => {
-
-      if (!blob) {
-        alert("Gagal membuat gambar.");
-        return;
+    const canvas = await html2canvas(
+      areaPrint,
+      {
+        scale: 3,
+        useCORS: true,
+        backgroundColor: "#ffffff"
       }
+    );
 
-      // Safari iPhone/iPad
-      if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-        const url = URL.createObjectURL(blob);
-        window.open(url, "_blank");
-        return;
-      }
+    const url =
+      canvas.toDataURL("image/png");
 
-      // Android & Desktop
-      const url = URL.createObjectURL(blob);
+    const link =
+      document.createElement("a");
 
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = fileName;
+    link.href = url;
 
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+    link.download =
+      `Tiket_Natal_${document.getElementById('tiketNama').innerText}.png`;
 
-      setTimeout(() => {
-        URL.revokeObjectURL(url);
-      }, 1000);
+    document.body.appendChild(link);
 
-    }, 'image/png');
+    link.click();
 
-  } catch (err) {
+    document.body.removeChild(link);
+
+  } catch(err) {
     console.error(err);
-    alert("Gagal mendownload tiket.");
+    alert("Gagal download tiket");
   }
 }
 
