@@ -7,10 +7,11 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   
-  <!-- SCRIPT UNTUK RENDER TIKET JADI GAMBAR -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlQA/bXXy14RMiwqOjwVdQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  
+  <script src="https://www.google.com/recaptcha/api.js?render=6Lc39yctAAAAAMFEJxjgh3GGOhxNRwpQSd3mSvpp"></script>
   
   <script>
     tailwind.config = {
@@ -26,7 +27,7 @@
   </script>
 
   <style>
-    /* Dasar */
+    /* BG */
     * { font-family: 'Inter', sans-serif; }
     body { background-color: #050505; color: #E5E5E5; overflow-x: hidden; }
     
@@ -54,10 +55,14 @@
       transition: all 0.4s ease;
       box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
     }
-    .btn-modern:hover { 
+    .btn-modern:hover:not(:disabled) { 
       transform: translateY(-2px) scale(1.05); 
       box-shadow: 0 10px 25px rgba(245, 158, 11, 0.5);
       filter: brightness(1.15); 
+    }
+    .btn-modern:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
     }
     
     .slideshow-container {
@@ -92,7 +97,7 @@
     .delay-200 { transition-delay: 200ms; }
     .delay-300 { transition-delay: 300ms; }
 
-    /* Custom Scrollbar untuk Modal biar tidak mepet */
+    /* Custom Scrollbar untuk Modal */
     .custom-scrollbar::-webkit-scrollbar { width: 5px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #DC2626; border-radius: 10px; }
   </style>
@@ -109,32 +114,15 @@
       </div>
 
       <nav class="hidden md:flex items-center gap-7 font-medium text-sm text-gray-300">
-        <!-- MENU DAFTAR NATAL -->
         <a href="#daftar-natal-section" id="nav-natal-desktop" class="hidden relative group hover:text-red-500 text-gold-400 font-bold transition-colors duration-300">
           Daftar Natal
           <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
         </a>
-        
-        <a href="#wadah-ibadah" class="relative group hover:text-gold-500 transition-colors duration-300">
-          Wadah Ibadah
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold-500 transition-all duration-300 group-hover:w-full"></span>
-        </a>
-        <a href="#komsel-sukacita" class="relative group hover:text-gold-500 transition-colors duration-300">
-          Media Sosial
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold-500 transition-all duration-300 group-hover:w-full"></span>
-        </a>
-        <a href="#layanan-diakonia" class="relative group hover:text-gold-500 transition-colors duration-300">
-          Layanan & Pendaftaran
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold-500 transition-all duration-300 group-hover:w-full"></span>
-        </a>
-        <a href="https://alamdamai.vercel.app/public.html" target="_blank" class="relative group hover:text-gold-500 transition-colors duration-300">
-          Diakonia
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold-500 transition-all duration-300 group-hover:w-full"></span>
-        </a>
-        <a href="#lokasi-gereja" class="relative group hover:text-gold-500 transition-colors duration-300">
-          Lokasi & Kontak
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold-500 transition-all duration-300 group-hover:w-full"></span>
-        </a>
+        <a href="#wadah-ibadah" class="relative group hover:text-gold-500 transition-colors duration-300">Wadah Ibadah</a>
+        <a href="#komsel-sukacita" class="relative group hover:text-gold-500 transition-colors duration-300">Media Sosial</a>
+        <a href="#layanan-diakonia" class="relative group hover:text-gold-500 transition-colors duration-300">Layanan & Pendaftaran</a>
+        <a href="https://alamdamai.vercel.app/public.html" target="_blank" class="relative group hover:text-gold-500 transition-colors duration-300">Diakonia</a>
+        <a href="#lokasi-gereja" class="relative group hover:text-gold-500 transition-colors duration-300">Lokasi & Kontak</a>
       </nav>
 
       <div class="flex items-center gap-4 relative z-10">
@@ -176,7 +164,6 @@
       </div>
     </section>
 
-    <!-- ================= SECTION DAFTAR NATAL ================= -->
     <section id="daftar-natal-section" class="scroll-mt-32 hidden mb-24 reveal">
       <div class="flex items-center gap-4 mb-8 border-l-4 border-red-600 pl-4">
         <h2 class="text-3xl font-black text-white">Daftar Ibadah Natal</h2>
@@ -187,7 +174,7 @@
         
         <div class="flex flex-col lg:flex-row gap-10 relative z-10">
           <div class="w-full lg:w-1/3 flex flex-col items-center justify-center bg-dark-900/50 rounded-3xl border border-white/5 p-4 relative overflow-hidden h-64 lg:h-auto">
-           <img src="poster_natal.webp" alt="Poster Natal" class="absolute inset-0 w-full h-full object-cover">
+          <img src="poster_natal.webp" alt="Poster Natal" class="absolute inset-0 w-full h-full object-cover">
           </div>
 
           <div class="w-full lg:w-2/3 flex flex-col justify-center text-center lg:text-left">
@@ -195,19 +182,19 @@
             <p class="text-gray-400 mb-6 font-medium"><i class="fas fa-calendar-alt text-red-500 mr-2"></i> 14 Desember 2026 &nbsp;&bull;&nbsp; <i class="fas fa-map-marker-alt text-red-500 mx-2"></i> GPdI Impact</p>
             
             <div class="flex flex-col sm:flex-row gap-5 mb-8">
-               <div class="bg-dark-900 border border-red-500/30 p-5 rounded-2xl flex-1 text-center shadow-xl">
+              <div class="bg-dark-900 border border-red-500/30 p-5 rounded-2xl flex-1 text-center shadow-xl">
                   <h4 class="text-red-400 font-bold mb-2 uppercase text-sm">Sesi Pagi (08.00 WIB)</h4>
-                  <p class="text-5xl font-black text-white flex items-center justify-center gap-2"><i class="fas fa-ticket-alt text-xl text-gray-500"></i> <span id="kuotaPagiLuar">275</span></p>
-                  <p class="text-[10px] text-gray-500 mt-1 uppercase font-bold">Sisa Kuota</p>
-               </div>
-               <div class="bg-dark-900 border border-gold-500/30 p-5 rounded-2xl flex-1 text-center shadow-xl">
+                  <p class="text-5xl font-black text-white flex items-center justify-center gap-2"><i class="fas fa-ticket-alt text-xl text-gray-500"></i> <span id="kuotaPagiLuar">...</span></p>
+                  <p class="text-[10px] text-gray-500 mt-1 uppercase font-bold">Sisa Kuota Server</p>
+              </div>
+              <div class="bg-dark-900 border border-gold-500/30 p-5 rounded-2xl flex-1 text-center shadow-xl">
                   <h4 class="text-gold-400 font-bold mb-2 uppercase text-sm">Sesi Sore (15.30 WIB)</h4>
-                  <p class="text-5xl font-black text-white flex items-center justify-center gap-2"><i class="fas fa-ticket-alt text-xl text-gray-500"></i> <span id="kuotaSoreLuar">275</span></p>
-                  <p class="text-[10px] text-gray-500 mt-1 uppercase font-bold">Sisa Kuota</p>
-               </div>
+                  <p class="text-5xl font-black text-white flex items-center justify-center gap-2"><i class="fas fa-ticket-alt text-xl text-gray-500"></i> <span id="kuotaSoreLuar">...</span></p>
+                  <p class="text-[10px] text-gray-500 mt-1 uppercase font-bold">Sisa Kuota Server</p>
+            </div>
             </div>
             
-            <button onclick="bukaFormNatal()" class="w-full sm:w-auto bg-gradient-to-r from-red-700 to-red-500 hover:from-red-600 hover:to-red-400 px-10 py-4 rounded-xl text-lg font-black shadow-red-500/30 transform hover:scale-105 transition duration-300 text-white">
+            <button onclick="bukaFormNatal()" class="w-full sm:w-auto bg-gradient-to-r from-red-700 to-red-500 hover:from-red-600 hover:to-red-400 px-10 py-4 rounded-xl text-lg font-black shadow-red-500/30 transform transition duration-300 text-white">
               <i class="fas fa-calendar-check mr-2"></i> DAFTAR SEKARANG
             </button>
           </div>
@@ -215,7 +202,6 @@
       </div>
     </section>
 
-    <!-- WADAH IBADAH -->
     <h2 id="wadah-ibadah" class="scroll-mt-32 text-3xl font-black mb-8 border-l-4 border-gold-500 pl-4 text-white reveal">
       Wadah Ibadah & Kegiatan
     </h2>
@@ -286,44 +272,37 @@
       </div>
     </div>
 
-    <!-- LAYANAN & PENDAFTARAN -->
     <div id="layanan-diakonia" class="scroll-mt-32 flex items-center gap-4 mb-8 border-l-4 border-gold-500 pl-4 reveal">
       <h2 class="text-3xl font-black text-white">Layanan & Pendaftaran</h2>
     </div>
     
     <div class="grid grid-cols-2 md:grid-cols-4 gap-5 mb-24 reveal delay-100">
-      
       <a href="https://docs.google.com/forms/d/e/1FAIpQLSeSsNr6tErD72I_hVEANuslLU5skHHHN_fCfcRtc5dbuMDbJQ/viewform?usp=header" target="_blank" class="glass-card p-6 rounded-3xl text-center flex flex-col items-center group">
         <div class="w-16 h-16 rounded-full bg-gold-500/10 flex items-center justify-center mb-4 group-hover:bg-gold-500 transition-colors duration-300 shadow-inner">
           <i class="fas fa-water text-2xl text-gold-500 group-hover:text-dark-900 transition-colors duration-300"></i>
         </div>
         <h4 class="font-bold text-sm md:text-base text-gray-300 group-hover:text-white">Baptisan Air</h4>
       </a>
-      
       <a href="https://docs.google.com/forms/d/e/1FAIpQLSeRT7ajwYK4YGNjt0MpUGHFHH1ehzNBuyAGOdkODzKsnNoLOw/viewform?usp=header" target="_blank" class="glass-card p-6 rounded-3xl text-center flex flex-col items-center group">
         <div class="w-16 h-16 rounded-full bg-gold-500/10 flex items-center justify-center mb-4 group-hover:bg-gold-500 transition-colors duration-300 shadow-inner">
           <i class="fas fa-baby text-2xl text-gold-500 group-hover:text-dark-900 transition-colors duration-300"></i>
         </div>
         <h4 class="font-bold text-sm md:text-base text-gray-300 group-hover:text-white">Penyerahan Anak</h4>
       </a>
-      
       <a href="https://docs.google.com/forms/d/e/1FAIpQLSe3iKP7YEtV3f966je244leSt2jple_7TGcBtUSFMG-rhnhKA/viewform?usp=header" target="_blank" class="glass-card p-6 rounded-3xl text-center flex flex-col items-center group">
         <div class="w-16 h-16 rounded-full bg-gold-500/10 flex items-center justify-center mb-4 group-hover:bg-gold-500 transition-colors duration-300 shadow-inner">
           <i class="fas fa-hands text-2xl text-gold-500 group-hover:text-dark-900 transition-colors duration-300"></i>
         </div>
         <h4 class="font-bold text-sm md:text-base text-gray-300 group-hover:text-white">Pendaftaran Pelayan</h4>
       </a>
-      
       <a href="https://docs.google.com/forms/d/e/1FAIpQLScdHyyNx0hmxYBOVc1izovqX5_1JXFVinlTcnVDfSbO5FU0yA/viewform?usp=header" target="_blank" class="glass-card p-6 rounded-3xl text-center flex flex-col items-center group">
         <div class="w-16 h-16 rounded-full bg-gold-500/10 flex items-center justify-center mb-4 group-hover:bg-gold-500 transition-colors duration-300 shadow-inner">
           <i class="fas fa-user-plus text-2xl text-gold-500 group-hover:text-dark-900 transition-colors duration-300"></i>
         </div>
         <h4 class="font-bold text-sm md:text-base text-gray-300 group-hover:text-white">Jemaat Baru</h4>
       </a>
-
     </div>
 
-    <!-- PROFIL GEMBALA -->
     <div class="glass-card rounded-[2.5rem] p-8 md:p-12 flex flex-col md:flex-row gap-8 items-center mb-16 border-gold-500/30 shadow-2xl relative overflow-hidden reveal">
       <div class="absolute top-0 right-0 w-72 h-72 bg-gold-500/10 rounded-full blur-3xl mix-blend-screen"></div>
       <div class="absolute bottom-0 left-0 w-64 h-64 bg-gold-600/5 rounded-full blur-3xl mix-blend-screen"></div>
@@ -391,7 +370,6 @@
     </footer>
   </main>
 
-  <!-- ================= MODAL FORM PENDAFTARAN NATAL ================= -->
   <div id="modalNatal" class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
     <div class="bg-dark-900 border border-red-600/30 rounded-3xl shadow-2xl shadow-red-500/20 w-full max-w-lg h-[85vh] flex flex-col transform scale-95 transition-transform duration-300" id="boxNatal">
       
@@ -414,12 +392,12 @@
 
           <div>
             <label class="block text-gray-300 text-sm font-semibold mb-2">Nomor Telepon / WA *</label>
-            <input type="number" id="inputWANatal" required class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500" placeholder="08123456789">
+            <input type="text" id="inputWANatal" required maxlength="15" pattern="[0-9]+" class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500" placeholder="08123456789">
           </div>
 
           <div>
             <label class="block text-gray-300 text-sm font-semibold mb-2">Nama Pendaftar Utama *</label>
-            <input type="text" id="inputNamaNatal" required class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500" placeholder="Nama Anda">
+            <input type="text" id="inputNamaNatal" required maxlength="50" class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500" placeholder="Nama Anda">
           </div>
 
           <div>
@@ -427,13 +405,13 @@
             <input type="number" id="inputJumlahNatal" required min="1" max="10" oninput="renderFormAnggota()" class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500" placeholder="Contoh: 3">
           </div>
 
-          <!-- KOTAK DINAMIS UNTUK ANGGOTA LAIN -->
           <div id="containerAnggotaNatal" class="space-y-3">
-             <!-- Akan diisi Javascript -->
-          </div>
+            </div>
           
+          <p id="errorMsg" class="text-red-500 text-sm hidden font-semibold text-center"></p>
+
           <div class="pt-4 border-t border-white/10 pb-4">
-            <button type="submit" id="btnSubmitNatal" class="w-full bg-red-600 hover:bg-red-700 font-bold text-white rounded-xl py-3 flex items-center justify-center gap-2 transition-all">
+            <button type="submit" id="btnSubmitNatal" class="btn-modern w-full font-bold text-white rounded-xl py-3 flex items-center justify-center gap-2 transition-all">
               <span>Ambil Tiket</span> <i class="fas fa-ticket-alt"></i>
             </button>
           </div>
@@ -442,34 +420,25 @@
     </div>
   </div>
 
-  <!-- ================= E-TICKET ================= -->
   <div id="modalTiket" class="fixed inset-0 z-[110] bg-black/95 hidden flex-col items-center justify-start overflow-y-auto py-12 px-4 opacity-0 transition-opacity duration-500 custom-scrollbar">
     
-    <!-- Wrapper utama agar responsif dan bisa di-scroll bila perlu -->
     <div class="m-auto w-full max-w-[360px] flex flex-col items-center">
       <p class="text-green-400 font-bold mb-4 animate-bounce text-center"><i class="fas fa-check-circle"></i> Pendaftaran Berhasil!</p>
       
-      <!-- Bagian Putih Ini yang Akan di-Screenshot secara spesifik menggunakan Inline CSS Murni -->
       <div id="areaPrintTiket" class="bg-white text-black p-6 rounded-2xl shadow-2xl relative" style="width: 100%; font-family: 'Inter', sans-serif; background-color: #ffffff;">
         
-        <!-- Header Tiket -->
         <h2 style="font-size: 24px; font-weight: 900; color: #dc2626; margin: 0 0 4px 0;">IBADAH NATAL</h2>
         <p style="font-size: 12px; font-weight: bold; color: #6b7280; letter-spacing: 0.1em; margin: 0 0 16px 0;">14 DESEMBER 2026</p>
         
-        <!-- Garis Pemisah -->
         <div style="border-top: 2px dashed #9ca3af; margin: 16px 0;"></div>
         
-        <!-- No Urut (FIXED OVERLAPPING) -->
         <p style="font-size: 11px; font-weight: bold; color: #9ca3af; letter-spacing: 0.1em; margin: 0 0 8px 0;">NO URUT</p>
-        <!-- Penambahan Margin Bottom eksplisit dan Line-height normal agar Sesi tidak menabrak teks -->
         <h1 style="font-size: 72px; font-weight: 900; color: #000; margin: 0 0 16px 0; line-height: normal;" id="tiketNoUrut">000</h1>
         
-        <!-- Box Sesi -->
         <div style="background-color: #111; color: #fff; padding: 8px 16px; border-radius: 8px; display: inline-block; font-weight: bold; font-size: 14px; margin-bottom: 24px;" id="tiketSesi">
           SESI PAGI (08.00)
         </div>
 
-        <!-- Detail Box -->
         <div style="background-color: #f9fafb; border: 1px solid #e5e7eb; padding: 16px; border-radius: 12px; text-align: left;">
           <p style="font-size: 10px; color: #6b7280; font-weight: bold; text-transform: uppercase; margin: 0 0 4px 0;">Pendaftar Utama</p>
           <p style="font-size: 18px; font-weight: 900; color: #000; margin: 0 0 12px 0;" id="tiketNama">John Doe</p>
@@ -486,7 +455,6 @@
         <p style="font-size: 10px; color: #9ca3af; margin: 16px 0 0 0; font-weight: 500; text-align: center;">Tunjukkan tiket ini saat memasuki area Ibadah.</p>
       </div>
 
-      <!-- Tombol Aksi Bawah -->
       <div class="w-full mt-6 flex flex-col gap-3">
         <button onclick="downloadTiketAsImage()" class="bg-gold-500 hover:bg-gold-600 text-black font-black py-4 px-6 rounded-xl w-full flex items-center justify-center gap-2 shadow-lg transition-transform active:scale-95">
           <i class="fas fa-download"></i> DOWNLOAD TIKET
@@ -500,7 +468,7 @@
 
   <script>
     /* ---------------------------------------------------
-       1. UI INTERACTION (Mobile Menu & Scroll Animation)
+    1. UI INTERACTION (Mobile Menu & Scroll Animation)
     --------------------------------------------------- */
     const menuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
@@ -528,24 +496,40 @@
     }
 
     /* ---------------------------------------------------
-       2. FITUR NATAL (LIVE COUNT, DINAMIS FORM & E-TICKET)
+    2. FITUR NATAL (LIVE COUNT, DINAMIS FORM & E-TICKET)
     --------------------------------------------------- */
     const API_URL_NATAL = 'https://script.google.com/macros/s/AKfycbziUeqUHVUaFNB1h-NpV4yLFQ2PxYd8UFbNcdOPSczx-y-DLShMxlggh2p-dHeIf24jog/exec'; 
 
-    let kuotaPagi = 275;
-    let kuotaSore = 275;
-    let urutPagi = 1;
-    let urutSore = 1;
+    // [KEAMANAN 2] GET KUOTA DARI SERVER SAAT LOAD
+    async function fetchKuotaAwal() {
+      try {
+        // Asumsi server menangani request GET dengan parameter action=getKuota
+        const res = await fetch(API_URL_NATAL + '?action=getKuota');
+        const data = await res.json();
+        if(data.status === 'success') {
+          document.getElementById('kuotaPagiLuar').innerText = data.sisaPagi;
+          document.getElementById('kuotaSoreLuar').innerText = data.sisaSore;
+        } else {
+          document.getElementById('kuotaPagiLuar').innerText = "Load..";
+          document.getElementById('kuotaSoreLuar').innerText = "Load..";
+        }
+      } catch(e) {
+        // Jika backend belum siap/error, berikan fallback text
+        document.getElementById('kuotaPagiLuar').innerText = "--";
+        document.getElementById('kuotaSoreLuar').innerText = "--";
+        console.warn("Backend Get Kuota Belum Tersedia atau Error Jaringan.");
+      }
+    }
 
     // CEK BULAN (OKTOBER KE ATAS BARU AKTIF)
     function initNatalFeature() {
       const today = new Date();
-      // getMonth() = 0 untuk Januari, jadi 9 = Oktober.
-      // UBAH ANGKA 9 DI BAWAH .
+      // Bulan 9 = Oktober.
       if (today.getMonth() >= 9) { 
         document.getElementById('nav-natal-desktop').classList.remove('hidden');
         document.getElementById('nav-natal-mobile').classList.remove('hidden');
         document.getElementById('daftar-natal-section').classList.remove('hidden');
+        fetchKuotaAwal(); // Load kuota jika fitur aktif
       }
     }
 
@@ -553,13 +537,12 @@
     function renderFormAnggota() {
       const jumlah = parseInt(document.getElementById('inputJumlahNatal').value) || 1;
       const container = document.getElementById('containerAnggotaNatal');
-      container.innerHTML = ''; // Kosongkan
+      container.innerHTML = ''; 
       
-      // Jika diisi > 1, buat kotak input untuk sisanya
       if (jumlah > 1) {
         container.innerHTML += `<label class="block text-gray-300 text-sm font-semibold mb-2">Nama Anggota (Tulis di bawah ini) *</label>`;
         for(let i = 1; i < jumlah; i++) {
-          container.innerHTML += `<input type="text" class="input-anggota-extra w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-red-500 mb-2" placeholder="Nama Anggota ${i}" required>`;
+          container.innerHTML += `<input type="text" class="input-anggota-extra w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-red-500 mb-2" maxlength="50" placeholder="Nama Anggota ${i}" required>`;
         }
       }
     }
@@ -567,8 +550,10 @@
     const modalNatal = document.getElementById('modalNatal');
     const boxNatal = document.getElementById('boxNatal');
     const modalTiket = document.getElementById('modalTiket');
+    const errorMsg = document.getElementById('errorMsg');
 
     function bukaFormNatal() {
+      errorMsg.classList.add('hidden');
       modalNatal.classList.remove('hidden');
       setTimeout(() => { modalNatal.classList.remove('opacity-0'); boxNatal.classList.remove('scale-95'); boxNatal.classList.add('scale-100'); }, 10);
     }
@@ -578,67 +563,108 @@
       setTimeout(() => { modalNatal.classList.add('hidden'); document.getElementById('formNatal').reset(); document.getElementById('containerAnggotaNatal').innerHTML = ''; }, 300);
     }
 
+    // [KEAMANAN 4] SANITASI INPUT (Formula Injection)
+    function sanitizeInput(str) {
+      if (typeof str !== 'string') return str;
+      let safeStr = str.trim();
+      // Tambahkan petik satu jika input berpotensi memicu eksekusi rumus di Google Sheets
+      if (/^[=+\-@]/.test(safeStr)) {
+          safeStr = "'" + safeStr;
+      }
+      return safeStr;
+    }
+
+    // FUNGSI SUBMIT UTAMA
     async function submitNatal(e) {
       e.preventDefault();
       
+      const btn = document.getElementById('btnSubmitNatal');
+      if (btn.disabled) return; // Prevent Double Submit
+      
+      errorMsg.classList.add('hidden');
+
       const sesi = document.getElementById('inputSesiNatal').value;
-      const wa = document.getElementById('inputWANatal').value;
-      const nama = document.getElementById('inputNamaNatal').value;
+      const waRaw = document.getElementById('inputWANatal').value;
+      const namaRaw = document.getElementById('inputNamaNatal').value;
       const jumlah = parseInt(document.getElementById('inputJumlahNatal').value);
       
-      // Gabungkan nama anggota dinamis pakai koma
+      // Gabungin nama anggota
       let arrAnggota = [];
       document.querySelectorAll('.input-anggota-extra').forEach(inp => {
-        if(inp.value.trim() !== '') arrAnggota.push(inp.value.trim());
+        if(inp.value.trim() !== '') arrAnggota.push(sanitizeInput(inp.value));
       });
       const stringAnggota = arrAnggota.length > 0 ? arrAnggota.join(', ') : '-';
 
-      // Validasi Kuota
-      if (sesi === 'Pagi' && (kuotaPagi - jumlah < 0)) return alert("Maaf, Kuota Ibadah Pagi tidak mencukupi untuk " + jumlah + " orang.");
-      if (sesi === 'Sore' && (kuotaSore - jumlah < 0)) return alert("Maaf, Kuota Ibadah Sore tidak mencukupi untuk " + jumlah + " orang.");
+      // Sanitasi
+      const safeNama = sanitizeInput(namaRaw);
+      const safeWA = sanitizeInput(waRaw);
 
-      // Visual Loading
-      const btn = document.getElementById('btnSubmitNatal');
+      // Loading UI State
       btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Memproses...';
       btn.disabled = true;
 
-      // 1. GENERATE NO URUT LOKAL
-      let tiketUrut = sesi === 'Pagi' ? urutPagi : urutSore;
-      
-      // 2. TAMPILKAN KE TIKET HTML
-      document.getElementById('tiketNoUrut').innerText = tiketUrut.toString().padStart(3, '0');
-      document.getElementById('tiketSesi').innerText = sesi === 'Pagi' ? "SESI PAGI (08.00)" : "SESI SORE (15.30)";
-      document.getElementById('tiketNama').innerText = nama;
-      document.getElementById('tiketJumlah').innerText = jumlah + " Orang";
-      document.getElementById('tiketAnggota').innerText = stringAnggota;
+      // [KEAMANAN 1 & 5] Generate Token reCAPTCHA v3 lalu Submit
+      grecaptcha.ready(function() {
+        grecaptcha.execute('6Lc39yctAAAAAMFEJxjgh3GGOhxNRwpQSd3mSvpp', {action: 'submit_natal'}).then(async function(token) {
+          
+          const formData = new FormData();
+          formData.append("sesi", sesi);
+          formData.append("nama", safeNama);
+          formData.append("wa", safeWA);
+          formData.append("jumlah", jumlah);
+          formData.append("anggota", stringAnggota);
+          formData.append("recaptchaToken", token); // Token dikirim ke server untuk divalidasi
 
-      // 3. UPDATE KUOTA LOKAL
-      if (sesi === 'Pagi') { kuotaPagi -= jumlah; urutPagi++; document.getElementById('kuotaPagiLuar').innerText = kuotaPagi; } 
-      else { kuotaSore -= jumlah; urutSore++; document.getElementById('kuotaSoreLuar').innerText = kuotaSore; }
+          try {
+            const response = await fetch(API_URL_NATAL, { method: 'POST', body: formData });
+            // [KEAMANAN 2] Expect backend mereturn data JSON valid tentang kuota dan urut
+            const result = await response.json();
 
-      // 4. KIRIM KE SPREADSHEET MENGGUNAKAN FORM DATA 
-      const formData = new FormData();
-      formData.append("sesi", sesi);
-      formData.append("nama", nama);
-      formData.append("wa", wa);
-      formData.append("jumlah", jumlah);
-      formData.append("anggota", stringAnggota);
-      formData.append("noUrut", tiketUrut);
+            if(result.status === 'success') {
+              // Server menentukan Nomor Urut (Fallback ke 999 jika server blm diupdate)
+              const noUrutServer = result.noUrut || "999"; 
+              
+              // Update Tampilan Tiket
+              document.getElementById('tiketNoUrut').innerText = noUrutServer.toString().padStart(3, '0');
+              document.getElementById('tiketSesi').innerText = sesi === 'Pagi' ? "SESI PAGI (08.00)" : "SESI SORE (15.30)";
+              document.getElementById('tiketNama').innerText = safeNama;
+              document.getElementById('tiketJumlah').innerText = jumlah + " Orang";
+              document.getElementById('tiketAnggota').innerText = stringAnggota;
 
-      try {
-        fetch(API_URL_NATAL, { method: 'POST', body: formData });
-      } catch (err) { console.log("Gagal sync ke server, tapi tiket dicetak."); }
+              // Update Kuota di Halaman Depan sesuai data real dari server
+              if(result.sisaPagi !== undefined) document.getElementById('kuotaPagiLuar').innerText = result.sisaPagi;
+              if(result.sisaSore !== undefined) document.getElementById('kuotaSoreLuar').innerText = result.sisaSore;
 
-      // 5. MUNCULKAN TIKET E-TICKET
-      tutupFormNatal();
-      setTimeout(() => {
-        modalTiket.classList.remove('hidden');
-        modalTiket.classList.add('flex');
-        setTimeout(() => { modalTiket.classList.remove('opacity-0'); }, 10);
-      }, 350);
+              // Tampilkan Modal Tiket
+              tutupFormNatal();
+              setTimeout(() => {
+                modalTiket.classList.remove('hidden');
+                modalTiket.classList.add('flex');
+                setTimeout(() => { modalTiket.classList.remove('opacity-0'); }, 10);
+              }, 350);
+            } else {
+              // Jika Gagal (misal kuota habis dari sisi server)
+              errorMsg.innerText = result.message || "Gagal mendaftar. Kuota mungkin sudah habis.";
+              errorMsg.classList.remove('hidden');
+            }
+          } catch (err) {
+            console.error(err);
+            errorMsg.innerText = "Terjadi kendala jaringan. Pastikan koneksi stabil.";
+            errorMsg.classList.remove('hidden');
+          } finally {
+            // [KEAMANAN 8] Kembalikan state tombol jika gagal, agar bisa di-retry
+            btn.innerHTML = '<span>Ambil Tiket</span> <i class="fas fa-ticket-alt"></i>';
+            btn.disabled = false;
+          }
 
-      btn.innerHTML = '<span>Ambil Tiket</span> <i class="fas fa-ticket-alt"></i>';
-      btn.disabled = false;
+        }).catch(function(err){
+           // Fallback jika Google Recaptcha diblokir/gagal load
+           errorMsg.innerText = "Gagal memverifikasi reCAPTCHA. Coba matikan AdBlock.";
+           errorMsg.classList.remove('hidden');
+           btn.innerHTML = '<span>Ambil Tiket</span> <i class="fas fa-ticket-alt"></i>';
+           btn.disabled = false;
+        });
+      });
     }
 
     function tutupTiket() {
@@ -648,7 +674,6 @@
 
     function downloadTiketAsImage() {
       const areaPrint = document.getElementById('areaPrintTiket');
-      // Setting backgroundColor eksplisit sangat penting agar html2canvas tidak transparan
       html2canvas(areaPrint, { scale: 3, backgroundColor: "#ffffff" }).then(canvas => {
         const link = document.createElement('a');
         link.download = `Tiket_Natal_${document.getElementById('tiketNama').innerText.replace(/\s+/g, '_')}.png`;
@@ -660,7 +685,7 @@
     }
 
     /* ---------------------------------------------------
-       3. SLIDER LOGIC & API FETCH
+      3. SLIDER LOGIC & API FETCH
     --------------------------------------------------- */
     const sliderStates = {};
 
@@ -741,7 +766,7 @@
     };
 
     /* ---------------------------------------------------
-       INITIALIZATION
+    INITIALIZATION
     --------------------------------------------------- */
     document.addEventListener("DOMContentLoaded", () => {
       initScrollAnimations();
