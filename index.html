@@ -682,18 +682,55 @@
       setTimeout(() => { modalTiket.classList.add('hidden'); modalTiket.classList.remove('flex'); }, 500);
     }
 
-    function downloadTiketAsImage() {
-      const areaPrint = document.getElementById('areaPrintTiket');
-      // Setting backgroundColor biar html2canvas tidak transparan
-      html2canvas(areaPrint, { scale: 3, backgroundColor: "#ffffff" }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = `Tiket_Natal_${document.getElementById('tiketNama').innerText.replace(/\s+/g, '_')}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-      }).catch(err => {
-        alert("Gagal mendownload tiket dari browser ini. Silakan screenshot layar manual.");
-      });
-    }
+    async function downloadTiketAsImage() {
+  try {
+    const areaPrint = document.getElementById('areaPrintTiket');
+
+    const canvas = await html2canvas(areaPrint, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: "#ffffff"
+    });
+
+    const fileName =
+      `Tiket_Natal_${document.getElementById('tiketNama').innerText.replace(/\s+/g, '_')}.png`;
+
+    canvas.toBlob((blob) => {
+
+      if (!blob) {
+        alert("Gagal membuat gambar.");
+        return;
+      }
+
+      // Safari iPhone/iPad
+      if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+        const url = URL.createObjectURL(blob);
+        window.open(url, "_blank");
+        return;
+      }
+
+      // Android & Desktop
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+      }, 1000);
+
+    }, 'image/png');
+
+  } catch (err) {
+    console.error(err);
+    alert("Gagal mendownload tiket.");
+  }
+}
 
     /* ---------------------------------------------------
       3. SLIDER LOGIC & API FETCH
