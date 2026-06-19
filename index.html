@@ -498,7 +498,7 @@
     /* ---------------------------------------------------
     2. FITUR NATAL (LIVE COUNT, DINAMIS FORM & E-TICKET)
     --------------------------------------------------- */
-    const API_URL_NATAL = 'https://script.google.com/macros/s/AKfycbwJa6Yp6TueLulCOn2SD1ItAYKw4QLIN3-uuF7hREQYo1YNgK6Lz8oMpiyBhhPtTM3wqw/exec'; 
+    const API_URL_NATAL = 'https://script.google.com/macros/s/AKfycbw5FPjmt4DdjqEWdPgcf9SaTXame1SYo5y4NkCP25xeAjxaKhAsHtw289PvdfNkMNGYQw/exec'; 
 
     // [KEAMANAN 2] GET KUOTA DARI SERVER SAAT LOAD
     async function fetchKuotaAwal() {
@@ -672,16 +672,44 @@
       setTimeout(() => { modalTiket.classList.add('hidden'); modalTiket.classList.remove('flex'); }, 500);
     }
 
-    function downloadTiketAsImage() {
+    async function downloadTiketAsImage() {
+      const btn = document.querySelector('button[onclick="downloadTiketAsImage()"]');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+      btn.disabled = true;
+
       const areaPrint = document.getElementById('areaPrintTiket');
-      html2canvas(areaPrint, { scale: 3, backgroundColor: "#ffffff" }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = `Tiket_Natal_${document.getElementById('tiketNama').innerText.replace(/\s+/g, '_')}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-      }).catch(err => {
-        alert("Gagal mendownload tiket dari browser ini. Silakan screenshot layar manual.");
-      });
+
+      try {
+        // Render canvas
+        const canvas = await html2canvas(areaPrint, { 
+          scale: 3, 
+          backgroundColor: "#ffffff",
+          logging: false,
+          useCORS: true 
+        });
+
+        // Konversi ke blob agar browser mengenali sebagai file yang sah untuk di-download
+        canvas.toBlob(function(blob) {
+          const link = document.createElement('a');
+          link.download = `Tiket_Natal_${document.getElementById('tiketNama').innerText.replace(/\s+/g, '_')}.png`;
+          link.href = URL.createObjectURL(blob);
+          
+          // Trigger klik otomatis
+          link.click();
+          
+          // Bersihkan memory
+          URL.revokeObjectURL(link.href);
+          
+          btn.innerHTML = '<i class="fas fa-download"></i> DOWNLOAD TIKET';
+          btn.disabled = false;
+        }, 'image/png');
+
+      } catch (err) {
+        console.error(err);
+        alert("Gagal mendownload. Pastikan browser kamu mengizinkan akses download.");
+        btn.innerHTML = '<i class="fas fa-download"></i> DOWNLOAD TIKET';
+        btn.disabled = false;
+      }
     }
 
     /* ---------------------------------------------------
