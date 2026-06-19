@@ -683,47 +683,63 @@
     }
 
     async function downloadTiketAsImage() {
+
+  const btn = document.querySelector(
+    'button[onclick="downloadTiketAsImage()"]'
+  );
+
+  const originalText = btn.innerHTML;
+
   try {
 
-    const areaPrint =
-      document.getElementById('areaPrintTiket');
+    btn.disabled = true;
+    btn.innerHTML =
+      '<i class="fas fa-spinner fa-spin"></i> Membuat Tiket...';
 
-    await new Promise(resolve =>
-      setTimeout(resolve, 200)
-    );
+    const area =
+      document.getElementById("areaPrintTiket");
 
-    const canvas = await html2canvas(
-      areaPrint,
-      {
-        scale: 3,
+    await document.fonts.ready;
+
+    const canvas =
+      await html2canvas(area, {
+        scale: 2,
+        backgroundColor: "#ffffff",
         useCORS: true,
-        backgroundColor: "#ffffff"
-      }
-    );
+        logging: false
+      });
 
-    const url =
+    const dataUrl =
       canvas.toDataURL("image/png");
 
-    const link =
+    const a =
       document.createElement("a");
 
-    link.href = url;
+    a.href = dataUrl;
 
-    link.download =
-      `Tiket_Natal_${document.getElementById('tiketNama').innerText}.png`;
+    a.download =
+      `Tiket_Natal_${Date.now()}.png`;
 
-    document.body.appendChild(link);
+    document.body.appendChild(a);
 
-    link.click();
+    a.click();
 
-    document.body.removeChild(link);
+    document.body.removeChild(a);
 
-  } catch(err) {
-    console.error(err);
-    alert("Gagal download tiket");
+  } catch (e) {
+
+    console.error(e);
+
+    alert(
+      "Gagal membuat tiket. Buka Console untuk detail error."
+    );
+
+  } finally {
+
+    btn.disabled = false;
+    btn.innerHTML = originalText;
   }
 }
-
     /* ---------------------------------------------------
       3. SLIDER LOGIC & API FETCH
     --------------------------------------------------- */
