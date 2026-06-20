@@ -120,18 +120,36 @@
         </a>
       </div>
 
+      <!-- MENU DESKTOP -->
       <nav class="hidden md:flex items-center gap-7 font-medium text-sm text-gray-300">
-        <a href="#daftar-natal-section" id="nav-natal-desktop" class="hidden relative group hover:text-red-500 text-gold-400 font-bold transition-colors duration-300">
+        <a href="#daftar-natal-section" id="nav-natal-desktop" class="nav-item hidden relative group hover:text-red-500 transition-colors duration-300">
           Daftar Natal
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
+          <span class="underline-span absolute -bottom-1 left-0 h-0.5 bg-red-500 transition-all duration-300 w-0 group-hover:w-full"></span>
         </a>
-        <a href="#wadah-ibadah" class="relative group hover:text-gold-500 transition-colors duration-300">Wadah Ibadah</a>
-        <a href="#komsel-sukacita" class="relative group hover:text-gold-500 transition-colors duration-300">Media Sosial</a>
-        <a href="#layanan-diakonia" class="relative group hover:text-gold-500 transition-colors duration-300">Layanan & Pendaftaran</a>
-        <a href="https://alamdamai.vercel.app/public.html" target="_blank" class="relative group hover:text-gold-500 transition-colors duration-300">Diakonia</a>
-        <a href="#lokasi-gereja" class="relative group hover:text-gold-500 transition-colors duration-300">Lokasi & Kontak</a>
+        <a href="#wadah-ibadah" class="nav-item relative group hover:text-gold-500 transition-colors duration-300">
+          Wadah Ibadah
+          <span class="underline-span absolute -bottom-1 left-0 h-0.5 bg-gold-500 transition-all duration-300 w-0 group-hover:w-full"></span>
+        </a>
+        <a href="#komsel-sukacita" class="nav-item relative group hover:text-gold-500 transition-colors duration-300">
+          Media Sosial
+          <span class="underline-span absolute -bottom-1 left-0 h-0.5 bg-gold-500 transition-all duration-300 w-0 group-hover:w-full"></span>
+        </a>
+        <a href="#layanan-diakonia" class="nav-item relative group hover:text-gold-500 transition-colors duration-300">
+          Layanan & Pendaftaran
+          <span class="underline-span absolute -bottom-1 left-0 h-0.5 bg-gold-500 transition-all duration-300 w-0 group-hover:w-full"></span>
+        </a>
+        <!-- Diakonia ini link ke luar, jadi tidak akan kena efek highlight -->
+        <a href="https://alamdamai.vercel.app/public.html" target="_blank" class="nav-item relative group hover:text-gold-500 transition-colors duration-300">
+          Diakonia
+          <span class="underline-span absolute -bottom-1 left-0 h-0.5 bg-gold-500 transition-all duration-300 w-0 group-hover:w-full"></span>
+        </a>
+        <a href="#lokasi-gereja" class="nav-item relative group hover:text-gold-500 transition-colors duration-300">
+          Lokasi & Kontak
+          <span class="underline-span absolute -bottom-1 left-0 h-0.5 bg-gold-500 transition-all duration-300 w-0 group-hover:w-full"></span>
+        </a>
       </nav>
 
+      <!-- TOMBOL HUBUNGI KAMI DAN HAMBURGER MENU ADA DI TENGAH SINI -->
       <div class="flex items-center gap-4 relative z-10">
         <a href="https://wa.me/6281324282488" target="_blank" class="btn-modern px-5 py-2 md:px-7 md:py-3 rounded-full text-xs md:text-sm font-bold flex items-center gap-2">
           <i class="fab fa-whatsapp text-lg"></i> <span class="hidden sm:inline">Hubungi Kami</span>
@@ -140,12 +158,13 @@
           <i class="fas fa-bars"></i>
         </button>
       </div>
-    </div>
+    </div> <!-- PENUTUP DIV HEADER -->
 
+    <!-- MENU MOBILE -->
     <nav id="mobile-menu" class="hidden flex-col w-full bg-dark-900 border-t border-gold-500/20 py-4 gap-4 text-center md:hidden shadow-2xl absolute top-full left-0">
-      <a href="#daftar-natal-section" id="nav-natal-mobile" class="hidden mobile-link text-gold-400 hover:text-red-500 font-bold transition tracking-wide py-2">Daftar Natal</a>
+      <a href="#daftar-natal-section" id="nav-natal-mobile" class="hidden mobile-link text-gray-300 hover:text-red-500 font-semibold transition tracking-wide py-2">Daftar Natal</a>
       <a href="#wadah-ibadah" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition tracking-wide py-2">Wadah Ibadah</a>
-      <a href="#media-sosial" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition tracking-wide py-2">Media Sosial</a>
+      <a href="#komsel-sukacita" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition tracking-wide py-2">Media Sosial</a>
       <a href="#layanan-diakonia" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition tracking-wide py-2">Layanan & Pendaftaran</a>
       <a href="https://alamdamai.vercel.app/public.html" target="_blank" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition tracking-wide py-2">Diakonia</a>
       <a href="#lokasi-gereja" class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition tracking-wide py-2">Lokasi & Kontak</a>
@@ -555,7 +574,7 @@
     function initNatalFeature() {
       const today = new Date();
       // Bulan 9 = Oktober.
-      if (today.getMonth() >= 5) { 
+      if (today.getMonth() >= 9) { 
         document.getElementById('nav-natal-desktop').classList.remove('hidden');
         document.getElementById('nav-natal-mobile').classList.remove('hidden');
         document.getElementById('daftar-natal-section').classList.remove('hidden');
@@ -837,12 +856,68 @@
       }
     }
 
+    // FITUR HIGHLIGHT MENU OTOMATIS SAAT SCROLL
+    function initScrollSpy() {
+      const desktopNavItems = document.querySelectorAll('.nav-item');
+      const mobileNavItems = document.querySelectorAll('.mobile-link');
+      
+      // Kumpulkan semua ID target (contoh: wadah-ibadah, komsel-sukacita)
+      const targetIds = Array.from(desktopNavItems)
+                             .map(link => link.getAttribute('href'))
+                             .filter(href => href.startsWith('#'))
+                             .map(href => href.substring(1));
+                             
+      window.addEventListener('scroll', () => {
+        let currentSectionId = '';
+        
+        targetIds.forEach(id => {
+          const section = document.getElementById(id);
+          if (section) {
+            // -150px offset agar highlight berubah tepat SEBELUM judulnya nabrak ke atas layar
+            if (window.scrollY >= (section.offsetTop - 150)) {
+              currentSectionId = id;
+            }
+          }
+        });
+
+        // Warnai ulang menu Desktop
+        desktopNavItems.forEach(link => {
+          if(!link.getAttribute('href').startsWith('#')) return; // Abaikan link luar (Diakonia)
+          const span = link.querySelector('.underline-span');
+          
+          if (link.getAttribute('href') === `#${currentSectionId}`) {
+            // Aktif = Emas dan ada garis bawahnya menetap
+            link.classList.add('text-gold-400', 'font-bold');
+            link.classList.remove('text-gray-300');
+            if(span) span.classList.add('w-full');
+          } else {
+            // Tidak Aktif = Abu-abu biasa
+            link.classList.remove('text-gold-400', 'font-bold');
+            link.classList.add('text-gray-300');
+            if(span) span.classList.remove('w-full');
+          }
+        });
+
+        // Warnai ulang menu Mobile
+        mobileNavItems.forEach(link => {
+          if(!link.getAttribute('href').startsWith('#')) return;
+          if (link.getAttribute('href') === `#${currentSectionId}`) {
+            link.classList.add('text-gold-400', 'font-bold');
+            link.classList.remove('text-gray-300', 'font-semibold');
+          } else {
+            link.classList.remove('text-gold-400', 'font-bold');
+            link.classList.add('text-gray-300', 'font-semibold');
+          }
+        });
+      });
+    }
     /* ---------------------------------------------------
     INITIALIZATION
     --------------------------------------------------- */
     document.addEventListener("DOMContentLoaded", () => {
       initScrollAnimations();
       initNatalFeature();
+      initScrollSpy();
       
       fetchMedia('IBADAH_RAYA_MINGGU', 'slider-ibadah-raya');
       fetchMedia('IMPACT_KIDS', 'slider-impact-kids');
