@@ -410,6 +410,21 @@
             <label class="block text-gray-300 text-sm font-semibold mb-2">Jumlah Orang (Max 10) *</label>
             <input type="number" id="inputJumlahNatal" required min="1" max="10" oninput="renderFormAnggota()" class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500" placeholder="Contoh: 3">
           </div>
+          
+          <div>
+            <label class="block text-gray-300 text-sm font-semibold mb-2">Jenis Kendaraan *</label>
+            <select id="inputJenisKendaraan" required onchange="toggleKendaraan()" class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 appearance-none">
+              <option value="" disabled selected>-- Pilih Kendaraan --</option>
+              <option value="Kendaraan Umum">Kendaraan Umum</option>
+              <option value="Motor">Motor</option>
+              <option value="Mobil">Mobil</option>
+            </select>
+          </div>
+
+          <div id="boxJumlahKendaraan" class="hidden">
+            <label class="block text-gray-300 text-sm font-semibold mb-2" id="labelJmlKendaraan">Jumlah Kendaraan *</label>
+            <input type="number" id="inputJmlKendaraan" min="1" max="5" class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500" placeholder="Berapa kendaraan?">
+          </div>
 
           <div id="containerAnggotaNatal" class="space-y-3">
             </div>
@@ -450,11 +465,17 @@
 
         <div style="background-color: #f9fafb; border: 1px solid #e5e7eb; padding: 16px; border-radius: 12px; text-align: left;">
           <p style="font-size: 10px; color: #6b7280; font-weight: bold; text-transform: uppercase; margin: 0 0 4px 0;">Pendaftar Utama</p>
-          <p style="font-size: 18px; font-weight: 900; color: #000; margin: 0 0 12px 0;" id="tiketNama">John Doe</p>
+          <p style="font-size: 18px; font-weight: 900; color: #000; margin: 0 0 12px 0;" id="tiketNama">Roy Sinaga </p>
           
           <div style="border-top: 1px solid #e5e7eb; padding-top: 12px; margin-bottom: 12px;">
             <p style="font-size: 10px; color: #6b7280; font-weight: bold; text-transform: uppercase; margin: 0 0 4px 0;">Jumlah Kursi</p>
             <p style="font-size: 16px; font-weight: 900; color: #dc2626; margin: 0;" id="tiketJumlah">3 Orang</p>
+          </div>
+
+          <div style="text-align: right;">
+              <p style="font-size: 10px; color: #6b7280; font-weight: bold; text-transform: uppercase; margin: 0 0 4px 0;">Kendaraan</p>
+              <p style="font-size: 14px; font-weight: 900; color: #000; margin: 0;" id="tiketKendaraan">Motor (2)</p>
+            </div>
           </div>
 
           <p style="font-size: 10px; color: #6b7280; font-weight: bold; text-transform: uppercase; margin: 0 0 4px 0;">Anggota Lainnya</p>
@@ -507,7 +528,7 @@
     /* ---------------------------------------------------
     2. FITUR NATAL (LIVE COUNT, DINAMIS FORM & E-TICKET)
     --------------------------------------------------- */
-    const API_URL_NATAL = 'https://script.google.com/macros/s/AKfycbw5FPjmt4DdjqEWdPgcf9SaTXame1SYo5y4NkCP25xeAjxaKhAsHtw289PvdfNkMNGYQw/exec'; 
+    const API_URL_NATAL = 'https://script.google.com/macros/s/AKfycbzk_PNRdcyKHWXWmn7mYkQhUPSXmHfobyHNpqUWRbpVa5YAxaRHSnykjl5Uj2kQmANCPg/exec'; 
 
     // [KEAMANAN 2] GET KUOTA DARI SERVER SAAT LOAD
     async function fetchKuotaAwal() {
@@ -534,7 +555,7 @@
     function initNatalFeature() {
       const today = new Date();
       // Bulan 9 = Oktober.
-      if (today.getMonth() >= 5) { 
+      if (today.getMonth() >= 9) { 
         document.getElementById('nav-natal-desktop').classList.remove('hidden');
         document.getElementById('nav-natal-mobile').classList.remove('hidden');
         document.getElementById('daftar-natal-section').classList.remove('hidden');
@@ -596,6 +617,17 @@
       const waRaw = document.getElementById('inputWANatal').value;
       const namaRaw = document.getElementById('inputNamaNatal').value;
       const jumlah = parseInt(document.getElementById('inputJumlahNatal').value);
+
+      // Tangkap data kendaraan
+      const jenisKendaraan = document.getElementById('inputJenisKendaraan').value;
+      const jmlKendaraan = document.getElementById('inputJmlKendaraan').value;
+      
+      let infoKendaraan = jenisKendaraan; // Defaultnya cuma nama (Misal: "Mobil" atau "Kendaraan Umum")
+      
+      // Khusus motor, kita tambahkan jumlahnya di belakang
+      if (jenisKendaraan === 'Motor') {
+        infoKendaraan = `Motor (${jmlKendaraan})`; 
+      }
       
       // Gabungin nama anggota
       let arrAnggota = [];
@@ -778,6 +810,32 @@
       state.currentIndex = (state.currentIndex + direction + state.slides.length) % state.slides.length;
       putarSlideAktif(sliderId);
     };
+
+    // LOGIKA PINTAR KENDARAAN (REVISI)
+    function toggleKendaraan() {
+      const jenis = document.getElementById('inputJenisKendaraan').value;
+      const boxJml = document.getElementById('boxJumlahKendaraan');
+      const inputJml = document.getElementById('inputJmlKendaraan');
+      const labelJml = document.getElementById('labelJmlKendaraan');
+      const jmlOrang = parseInt(document.getElementById('inputJumlahNatal').value) || 1;
+
+      // HANYA MUNCUL JIKA PILIH MOTOR
+      if (jenis === 'Motor') {
+        boxJml.classList.remove('hidden');
+        inputJml.required = true;
+        
+        
+          labelJml.innerText = `Jumlah Motor yang dibawa *`;
+        
+        
+
+      } else {
+        // JIKA MOBIL ATAU KENDARAAN UMUM -> Sembunyikan & Kosongkan input
+        boxJml.classList.add('hidden');
+        inputJml.required = false;
+        inputJml.value = "";
+      }
+    }
 
     /* ---------------------------------------------------
     INITIALIZATION
