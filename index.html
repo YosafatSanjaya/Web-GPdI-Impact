@@ -1059,7 +1059,7 @@
       renderAdminTable();
     }
 
-  function renderAdminTable() {
+ function renderAdminTable() {
       const tbody = document.getElementById('tabelAdminBody');
       const dataSesi = adminDataCache[currentAdminTab];
       
@@ -1123,12 +1123,6 @@
           `;
         });
       }
-    }
-
-      // Update Kartu Counter
-      document.getElementById('adminTotalDaftar').innerHTML = `${totalDaftar} <span class="text-sm font-normal text-gray-500">Orang</span>`;
-      document.getElementById('adminTotalHadir').innerHTML = `${totalHadir} <span class="text-sm font-normal text-gray-500">Orang</span>`;
-      document.getElementById('adminBelumHadir').innerHTML = `${totalDaftar - totalHadir} <span class="text-sm font-normal text-gray-500">Orang</span>`;
     }
 
     async function tandaiKehadiran(btnElement, rowIndex, isHadir) {
