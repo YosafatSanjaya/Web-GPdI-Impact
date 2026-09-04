@@ -398,6 +398,61 @@
         <p class="tracking-wide">&copy; 1999 GPdI Impact. </p>
       </div>
     </footer>
+
+    <!-- ================= DASHBOARD ADMIN (TERSEMBUNYI) ================= -->
+    <section id="admin-dashboard" class="hidden relative z-[999] bg-dark-900 min-h-screen pb-20">
+      <div class="flex flex-col md:flex-row justify-between items-center mb-8 border-b border-gold-500/20 pb-4">
+        <div>
+          <h2 class="text-3xl font-black text-white"><i class="fas fa-shield-alt text-gold-500 mr-2"></i> Pintu Kedatangan (Admin)</h2>
+          <p class="text-gray-400 text-sm mt-1">Pantau pendaftar dan *scan* kehadiran Jemaat</p>
+        </div>
+        <div class="mt-4 md:mt-0 flex gap-2">
+          <button onclick="switchAdminTab('Pagi')" id="tabAdminPagi" class="bg-gold-500 text-black px-6 py-2 rounded-xl font-bold transition-all">Sesi Pagi</button>
+          <button onclick="switchAdminTab('Sore')" id="tabAdminSore" class="bg-dark-800 text-gray-400 border border-gold-500/30 px-6 py-2 rounded-xl font-bold transition-all">Sesi Sore</button>
+        </div>
+      </div>
+
+      <!-- COUNTER KEDATANGAN -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-dark-800 border border-white/5 p-5 rounded-2xl">
+          <p class="text-gray-400 text-xs font-bold uppercase tracking-wider">Total Pendaftar</p>
+          <p class="text-3xl font-black text-white mt-1" id="adminTotalDaftar">0 <span class="text-sm font-normal text-gray-500">Orang</span></p>
+        </div>
+        <div class="bg-dark-800 border border-green-500/30 p-5 rounded-2xl shadow-[0_0_15px_rgba(34,197,94,0.1)]">
+          <p class="text-green-400 text-xs font-bold uppercase tracking-wider">Sudah Masuk (Hadir)</p>
+          <p class="text-3xl font-black text-white mt-1" id="adminTotalHadir">0 <span class="text-sm font-normal text-gray-500">Orang</span></p>
+        </div>
+        <div class="bg-dark-800 border border-red-500/30 p-5 rounded-2xl">
+          <p class="text-red-400 text-xs font-bold uppercase tracking-wider">Belum Datang</p>
+          <p class="text-3xl font-black text-white mt-1" id="adminBelumHadir">0 <span class="text-sm font-normal text-gray-500">Orang</span></p>
+        </div>
+        <div class="bg-dark-800 border border-blue-500/30 p-5 rounded-2xl flex items-center justify-center">
+          <button onclick="loadAdminData()" class="w-full h-full text-blue-400 font-bold hover:text-white transition-colors flex items-center justify-center gap-2">
+            <i class="fas fa-sync-alt" id="iconSyncAdmin"></i> Refresh Data
+          </button>
+        </div>
+      </div>
+
+      <!-- TABEL DATA -->
+      <div class="bg-dark-800 rounded-2xl border border-white/5 overflow-x-auto shadow-2xl">
+        <table class="w-full text-left border-collapse whitespace-nowrap">
+          <thead>
+            <tr class="bg-dark-900 text-gray-400 text-xs uppercase tracking-wider border-b border-white/10">
+              <th class="p-4 font-semibold text-center">No Urut</th>
+              <th class="p-4 font-semibold">Nama Pendaftar</th>
+              <th class="p-4 font-semibold text-center">Jml Orang</th>
+              <th class="p-4 font-semibold">Kendaraan</th>
+              <th class="p-4 font-semibold">Nomor WA</th>
+              <th class="p-4 font-semibold text-center">Status Masuk</th>
+            </tr>
+          </thead>
+          <tbody id="tabelAdminBody" class="text-sm text-gray-300 divide-y divide-white/5">
+            <!-- Data akan dimuat lewat JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+    
   </main>
 
   <div id="modalNatal" class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
@@ -552,7 +607,7 @@
     /* ---------------------------------------------------
     2. FITUR NATAL (LIVE COUNT, DINAMIS FORM & E-TICKET)
     --------------------------------------------------- */
-    const API_URL_NATAL = 'https://script.google.com/macros/s/AKfycbzk_PNRdcyKHWXWmn7mYkQhUPSXmHfobyHNpqUWRbpVa5YAxaRHSnykjl5Uj2kQmANCPg/exec'; 
+    const API_URL_NATAL = 'https://script.google.com/macros/s/AKfycbxJYbbljJ9_h8g24uXEr9ovBBGZ1EDXCkLBPhwXxSLB1-if14yPS9ootV-bMR6V7TGbnw/exec'; 
 
     // [SEC 2] GET KUOTA DARI SERVER SAAT LOAD
     async function fetchKuotaAwal() {
@@ -932,10 +987,155 @@
     /* ---------------------------------------------------
     INITIALIZATION
     --------------------------------------------------- */
+
+/* ===================================================
+       4. FITUR ADMIN DASHBOARD RUTING & LOGIKA
+    =================================================== */
+    let adminDataCache = { Pagi: [], Sore: [] };
+    let currentAdminTab = 'Pagi';
+
+    function checkRoute() {
+      const header = document.querySelector('header');
+      const mainSections = document.querySelectorAll('main > section:not(#admin-dashboard), main > h2, main > div:not(#admin-dashboard), footer');
+      const adminDashboard = document.getElementById('admin-dashboard');
+
+      if (window.location.hash === '#admin') {
+        // Sembunyikan web utama, tampilkan Admin
+        header.style.display = 'none';
+        mainSections.forEach(el => el.style.display = 'none');
+        adminDashboard.classList.remove('hidden');
+        document.body.classList.remove('bg-dark-900');
+        document.body.classList.add('bg-black');
+        loadAdminData();
+      } else {
+        // Tampilkan web utama kembali
+        header.style.display = 'flex';
+        mainSections.forEach(el => el.style.display = '');
+        adminDashboard.classList.add('hidden');
+        document.body.classList.remove('bg-black');
+        document.body.classList.add('bg-dark-900');
+      }
+    }
+
+    async function loadAdminData() {
+      const icon = document.getElementById('iconSyncAdmin');
+      icon.classList.add('fa-spin');
+      
+      try {
+        const response = await fetch(API_URL_NATAL + '?action=getAdminData');
+        const data = await response.json();
+        if (data.status === 'success') {
+          adminDataCache.Pagi = data.pagi;
+          adminDataCache.Sore = data.sore;
+          renderAdminTable();
+        }
+      } catch (err) {
+        alert("Gagal memuat data dari server.");
+      } finally {
+        icon.classList.remove('fa-spin');
+      }
+    }
+
+    function switchAdminTab(sesi) {
+      currentAdminTab = sesi;
+      const tabPagi = document.getElementById('tabAdminPagi');
+      const tabSore = document.getElementById('tabAdminSore');
+      
+      if(sesi === 'Pagi') {
+        tabPagi.className = "bg-gold-500 text-black px-6 py-2 rounded-xl font-bold transition-all";
+        tabSore.className = "bg-dark-800 text-gray-400 border border-gold-500/30 px-6 py-2 rounded-xl font-bold transition-all";
+      } else {
+        tabSore.className = "bg-gold-500 text-black px-6 py-2 rounded-xl font-bold transition-all";
+        tabPagi.className = "bg-dark-800 text-gray-400 border border-gold-500/30 px-6 py-2 rounded-xl font-bold transition-all";
+      }
+      renderAdminTable();
+    }
+
+    function renderAdminTable() {
+      const tbody = document.getElementById('tabelAdminBody');
+      const dataSesi = adminDataCache[currentAdminTab];
+      
+      let totalDaftar = 0;
+      let totalHadir = 0;
+      tbody.innerHTML = '';
+
+      if (dataSesi.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-500">Belum ada data pendaftar.</td></tr>`;
+      } else {
+        dataSesi.forEach(item => {
+          totalDaftar += Number(item.jumlah);
+          if (item.hadir) totalHadir += Number(item.jumlah);
+
+          const rowClass = item.hadir ? "bg-green-900/10" : "hover:bg-white/5";
+          const btnClass = item.hadir ? "bg-green-600 text-white" : "bg-dark-700 border border-white/20 text-gray-400 hover:border-gold-500";
+          const btnText = item.hadir ? `<i class="fas fa-check-double"></i> Telah Masuk` : `Ceklis Hadir`;
+
+          tbody.innerHTML += `
+            <tr class="${rowClass} transition-colors">
+              <td class="p-4 text-center font-black text-gold-400 text-lg">${String(item.noUrut).padStart(3, '0')}</td>
+              <td class="p-4">
+                <p class="font-bold text-white text-base">${item.nama}</p>
+                <p class="text-xs text-gray-500 mt-1 max-w-[200px] truncate" title="${item.anggota}">Lainnya: ${item.anggota}</p>
+              </td>
+              <td class="p-4 text-center">
+                <span class="bg-dark-900 border border-white/10 px-3 py-1 rounded-lg text-white font-bold">${item.jumlah}</span>
+              </td>
+              <td class="p-4 font-medium text-gray-400">${item.kendaraan}</td>
+              <td class="p-4 text-gray-400"><a href="https://wa.me/${item.wa}" target="_blank" class="hover:text-green-400"><i class="fab fa-whatsapp"></i> ${item.wa}</a></td>
+              <td class="p-4 text-center">
+                <button onclick="tandaiKehadiran(this, ${item.row}, ${!item.hadir})" class="${btnClass} px-4 py-2 rounded-lg font-bold text-xs transition-all w-32 shadow-lg">
+                  ${btnText}
+                </button>
+              </td>
+            </tr>
+          `;
+        });
+      }
+
+      // Update Kartu Counter
+      document.getElementById('adminTotalDaftar').innerHTML = `${totalDaftar} <span class="text-sm font-normal text-gray-500">Orang</span>`;
+      document.getElementById('adminTotalHadir').innerHTML = `${totalHadir} <span class="text-sm font-normal text-gray-500">Orang</span>`;
+      document.getElementById('adminBelumHadir').innerHTML = `${totalDaftar - totalHadir} <span class="text-sm font-normal text-gray-500">Orang</span>`;
+    }
+
+    async function tandaiKehadiran(btnElement, rowIndex, isHadir) {
+      btnElement.innerHTML = `<i class="fas fa-spinner fa-spin"></i>`;
+      btnElement.disabled = true;
+
+      const formData = new FormData();
+      formData.append('action', 'markArrived');
+      formData.append('sesi', currentAdminTab);
+      formData.append('row', rowIndex);
+      formData.append('isHadir', isHadir);
+
+      try {
+        const res = await fetch(API_URL_NATAL, { method: 'POST', body: formData });
+        const result = await res.json();
+        
+        if (result.status === 'success') {
+          // Update data lokal agar UI langsung berubah tanpa perlu loading ulang
+          const index = adminDataCache[currentAdminTab].findIndex(x => x.row === rowIndex);
+          if(index !== -1) adminDataCache[currentAdminTab][index].hadir = isHadir;
+          renderAdminTable();
+        } else {
+          alert("Gagal mencatat. Coba lagi.");
+          renderAdminTable(); 
+        }
+      } catch(e) {
+        alert("Gangguan koneksi.");
+        renderAdminTable();
+      }
+    }
+
+    window.addEventListener('hashchange', checkRoute);
+
     document.addEventListener("DOMContentLoaded", () => {
       initScrollAnimations();
       initNatalFeature();
       initScrollSpy();
+
+      //PEMANGGILAN FITUR ADMIN :
+      checkRoute();
       
       fetchMedia('IBADAH_RAYA_MINGGU', 'slider-ibadah-raya');
       fetchMedia('IMPACT_KIDS', 'slider-impact-kids');
