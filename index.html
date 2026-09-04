@@ -212,12 +212,12 @@
             
             <div class="flex flex-col sm:flex-row gap-5 mb-8">
               <div class="bg-dark-900 border border-red-500/30 p-5 rounded-2xl flex-1 text-center shadow-xl">
-                  <h4 class="text-red-400 font-bold mb-2 uppercase text-sm">Sesi Pagi (08.00 WIB)</h4>
+                  <h4 class="text-red-400 font-bold mb-2 uppercase text-sm">Sesi 1 (12.30 WIB)</h4>
                   <p class="text-5xl font-black text-white flex items-center justify-center gap-2"><i class="fas fa-ticket-alt text-xl text-gray-500"></i> <span id="kuotaPagiLuar">...</span></p>
                   <p class="text-[10px] text-gray-500 mt-1 uppercase font-bold">Sisa Kuota Server</p>
               </div>
               <div class="bg-dark-900 border border-gold-500/30 p-5 rounded-2xl flex-1 text-center shadow-xl">
-                  <h4 class="text-gold-400 font-bold mb-2 uppercase text-sm">Sesi Sore (15.30 WIB)</h4>
+                  <h4 class="text-gold-400 font-bold mb-2 uppercase text-sm">Sesi II (16.30 WIB)</h4>
                   <p class="text-5xl font-black text-white flex items-center justify-center gap-2"><i class="fas fa-ticket-alt text-xl text-gray-500"></i> <span id="kuotaSoreLuar">...</span></p>
                   <p class="text-[10px] text-gray-500 mt-1 uppercase font-bold">Sisa Kuota Server</p>
             </div>
@@ -407,8 +407,8 @@
           <p class="text-gray-400 text-sm mt-1">Cek Kehadiran Jemaat Natal</p>
         </div>
         <div class="mt-4 md:mt-0 flex gap-2">
-          <button onclick="switchAdminTab('Pagi')" id="tabAdminPagi" class="bg-gold-500 text-black px-6 py-2 rounded-xl font-bold transition-all">Sesi Pagi</button>
-          <button onclick="switchAdminTab('Sore')" id="tabAdminSore" class="bg-dark-800 text-gray-400 border border-gold-500/30 px-6 py-2 rounded-xl font-bold transition-all">Sesi Sore</button>
+          <button onclick="switchAdminTab('Pagi')" id="tabAdminPagi" class="bg-gold-500 text-black px-6 py-2 rounded-xl font-bold transition-all">Sesi 1</button>
+          <button onclick="switchAdminTab('Sore')" id="tabAdminSore" class="bg-dark-800 text-gray-400 border border-gold-500/30 px-6 py-2 rounded-xl font-bold transition-all">Sesi II </button>
         </div>
       </div>
 
@@ -431,6 +431,14 @@
             <i class="fas fa-sync-alt" id="iconSyncAdmin"></i> Refresh Data
           </button>
         </div>
+      </div>
+      
+      <!-- KOTAK PENCARIAN (SEARCH BAR) -->
+      <div class="mb-5 relative">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+          <i class="fas fa-search text-gray-500"></i>
+        </div>
+        <input type="text" id="adminSearchInput" oninput="renderAdminTable()" class="w-full bg-dark-800 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors shadow-lg" placeholder="Cari Nama Pendaftar, Anggota, atau No Urut (Cth: 005)...">
       </div>
 
       <!-- TABEL DATA -->
@@ -470,8 +478,8 @@
             <label class="block text-gray-300 text-sm font-semibold mb-2">Pilihan Ibadah *</label>
             <select id="inputSesiNatal" required class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 appearance-none">
               <option value="" disabled selected>-- Pilih Sesi Ibadah --</option>
-              <option value="Pagi">Ibadah Pagi (08.00)</option>
-              <option value="Sore">Ibadah Sore (15.30)</option>
+              <option value="Pagi">Ibadah I (12.30)</option>
+              <option value="Sore">Ibadah II (16.30)</option>
             </select>
           </div>
 
@@ -539,7 +547,7 @@
         <h1 style="font-size: 72px; font-weight: 900; color: #000; margin: 0 0 16px 0; line-height: normal;" id="tiketNoUrut">000</h1>
         
         <div style="background-color: #111; color: #fff; padding: 8px 16px; border-radius: 8px; display: inline-block; font-weight: bold; font-size: 14px; margin-bottom: 24px;" id="tiketSesi">
-          SESI PAGI (08.00)
+          SESI 1 (12.30)
         </div>
 
         <div style="background-color: #f9fafb; border: 1px solid #e5e7eb; padding: 16px; border-radius: 12px; text-align: left;">
@@ -746,7 +754,7 @@
               
               // Update Tampilan Tiket
               document.getElementById('tiketNoUrut').innerText = noUrutServer.toString().padStart(3, '0');
-              document.getElementById('tiketSesi').innerText = sesi === 'Pagi' ? "SESI PAGI (08.00)" : "SESI SORE (15.30)";
+              document.getElementById('tiketSesi').innerText = sesi === 'Pagi' ? "SESI I (12.30)" : "SESI II (16.30)";
               document.getElementById('tiketNama').innerText = safeNama;
               document.getElementById('tiketJumlah').innerText = jumlah + " Orang";
               document.getElementById('tiketAnggota').innerText = stringAnggota;
@@ -1055,17 +1063,41 @@
       const tbody = document.getElementById('tabelAdminBody');
       const dataSesi = adminDataCache[currentAdminTab];
       
+      // Ambil teks dari kotak pencarian (ubah ke huruf kecil semua agar pencarian tidak sensitif besar/kecil huruf)
+      const searchInput = document.getElementById('adminSearchInput');
+      const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+      
       let totalDaftar = 0;
       let totalHadir = 0;
+      
+      // 1. Hitung Total Keseluruhan (tanpa terpengaruh search)
+      dataSesi.forEach(item => {
+        totalDaftar += Number(item.jumlah);
+        if (item.hadir) totalHadir += Number(item.jumlah);
+      });
+
+      // Update Kartu Counter
+      document.getElementById('adminTotalDaftar').innerHTML = `${totalDaftar} <span class="text-sm font-normal text-gray-500">Orang</span>`;
+      document.getElementById('adminTotalHadir').innerHTML = `${totalHadir} <span class="text-sm font-normal text-gray-500">Orang</span>`;
+      document.getElementById('adminBelumHadir').innerHTML = `${totalDaftar - totalHadir} <span class="text-sm font-normal text-gray-500">Orang</span>`;
+
+      // 2. Filter Data berdasarkan pencarian Admin
+      const filteredData = dataSesi.filter(item => {
+        const noUrutStr = String(item.noUrut).padStart(3, '0');
+        const nama = (item.nama || '').toLowerCase();
+        const anggota = (item.anggota || '').toLowerCase();
+        
+        // Cek apakah ketikan admin cocok dengan No Urut, Nama Utama, atau Nama Anggota
+        return noUrutStr.includes(searchTerm) || nama.includes(searchTerm) || anggota.includes(searchTerm);
+      });
+
       tbody.innerHTML = '';
 
-      if (dataSesi.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-500">Belum ada data pendaftar.</td></tr>`;
+      // 3. Tampilkan Data (Yang sudah difilter)
+      if (filteredData.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-500 font-bold">Oops! Data tidak ditemukan.</td></tr>`;
       } else {
-        dataSesi.forEach(item => {
-          totalDaftar += Number(item.jumlah);
-          if (item.hadir) totalHadir += Number(item.jumlah);
-
+        filteredData.forEach(item => {
           const rowClass = item.hadir ? "bg-green-900/10" : "hover:bg-white/5";
           const btnClass = item.hadir ? "bg-green-600 text-white" : "bg-dark-700 border border-white/20 text-gray-400 hover:border-gold-500";
           const btnText = item.hadir ? `<i class="fas fa-check-double"></i> Telah Masuk` : `Ceklis Hadir`;
@@ -1091,6 +1123,7 @@
           `;
         });
       }
+    }
 
       // Update Kartu Counter
       document.getElementById('adminTotalDaftar').innerHTML = `${totalDaftar} <span class="text-sm font-normal text-gray-500">Orang</span>`;
