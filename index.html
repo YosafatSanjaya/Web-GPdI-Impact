@@ -334,7 +334,7 @@
               </div>
             </div>
 
-            <button onclick="bukaFormNatal()"
+            <button id="btnBukaFormNatal" onclick="bukaFormNatal()"
               class="w-full sm:w-auto bg-gradient-to-r from-red-700 to-red-500 hover:from-red-600 hover:to-red-400 px-10 py-4 rounded-xl text-lg font-black shadow-red-500/30 transform transition duration-300 text-white">
               <i class="fas fa-calendar-check mr-2"></i> DAFTAR SEKARANG
             </button>
@@ -854,7 +854,7 @@
     /* ---------------------------------------------------
     2. FITUR NATAL (LIVE COUNT, DINAMIS FORM & E-TICKET)
     --------------------------------------------------- */
-   const API_URL_NATAL = '/api/natal';
+    const API_URL_NATAL = '/api/natal';
 
     // [SEC 2] GET KUOTA DARI SERVER SAAT LOAD
     async function fetchKuotaAwal() {
@@ -877,15 +877,38 @@
       }
     }
 
-    // CEK BULAN (OKTOBER KE ATAS BARU AKTIF)
+    // CEK BULAN (OKTOBER KE ATAS BARU AKTIF, SEBELUMNYA COMING SOON)
     function initNatalFeature() {
       const today = new Date();
-      // Bulan 9 = Oktober.
-      if (today.getMonth() >= 8) {
-        document.getElementById('nav-natal-desktop').classList.remove('hidden');
-        document.getElementById('nav-natal-mobile').classList.remove('hidden');
-        document.getElementById('daftar-natal-section').classList.remove('hidden');
-        fetchKuotaAwal(); // Load kuota jika fitur aktif
+      const currentMonth = today.getMonth(); // 0 = Januari, 8 = September, 9 = Oktober
+
+      const btnDaftar = document.getElementById('btnBukaFormNatal');
+
+      // Selalu tampilkan section Natal agar jemaat tahu ada event
+      document.getElementById('nav-natal-desktop').classList.remove('hidden');
+      document.getElementById('nav-natal-mobile').classList.remove('hidden');
+      document.getElementById('daftar-natal-section').classList.remove('hidden');
+
+      if (currentMonth >= 9) {
+        // JIKA SUDAH OKTOBER: Tombol Nyala
+        btnDaftar.disabled = false;
+        btnDaftar.innerHTML = '<i class="fas fa-calendar-check mr-2"></i> DAFTAR SEKARANG';
+        btnDaftar.className = "w-full sm:w-auto bg-gradient-to-r from-red-700 to-red-500 hover:from-red-600 hover:to-red-400 px-10 py-4 rounded-xl text-lg font-black shadow-red-500/30 transform transition duration-300 text-white";
+        btnDaftar.onclick = bukaFormNatal;
+
+        fetchKuotaAwal(); // Load sisa kuota live dari server
+      } else {
+        // JIKA BELUM OKTOBER (Sekarang): Tombol Mati (Coming Soon)
+        btnDaftar.disabled = true;
+        btnDaftar.innerHTML = '<i class="fas fa-lock mr-2"></i> DIBUKA 1 OKTOBER';
+
+        // Ubah tampilan tombol jadi abu-abu gelap (mati)
+        btnDaftar.className = "w-full sm:w-auto bg-dark-800 border border-white/20 px-10 py-4 rounded-xl text-lg font-black text-gray-500 cursor-not-allowed shadow-none transition-all";
+        btnDaftar.onclick = null; // Matikan aksi klik total
+
+        // Tampilkan kuota awal maksimal karena belum ada yang daftar
+        document.getElementById('kuotaPagiLuar').innerText = "230";
+        document.getElementById('kuotaSoreLuar').innerText = "230";
       }
     }
 
