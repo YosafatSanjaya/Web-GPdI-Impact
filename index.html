@@ -1242,6 +1242,7 @@
         =================================================== */
     let adminDataCache = { Pagi: [], Sore: [] };
     let currentAdminTab = 'Pagi';
+    let adminPasswordTemp = ""; // Tambahan variabel untuk menyimpan password sementara
 
     async function checkRoute() {
       const header = document.querySelector('header');
@@ -1250,37 +1251,26 @@
 
       if (window.location.pathname === '/admin' || window.location.hash === '#admin') {
 
-        // PROTEKSI PASSWORD HASH
+        // Minta password ke admin
         const inputPassword = prompt("Akses Terkunci. Masukkan Password Admin:");
 
-        // Jika user tekan cancel atau kosong
+        // Jika user tekan cancel atau dibiarkan kosong
         if (!inputPassword) {
           window.location.href = "/";
           return;
         }
 
-        // Proses mengubah ketikan user menjadi Hash SHA-256
-        const msgUint8 = new TextEncoder().encode(inputPassword);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const inputHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        // SIMPAN PASSWORD KETIKAN ADMIN UNTUK DIKIRIM KE SERVER
+        // (Kita biarkan server Google yang mencocokkan hash-nya)
+        adminPasswordTemp = inputPassword;
 
-        //  HASH CODE 
-        const targetHash = "466a940303ae3d0f255e1e3a4f3df0c0a2c4401d1f77313232a92c9cbc1c5639";
-
-        // Pencocokan
-        if (inputHash !== targetHash) {
-          alert("Password Salah!");
-          window.location.href = "/";
-          return;
-        }
-
-        // Jika Benar, Buka Dashboard Admin
+        // Buka UI Dashboard
         header.style.display = 'none';
         mainSections.forEach(el => el.style.display = 'none');
         adminDashboard.classList.remove('hidden');
         document.body.classList.remove('bg-dark-900');
         document.body.classList.add('bg-black');
+
         loadAdminData();
       } else {
         // Tampilkan web utama kembali
@@ -1294,18 +1284,32 @@
 
     async function loadAdminData() {
       const icon = document.getElementById('iconSyncAdmin');
+      const tbody = document.getElementById('tabelAdminBody');
+
       icon.classList.add('fa-spin');
 
+      // Tampilkan indikator loading di tabel
+      if (tbody) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-500 font-bold"><i class="fas fa-spinner fa-spin mr-2"></i> Mengambil data dari server...</td></tr>`;
+      }
+
       try {
-        const response = await fetch(API_URL_NATAL + '?action=getAdminData');
+        // PERBAIKAN: Sertakan password yang diketik admin ke dalam URL fetch
+        const response = await fetch(API_URL_NATAL + '?action=getAdminData&pass=' + encodeURIComponent(adminPasswordTemp));
         const data = await response.json();
+
         if (data.status === 'success') {
           adminDataCache.Pagi = data.pagi;
           adminDataCache.Sore = data.sore;
           renderAdminTable();
+        } else {
+          // Jika server Google menolak (karena hash password salah)
+          alert("Akses Ditolak Server: Password Salah!");
+          window.location.href = "/";
         }
       } catch (err) {
         alert("Gagal memuat data dari server.");
+        window.location.href = "/";
       } finally {
         icon.classList.remove('fa-spin');
       }
