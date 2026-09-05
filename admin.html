@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Admin - GPdI Impact</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    crossorigin="anonymous" />
+
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { gold: { 400: '#FBBF24', 500: '#F59E0B', 600: '#D97706', 700: '#B45309' }, dark: { 900: '#050505', 800: '#111111', 700: '#1A1A1A' } } } }
+    }
+  </script>
+
+  <!-- CSS Eksternal -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body class="antialiased selection:bg-gold-500 selection:text-black bg-black">
+
+  <section id="admin-dashboard" class="hidden relative z-[999] min-h-screen p-4 md:p-8">
+    <div class="flex flex-col md:flex-row justify-between items-center mb-8 border-b border-gold-500/20 pb-4">
+      <div>
+        <h2 class="text-3xl font-black text-white"><i class="fas fa-shield-alt text-gold-500 mr-2"></i> Kehadiran Natal
+        </h2>
+        <p class="text-gray-400 text-sm mt-1">Cek Kehadiran Jemaat Natal</p>
+      </div>
+      <div class="mt-4 md:mt-0 flex gap-2">
+        <button onclick="switchAdminTab('Pagi')" id="tabAdminPagi"
+          class="bg-gold-500 text-black px-6 py-2 rounded-xl font-bold transition-all">Sesi 1</button>
+        <button onclick="switchAdminTab('Sore')" id="tabAdminSore"
+          class="bg-dark-800 text-gray-400 border border-gold-500/30 px-6 py-2 rounded-xl font-bold transition-all">Sesi
+          II </button>
+      </div>
+    </div>
+
+    <!-- COUNTER KEDATANGAN -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div class="bg-dark-800 border border-white/5 p-5 rounded-2xl">
+        <p class="text-gray-400 text-xs font-bold uppercase tracking-wider">Total Pendaftar</p>
+        <p class="text-3xl font-black text-white mt-1" id="adminTotalDaftar">0 <span
+            class="text-sm font-normal text-gray-500">Orang</span></p>
+      </div>
+      <div class="bg-dark-800 border border-green-500/30 p-5 rounded-2xl shadow-[0_0_15px_rgba(34,197,94,0.1)]">
+        <p class="text-green-400 text-xs font-bold uppercase tracking-wider">Sudah Masuk (Hadir)</p>
+        <p class="text-3xl font-black text-white mt-1" id="adminTotalHadir">0 <span
+            class="text-sm font-normal text-gray-500">Orang</span></p>
+      </div>
+      <div class="bg-dark-800 border border-red-500/30 p-5 rounded-2xl">
+        <p class="text-red-400 text-xs font-bold uppercase tracking-wider">Belum Datang</p>
+        <p class="text-3xl font-black text-white mt-1" id="adminBelumHadir">0 <span
+            class="text-sm font-normal text-gray-500">Orang</span></p>
+      </div>
+      <div class="bg-dark-800 border border-blue-500/30 p-5 rounded-2xl flex items-center justify-center">
+        <button onclick="loadAdminData()"
+          class="w-full h-full text-blue-400 font-bold hover:text-white transition-colors flex items-center justify-center gap-2">
+          <i class="fas fa-sync-alt" id="iconSyncAdmin"></i> Refresh Data
+        </button>
+      </div>
+    </div>
+
+    <!-- KOTAK PENCARIAN (SEARCH BAR) -->
+    <div class="mb-5 relative">
+      <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+        <i class="fas fa-search text-gray-500"></i>
+      </div>
+      <input type="text" id="adminSearchInput" oninput="renderAdminTable()"
+        class="w-full bg-dark-800 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:border-gold-500 transition-colors shadow-lg"
+        placeholder="Cari Nama Pendaftar, Anggota, atau No Urut">
+    </div>
+
+    <!-- TABEL DATA -->
+    <div class="bg-dark-800 rounded-2xl border border-white/5 overflow-x-auto shadow-2xl">
+      <table class="w-full text-left border-collapse whitespace-nowrap">
+        <thead>
+          <tr class="bg-dark-900 text-gray-400 text-xs uppercase tracking-wider border-b border-white/10">
+            <th class="p-4 font-semibold text-center">No Urut</th>
+            <th class="p-4 font-semibold">Nama Pendaftar</th>
+            <th class="p-4 font-semibold text-center">Jumlah Orang</th>
+            <th class="p-4 font-semibold">Kendaraan</th>
+            <th class="p-4 font-semibold">Nomor WA</th>
+            <th class="p-4 font-semibold text-center">Status Masuk</th>
+          </tr>
+        </thead>
+        <tbody id="tabelAdminBody" class="text-sm text-gray-300 divide-y divide-white/5">
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Panggil Skrip Khusus Admin -->
+  <script src="assets/js/admin.js"></script>
+</body>
+
+</html>
