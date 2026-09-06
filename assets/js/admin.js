@@ -73,6 +73,9 @@ window.switchAdminTab = function (sesi) {
     renderAdminTable();
 }
 
+let currentRowKelola = null;
+let currentSesiKelola = null;
+
 window.renderAdminTable = function () {
     const tbody = document.getElementById('tabelAdminBody');
     const dataSesi = adminDataCache[currentAdminTab];
@@ -81,15 +84,19 @@ window.renderAdminTable = function () {
 
     let totalDaftar = 0;
     let totalHadir = 0;
+    let totalBatal = 0;
 
+    // Kalkulasi Counter Baru
     dataSesi.forEach(item => {
         totalDaftar += Number(item.jumlah);
-        if (item.hadir) totalHadir += Number(item.jumlah);
+        totalHadir += Number(item.jmlHadir || 0);
+        totalBatal += Number(item.jmlBatal || 0);
     });
 
     document.getElementById('adminTotalDaftar').innerHTML = `${totalDaftar} <span class="text-sm font-normal text-gray-500">Orang</span>`;
     document.getElementById('adminTotalHadir').innerHTML = `${totalHadir} <span class="text-sm font-normal text-gray-500">Orang</span>`;
-    document.getElementById('adminBelumHadir').innerHTML = `${totalDaftar - totalHadir} <span class="text-sm font-normal text-gray-500">Orang</span>`;
+    document.getElementById('adminTotalBatal').innerHTML = `${totalBatal} <span class="text-sm font-normal text-gray-500">Orang</span>`;
+    document.getElementById('adminBelumHadir').innerHTML = `${totalDaftar - totalHadir - totalBatal} <span class="text-sm font-normal text-gray-500">Orang</span>`;
 
     const filteredData = dataSesi.filter(item => {
         const noUrutStr = String(item.noUrut).padStart(3, '0');
@@ -104,12 +111,21 @@ window.renderAdminTable = function () {
         tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-500 font-bold">Data tidak ditemukan.</td></tr>`;
     } else {
         filteredData.forEach(item => {
-            const rowClass = item.hadir ? "bg-green-900/10" : "hover:bg-white/5";
-            const btnClass = item.hadir ? "bg-green-600 text-white" : "bg-dark-700 border border-white/20 text-gray-400 hover:border-gold-500";
-            const btnText = item.hadir ? `<i class="fas fa-check-double"></i> Telah Masuk` : `Ceklis Hadir`;
+            // Dinamika Tombol
+            let btnClass = "bg-dark-700 border border-white/20 text-gray-400 hover:border-gold-500";
+            let btnText = `Kelola Kehadiran`;
+
+            if (item.jmlHadir > 0) {
+                btnClass = "bg-green-600 text-white shadow-[0_0_15px_rgba(22,163,74,0.3)]";
+                btnText = `<i class="fas fa-check-double"></i> Hadir (${item.jmlHadir})`;
+            }
+            if (item.jmlBatal === item.jumlah && item.jumlah > 0) {
+                btnClass = "bg-red-900/40 text-red-400 border border-red-500/30";
+                btnText = `<i class="fas fa-ban"></i> Batal Semua`;
+            }
 
             tbody.innerHTML += `
-              <tr class="${rowClass} transition-colors">
+              <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
                 <td class="p-4 text-center font-black text-gold-400 text-lg">${String(item.noUrut).padStart(3, '0')}</td>
                 <td class="p-4">
                   <p class="font-bold text-white text-base">${item.nama}</p>
@@ -121,7 +137,7 @@ window.renderAdminTable = function () {
                 <td class="p-4 font-medium text-gray-400">${item.kendaraan}</td>
                 <td class="p-4 text-gray-400"><a href="https://wa.me/${item.wa}" target="_blank" class="hover:text-green-400"><i class="fab fa-whatsapp"></i> ${item.wa}</a></td>
                 <td class="p-4 text-center">
-                  <button onclick="tandaiKehadiran(this, ${item.row}, ${!item.hadir})" class="${btnClass} px-4 py-2 rounded-lg font-bold text-xs transition-all w-32 shadow-lg">
+                  <button onclick="bukaModalKelola(${item.row})" class="${btnClass} px-4 py-2 rounded-lg font-bold text-xs transition-all w-36 shadow-lg">
                     ${btnText}
                   </button>
                 </td>
@@ -131,30 +147,106 @@ window.renderAdminTable = function () {
     }
 }
 
-window.tandaiKehadiran = async function (btnElement, rowIndex, isHadir) {
-    btnElement.innerHTML = `<i class="fas fa-spinner fa-spin"></i>`;
-    btnElement.disabled = true;
+// BUKA MODAL DAN PECAH NAMA ANGGOTA
+window.bukaModalKelola = function (rowIndex) {
+    const item = adminDataCache[currentAdminTab].find(x => x.row === rowIndex);
+    if (!item) return;
 
-    const formData = new FormData();
+    currentRowKelola = item.row;
+    currentSesiKelola = currentAdminTab;
+
+    document.getElementById('kelolaTitle').innerText = `Kelola Urut #${String(item.noUrut).padStart(3, '0')}`;
+
+    // Pecah nama pendaftar utama dan anggota
+    let names = [{ type: 'Utama', name: item.nama }];
+    if (item.anggota && item.anggota !== '-') {
+        item.anggota.split(',').forEach(ang => {
+            names.push({ type: 'Anggota', name: ang.trim() });
+        });
+    }
+
+    let existingStatus = {};
+    try { existingStatus = item.statusDetail ? JSON.parse(item.statusDetail) : {}; } catch (e) { }
+
+    const list = document.getElementById('kelolaList');
+    list.innerHTML = '';
+
+    // Render Checklist per orang
+    names.forEach((person, idx) => {
+        const currentStatus = existingStatus[idx] || 'Belum';
+        list.innerHTML += `
+            <div class="bg-dark-800 p-4 rounded-xl border border-white/5 flex justify-between items-center gap-4">
+                <div class="overflow-hidden">
+                    <p class="text-[10px] text-gray-500 font-bold uppercase">${person.type}</p>
+                    <p class="text-white font-bold truncate">${person.name}</p>
+                </div>
+                <select id="status_${idx}" class="bg-dark-900 border border-white/10 text-sm text-white rounded-lg px-2 py-2 focus:border-gold-500 outline-none">
+                    <option value="Belum" ${currentStatus === 'Belum' ? 'selected' : ''}>Belum Datang</option>
+                    <option value="Hadir" ${currentStatus === 'Hadir' ? 'selected' : ''}>✅ Hadir</option>
+                    <option value="Batal" ${currentStatus === 'Batal' ? 'selected' : ''}>❌ Batal</option>
+                </select>
+            </div>
+        `;
+    });
+
+    const modal = document.getElementById('modalKelola');
+    const box = document.getElementById('boxKelola');
+    modal.classList.remove('hidden');
+    setTimeout(() => { modal.classList.remove('opacity-0'); box.classList.remove('scale-95'); box.classList.add('scale-100'); }, 10);
+}
+
+window.tutupModalKelola = function () {
+    const modal = document.getElementById('modalKelola');
+    const box = document.getElementById('boxKelola');
+    modal.classList.add('opacity-0'); box.classList.remove('scale-100'); box.classList.add('scale-95');
+    setTimeout(() => { modal.classList.add('hidden'); }, 300);
+}
+
+// SIMPAN HASIL STATUS (HADIR/BATAL) KE SERVER
+window.simpanKelola = async function () {
+    const item = adminDataCache[currentSesiKelola].find(x => x.row === currentRowKelola);
+    const btn = document.getElementById('btnSimpanKelola');
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Menyimpan...`;
+    btn.disabled = true;
+
+    let namesCount = 1 + (item.anggota && item.anggota !== '-' ? item.anggota.split(',').length : 0);
+    let statusDetail = {};
+    let jmlHadir = 0;
+    let jmlBatal = 0;
+
+    for (let i = 0; i < namesCount; i++) {
+        let val = document.getElementById(`status_${i}`).value;
+        statusDetail[i] = val;
+        if (val === 'Hadir') jmlHadir++;
+        if (val === 'Batal') jmlBatal++;
+    }
+
+    const formData = new URLSearchParams();
     formData.append('action', 'markArrived');
-    formData.append('sesi', currentAdminTab);
-    formData.append('row', rowIndex);
-    formData.append('isHadir', isHadir);
+    formData.append('sesi', currentSesiKelola);
+    formData.append('row', currentRowKelola);
+    formData.append('statusDetail', JSON.stringify(statusDetail));
+    formData.append('jmlHadir', jmlHadir);
+    formData.append('jmlBatal', jmlBatal);
 
     try {
-        const res = await fetch(API_URL_NATAL, { method: 'POST', body: formData });
+        const res = await fetch(API_URL_NATAL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: formData
+        });
         const result = await res.json();
 
         if (result.status === 'success') {
-            const index = adminDataCache[currentAdminTab].findIndex(x => x.row === rowIndex);
-            if (index !== -1) adminDataCache[currentAdminTab][index].hadir = isHadir;
+            item.statusDetail = JSON.stringify(statusDetail);
+            item.jmlHadir = jmlHadir;
+            item.jmlBatal = jmlBatal;
             renderAdminTable();
-        } else {
-            alert("Gagal mencatat. Coba lagi.");
-            renderAdminTable();
-        }
-    } catch (e) {
-        alert("Gangguan koneksi.");
-        renderAdminTable();
+            tutupModalKelola();
+        } else { alert("Gagal mencatat data."); }
+    } catch (e) { alert("Gangguan koneksi."); }
+    finally {
+        btn.innerHTML = `Simpan Kehadiran`;
+        btn.disabled = false;
     }
 }
