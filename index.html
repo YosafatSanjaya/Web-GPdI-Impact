@@ -397,14 +397,16 @@
               type="text" id="inputWANatal" required maxlength="15" pattern="[0-9]+"
               class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500"
               placeholder="08123456789"></div>
-          <div><label class="block text-gray-300 text-sm font-semibold mb-2">Nama Pendaftar Utama *</label><input
-              type="text" id="inputNamaNatal" required maxlength="50"
-              class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500"
-              placeholder="Nama Anda"></div>
-          <div><label class="block text-gray-300 text-sm font-semibold mb-2">Jumlah Orang (Max 10) *</label><input
-              type="number" id="inputJumlahNatal" required min="1" max="10" oninput="renderFormAnggota()"
-              class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500"
-              placeholder="Contoh: 3"></div>
+          <div>
+            <label class="block text-gray-300 text-sm font-semibold mb-2">Nama Pendaftar Utama *</label>
+            <!-- Tambahkan pattern huruf -->
+            <input type="text" id="inputNamaNatal" required maxlength="50" pattern="[a-zA-Z\s]+" title="Hanya boleh diisi huruf dan spasi" class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500" placeholder="Nama Anda (Hanya Huruf)">
+          </div>
+          <div>
+            <label class="block text-gray-300 text-sm font-semibold mb-2">Jumlah Orang (Max 7) *</label>
+            <!-- Ubah max="10" menjadi max="7" -->
+            <input type="number" id="inputJumlahNatal" required min="1" max="7" oninput="renderFormAnggota()" class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500" placeholder="Maksimal 7">
+          </div>
           <div><label class="block text-gray-300 text-sm font-semibold mb-2">Jenis Kendaraan *</label><select
               id="inputJenisKendaraan" required onchange="toggleKendaraan()"
               class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 appearance-none">
