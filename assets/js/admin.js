@@ -141,7 +141,7 @@ window.renderAdminTable = function () {
                   <span class="bg-dark-900 border border-white/10 px-3 py-1 rounded-lg text-white font-bold">${item.jumlah}</span>
                 </td>
                 <td class="p-4 font-medium text-gray-400">${item.kendaraan}</td>
-                <td class="p-4 text-gray-400"><a href="https://wa.me/${item.wa}" target="_blank" class="hover:text-green-400"><i class="fab fa-whatsapp"></i> ${item.wa}</a></td>
+                <td class="p-4 text-gray-400"><a href="https://wa.me/${waBersih}" target="_blank" class="hover:text-green-400"><i class="fab fa-whatsapp"></i> ${item.wa}</a></td>
                 <td class="p-4 text-center">
                   <button onclick="bukaModalKelola(${item.row})" class="${btnClass} px-4 py-2 rounded-lg font-bold text-xs transition-all w-36 shadow-lg">
                     ${btnText}
