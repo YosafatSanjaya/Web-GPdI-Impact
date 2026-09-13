@@ -130,17 +130,25 @@ window.submitNatal = async function (e) {
 
     grecaptcha.ready(function () {
         grecaptcha.execute('6Lc39yctAAAAAMFEJxjgh3GGOhxNRwpQSd3mSvpp', { action: 'submit_natal' }).then(async function (token) {
-            const formData = new FormData();
-            formData.append("sesi", sesi);
-            formData.append("nama", safeNama);
-            formData.append("wa", safeWA);
-            formData.append("jumlah", jumlah);
-            formData.append("anggota", stringAnggota);
-            formData.append("kendaraan", infoKendaraan);
-            formData.append("recaptchaToken", token);
+            
+            // UBAH 1: Ganti FormData menjadi URLSearchParams agar terbaca oleh Vercel
+            const payload = new URLSearchParams();
+            payload.append("sesi", sesi);
+            payload.append("nama", safeNama);
+            payload.append("wa", safeWA);
+            payload.append("jumlah", jumlah);
+            payload.append("anggota", stringAnggota);
+            payload.append("kendaraan", infoKendaraan);
+            payload.append("recaptchaToken", token);
 
             try {
-                const response = await fetch(API_URL_NATAL, { method: 'POST', body: formData });
+                // UBAH 2: Tambahkan headers Content-Type yang spesifik
+                const response = await fetch(API_URL_NATAL, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: payload 
+                });
+                
                 const result = await response.json();
 
                 if (result.status === 'success') {
@@ -180,6 +188,7 @@ window.submitNatal = async function (e) {
             btn.disabled = false;
         });
     });
+
 }
 
 window.tutupTiket = function () {
