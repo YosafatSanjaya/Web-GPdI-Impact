@@ -36,18 +36,18 @@ function initNatalFeature() {
     document.getElementById('nav-natal-mobile').classList.remove('hidden');
     document.getElementById('daftar-natal-section').classList.remove('hidden');
 
-    if (currentMonth >= 7) { // beta 1
+    if (currentMonth >= 8) { // beta 1
         btnDaftar.disabled = false;
         btnDaftar.innerHTML = '<i class="fas fa-calendar-check mr-2"></i> DAFTAR SEKARANG';
         btnDaftar.className = "w-full sm:w-auto bg-gradient-to-r from-red-700 to-red-500 hover:from-red-600 hover:to-red-400 px-10 py-4 rounded-xl text-lg font-black shadow-red-500/30 transform transition duration-300 text-white";
 
         fetchKuotaAwal();
-    }
-    // } else {
-    //     btnDaftar.disabled = true;
-    //     btnDaftar.innerHTML = '<i class="fas fa-lock mr-2"></i> DIBUKA 1 OKTOBER';
-    //     btnDaftar.className = "w-full sm:w-auto bg-dark-800 border border-white/20 px-10 py-4 rounded-xl text-lg font-black text-gray-500 cursor-not-allowed shadow-none transition-all";
-    //     btnDaftar.onclick = null;
+    
+    } else {
+        btnDaftar.disabled = true;
+        btnDaftar.innerHTML = '<i class="fas fa-lock mr-2"></i> DIBUKA 1 OKTOBER';
+        btnDaftar.className = "w-full sm:w-auto bg-dark-800 border border-white/20 px-10 py-4 rounded-xl text-lg font-black text-gray-500 cursor-not-allowed shadow-none transition-all";
+        btnDaftar.onclick = null;
 
         document.getElementById('kuotaPagiLuar').innerText = "230";
         document.getElementById('kuotaSoreLuar').innerText = "230";
