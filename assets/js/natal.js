@@ -55,14 +55,22 @@ function initNatalFeature() {
 }
 
 function renderFormAnggota() {
-    const jumlah = parseInt(document.getElementById('inputJumlahNatal').value) || 1;
+    let jumlah = parseInt(document.getElementById('inputJumlahNatal').value) || 1;
+    
+    // Kunci maksimal 7 agar tidak bisa diakali via inspect element
+    if (jumlah > 7) {
+        jumlah = 7;
+        document.getElementById('inputJumlahNatal').value = 7;
+    }
+
     const container = document.getElementById('containerAnggotaNatal');
     container.innerHTML = '';
 
     if (jumlah > 1) {
-        container.innerHTML += `<label class="block text-gray-300 text-sm font-semibold mb-2">Nama Anggota (Tulis di bawah ini) *</label>`;
+        container.innerHTML += `<label class="block text-gray-300 text-sm font-semibold mb-2">Nama Anggota Tambahan *</label>`;
         for (let i = 1; i < jumlah; i++) {
-            container.innerHTML += `<input type="text" class="input-anggota-extra w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-red-500 mb-2" maxlength="50" placeholder="Nama Anggota ${i}" required>`;
+            // Label i + 1 agar dimulai dari Anggota 2, 3, dst. Ditambah pattern anti-angka.
+            container.innerHTML += `<input type="text" class="input-anggota-extra w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-red-500 mb-2" maxlength="50" pattern="[a-zA-Z\\s]+" title="Hanya huruf dan spasi" placeholder="Nama Anggota ${i + 1}" required>`;
         }
     }
 }
