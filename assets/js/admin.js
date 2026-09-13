@@ -125,10 +125,15 @@ window.renderAdminTable = function () {
             }
 
            // TAMBAHKAN LOGIKA PEMBERSIH WA DI SINI
-            let waBersih = String(item.wa).replace(/\D/g, ''); // Hapus semua karakter selain angka (strip, spasi, dll)
+            let waBersih = String(item.wa).replace(/\D/g, ''); // Hapus semua karakter selain angka
+
+            // Koreksi otomatis berbagai format input nomor ke standar +62
             if (waBersih.startsWith('0')) {
-                waBersih = '62' + waBersih.substring(1); // Ubah angka 0 di depan menjadi 62
+                waBersih = '62' + waBersih.substring(1); // Jika mulai dari 0, ubah jadi 62
+            } else if (waBersih.startsWith('8')) {
+                waBersih = '62' + waBersih; // Jika langsung mulai dari 8, tambahkan 62 di depannya
             }
+            // Jika sudah berawalan 62 (karena user mengetik +62 atau 62), sistem tidak perlu mengubahnya lagi.
 
             tbody.innerHTML += `
               <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
@@ -141,7 +146,11 @@ window.renderAdminTable = function () {
                   <span class="bg-dark-900 border border-white/10 px-3 py-1 rounded-lg text-white font-bold">${item.jumlah}</span>
                 </td>
                 <td class="p-4 font-medium text-gray-400">${item.kendaraan}</td>
-                <td class="p-4 text-gray-400"><a href="https://wa.me/${waBersih}" target="_blank" class="hover:text-green-400"><i class="fab fa-whatsapp"></i> ${item.wa}</a></td>
+                <td class="p-4 text-gray-400">
+                  <a href="https://wa.me/${waBersih}" target="_blank" class="hover:text-green-400">
+                    <i class="fab fa-whatsapp"></i> ${item.wa}
+                  </a>
+                </td>
                 <td class="p-4 text-center">
                   <button onclick="bukaModalKelola(${item.row})" class="${btnClass} px-4 py-2 rounded-lg font-bold text-xs transition-all w-36 shadow-lg">
                     ${btnText}
