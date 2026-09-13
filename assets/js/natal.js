@@ -207,10 +207,14 @@ window.tutupTiket = function () {
 
 window.downloadTiketAsImage = async function () {
     const area = document.getElementById("areaPrintTiket");
+    // Turunkan resolusi render untuk HP (scale 1.5) agar tidak lemot
+    const scaleValue = window.innerWidth < 768 ? 1.5 : 2; 
+    
     const canvas = await html2canvas(area, {
-        scale: 2,
+        scale: scaleValue,
         useCORS: true,
-        backgroundColor: "#ffffff"
+        backgroundColor: "#ffffff",
+        logging: false // Matikan log sistem untuk mempercepat render
     });
     const link = document.createElement("a");
     link.href = canvas.toDataURL("image/png");
