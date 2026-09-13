@@ -124,6 +124,12 @@ window.renderAdminTable = function () {
                 btnText = `<i class="fas fa-ban"></i> Batal Semua`;
             }
 
+           // TAMBAHKAN LOGIKA PEMBERSIH WA DI SINI
+            let waBersih = String(item.wa).replace(/\D/g, ''); // Hapus semua karakter selain angka (strip, spasi, dll)
+            if (waBersih.startsWith('0')) {
+                waBersih = '62' + waBersih.substring(1); // Ubah angka 0 di depan menjadi 62
+            }
+
             tbody.innerHTML += `
               <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
                 <td class="p-4 text-center font-black text-gold-400 text-lg">${String(item.noUrut).padStart(3, '0')}</td>
