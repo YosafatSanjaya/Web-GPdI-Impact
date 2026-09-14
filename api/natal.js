@@ -23,7 +23,7 @@ export default async function handler(req, res) {
         const response = await fetch(url, { headers: supabaseHeaders });
         const data = await response.json();
         const terpakai = data.reduce((acc, curr) => acc + (curr.jumlah - (curr.jml_batal || 0)), 0);
-        return 275 - terpakai;
+        return 230 - terpakai;
     }
 
     // Fetch Data Lengkap Sesi untuk Admin
