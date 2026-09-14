@@ -136,6 +136,11 @@ window.submitNatal = async function (e) {
     btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Memproses...';
     btn.disabled = true;
 
+   // MUNCULKAN OVERLAY LOADING
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    loadingOverlay.classList.remove('hidden');
+    loadingOverlay.classList.add('flex');
+
     grecaptcha.ready(function () {
         grecaptcha.execute('6Lc39yctAAAAAMFEJxjgh3GGOhxNRwpQSd3mSvpp', { action: 'submit_natal' }).then(async function (token) {
             
@@ -188,12 +193,18 @@ window.submitNatal = async function (e) {
             } finally {
                 btn.innerHTML = '<span>Ambil Tiket</span> <i class="fas fa-ticket-alt"></i>';
                 btn.disabled = false;
+               // SEMBUNYIKAN OVERLAY LOADING SAAT SELESAI
+                    loadingOverlay.classList.add('hidden');
+                    loadingOverlay.classList.remove('flex');
             }
         }).catch(function (err) {
             errorMsg.innerText = "Gagal memverifikasi reCAPTCHA. Coba matikan AdBlock.";
             errorMsg.classList.remove('hidden');
             btn.innerHTML = '<span>Ambil Tiket</span> <i class="fas fa-ticket-alt"></i>';
             btn.disabled = false;
+           // SEMBUNYIKAN OVERLAY LOADING SAAT SELESAI
+                    loadingOverlay.classList.add('hidden');
+                    loadingOverlay.classList.remove('flex');
         });
     });
 
