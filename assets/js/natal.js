@@ -115,6 +115,7 @@ window.submitNatal = async function (e) {
     const waRaw = document.getElementById('inputWANatal').value;
     const namaRaw = document.getElementById('inputNamaNatal').value;
     const jumlah = parseInt(document.getElementById('inputJumlahNatal').value);
+    const anak = parseInt(document.getElementById('inputAnakNatal').value) || 0;
 
     const jenisKendaraan = document.getElementById('inputJenisKendaraan').value;
     const jmlKendaraan = document.getElementById('inputJmlKendaraan').value;
@@ -153,6 +154,7 @@ window.submitNatal = async function (e) {
             payload.append("anggota", stringAnggota);
             payload.append("kendaraan", infoKendaraan);
             payload.append("recaptchaToken", token);
+            payload.append("anak", anak);
 
             try {
                 // UBAH 2: Tambahkan headers Content-Type yang spesifik
@@ -172,6 +174,7 @@ window.submitNatal = async function (e) {
                     document.getElementById('tiketJumlah').innerText = jumlah + " Orang";
                     document.getElementById('tiketKendaraan').innerText = infoKendaraan;
                     document.getElementById('tiketAnggota').innerText = stringAnggota;
+                    document.getElementById('tiketAnak').innerText = anak > 0 ? anak + " Orang" : "-";
 
                     if (result.sisaPagi !== undefined) document.getElementById('kuotaPagiLuar').innerText = result.sisaPagi;
                     if (result.sisaSore !== undefined) document.getElementById('kuotaSoreLuar').innerText = result.sisaSore;
