@@ -413,6 +413,17 @@
             <!-- Ubah max="10" menjadi max="7" -->
             <input type="number" id="inputJumlahNatal" required min="1" max="7" oninput="renderFormAnggota()" class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500" placeholder="Maksimal 7">
           </div>
+          <div>
+            <label class="block text-gray-300 text-sm font-semibold mb-2">Bawa Anak (Usia ≤ 12 Tahun)?</label>
+            <select id="inputAnakNatal" class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 appearance-none">
+              <option value="0" selected>Tidak ada (0)</option>
+              <option value="1">1 Anak</option>
+              <option value="2">2 Anak</option>
+              <option value="3">3 Anak</option>
+              <option value="4">4 Anak</option>
+              <option value="5">5 Anak</option>
+            </select>
+          </div>
           <div><label class="block text-gray-300 text-sm font-semibold mb-2">Jenis Kendaraan *</label><select
               id="inputJenisKendaraan" required onchange="toggleKendaraan()"
               class="w-full bg-dark-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 appearance-none">
@@ -494,6 +505,12 @@
                   Kendaraan</p>
                 <p style="font-size: 15px; font-weight: 900; color: #111; margin: 0;" id="tiketKendaraan">-</p>
               </div>
+              <div style="display: flex; justify-content: space-between; border-top: 1px dashed #d1d5db; padding-top: 14px; margin-bottom: 14px;">
+              <div>
+                <p style="font-size: 9px; color: #6b7280; font-weight: 800; text-transform: uppercase; margin: 0 0 4px 0;">Anak (≤ 12 Thn)</p>
+                <p style="font-size: 15px; font-weight: 900; color: #111; margin: 0;" id="tiketAnak">0</p>
+              </div>
+            </div>
             </div>
             <p style="font-size: 9px; color: #6b7280; font-weight: 800; text-transform: uppercase; margin: 0 0 4px 0;">
               Anggota Tambahan</p>
