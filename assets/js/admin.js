@@ -144,6 +144,8 @@ window.renderAdminTable = function () {
                 </td>
                 <td class="p-4 text-center">
                   <span class="bg-dark-900 border border-white/10 px-3 py-1 rounded-lg text-white font-bold">${item.jumlah}</span>
+                  <!-- Menampilkan jumlah anak di bawah tiket utama -->
+                  ${item.anak > 0 ? `<p class="text-[10px] text-gray-400 mt-2 font-bold uppercase">Anak: <span class="text-white bg-red-600/20 px-2 py-0.5 rounded">${item.anak}</span></p>` : ''}
                 </td>
                 <td class="p-4 font-medium text-gray-400">${item.kendaraan}</td>
                 <td class="p-4 text-gray-400">
