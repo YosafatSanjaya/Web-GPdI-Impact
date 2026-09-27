@@ -38,6 +38,7 @@ export default async function handler(req, res) {
             wa: r.wa,
             jumlah: r.jumlah,
             anggota: r.anggota,
+            anak: r.anak || 0,
             noUrut: r.no_urut,
             kendaraan: r.kendaraan,
             hadir: r.hadir,
@@ -114,6 +115,7 @@ export default async function handler(req, res) {
             // 2. JIKA REQUEST PENDAFTARAN WEB NATAL
             const { sesi, nama, wa, anggota, kendaraan, recaptchaToken } = bodyData;
             const jumlah = parseInt(bodyData.jumlah) || 1;
+            const anak = parseInt(bodyData.anak) || 0;
 
             if (jumlah < 1 || jumlah > 7) {
                 return res.status(400).json({ status: "error", message: "Maksimal 7 orang." });
@@ -157,7 +159,7 @@ export default async function handler(req, res) {
 
             // Insert Data Baru
             const insertPayload = {
-                sesi, nama, wa, jumlah, anggota, kendaraan, no_urut: noUrut, kode_booking: kodeBooking, hadir: false
+                sesi, nama, wa, jumlah, anggota, kendaraan,anak,no_urut: noUrut, kode_booking: kodeBooking, hadir: false
             };
 
             const insertRes = await fetch(`${SUPABASE_URL}/rest/v1/pendaftar`, {
