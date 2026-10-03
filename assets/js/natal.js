@@ -15,13 +15,13 @@ async function fetchKuotaAwal() {
             document.getElementById('kuotaPagiLuar').innerText = data.sisaPagi;
             document.getElementById('kuotaSoreLuar').innerText = data.sisaSore;
         } else {
-            document.getElementById('kuotaPagiLuar').innerText = "Load..";
-            document.getElementById('kuotaSoreLuar').innerText = "Load..";
+            document.getElementById('kuotaPagiLuar').innerText = "Loading..";
+            document.getElementById('kuotaSoreLuar').innerText = "Loading..";
         }
     } catch (e) {
         document.getElementById('kuotaPagiLuar').innerText = "--";
         document.getElementById('kuotaSoreLuar').innerText = "--";
-        console.warn("Backend Get Kuota Belum Tersedia atau Error Jaringan.");
+        console.warn("Kuota Belum Tersedia atau Error Jaringan.");
     }
 }
 
@@ -169,7 +169,7 @@ window.submitNatal = async function (e) {
                 if (result.status === 'success') {
                     const noUrutServer = result.noUrut || "999";
                     document.getElementById('tiketNoUrut').innerText = noUrutServer.toString().padStart(3, '0');
-                    document.getElementById('tiketSesi').innerText = sesi === 'Pagi' ? "SESI I (12.30)" : "SESI II (16.30)";
+                    document.getElementById('tiketSesi').innerText = sesi === 'Pagi' ? "SESI I (9.30)" : "SESI II (16.00)";
                     document.getElementById('tiketNama').innerText = safeNama;
                     document.getElementById('tiketJumlah').innerText = jumlah + " Orang";
                     document.getElementById('tiketKendaraan').innerText = infoKendaraan;
