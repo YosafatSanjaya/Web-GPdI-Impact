@@ -1,5 +1,5 @@
 /* ===================================================
-   FITUR ADMIN DASHBOARD RUTING & LOGIKA
+   FITUR ADMIN DASHBOARD (BUG FIXED & PREMIUM UI)
 =================================================== */
 const API_URL_NATAL = '/api/natal';
 let adminDataCache = { Pagi: [], Sore: [] };
@@ -12,8 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function initAdminPortal() {
     const adminDashboard = document.getElementById('admin-dashboard');
-
-    const inputPassword = prompt("Akses Terkunci. Masukkan Password Admin:");
+    const inputPassword = prompt("Akses Admin Terkunci. Masukkan Password:");
 
     if (!inputPassword) {
         window.location.href = "/index.html";
@@ -22,9 +21,6 @@ async function initAdminPortal() {
 
     adminPasswordTemp = inputPassword;
     adminDashboard.classList.remove('hidden');
-    document.body.classList.remove('bg-dark-900');
-    document.body.classList.add('bg-black');
-
     loadAdminData();
 }
 
@@ -33,9 +29,8 @@ window.loadAdminData = async function () {
     const tbody = document.getElementById('tabelAdminBody');
 
     icon.classList.add('fa-spin');
-
     if (tbody) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-500 font-bold"><i class="fas fa-spinner fa-spin mr-2"></i> Mengambil data dari server...</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="p-10 text-center text-gold-500 font-bold tracking-widest text-xs uppercase"><i class="fas fa-circle-notch fa-spin mr-3 text-lg"></i> Sinkronisasi Database...</td></tr>`;
     }
 
     try {
@@ -51,7 +46,7 @@ window.loadAdminData = async function () {
             window.location.href = "/index.html";
         }
     } catch (err) {
-        alert("Gagal memuat data dari server.");
+        alert("Gagal terhubung ke database Supabase.");
         window.location.href = "/index.html";
     } finally {
         icon.classList.remove('fa-spin');
@@ -62,19 +57,18 @@ window.switchAdminTab = function (sesi) {
     currentAdminTab = sesi;
     const tabPagi = document.getElementById('tabAdminPagi');
     const tabSore = document.getElementById('tabAdminSore');
+    const activeClass = "bg-gold-500 text-black px-8 py-2.5 rounded-xl font-bold shadow-lg transition-all text-sm";
+    const inactiveClass = "hover:bg-white/5 text-gray-400 px-8 py-2.5 rounded-xl font-bold transition-all text-sm";
 
     if (sesi === 'Pagi') {
-        tabPagi.className = "bg-gold-500 text-black px-6 py-2 rounded-xl font-bold transition-all";
-        tabSore.className = "bg-dark-800 text-gray-400 border border-gold-500/30 px-6 py-2 rounded-xl font-bold transition-all";
+        tabPagi.className = activeClass;
+        tabSore.className = inactiveClass;
     } else {
-        tabSore.className = "bg-gold-500 text-black px-6 py-2 rounded-xl font-bold transition-all";
-        tabPagi.className = "bg-dark-800 text-gray-400 border border-gold-500/30 px-6 py-2 rounded-xl font-bold transition-all";
+        tabSore.className = activeClass;
+        tabPagi.className = inactiveClass;
     }
     renderAdminTable();
 }
-
-let currentRowKelola = null;
-let currentSesiKelola = null;
 
 window.renderAdminTable = function () {
     const tbody = document.getElementById('tabelAdminBody');
@@ -86,17 +80,16 @@ window.renderAdminTable = function () {
     let totalHadir = 0;
     let totalBatal = 0;
 
-    // Kalkulasi Counter Baru
     dataSesi.forEach(item => {
         totalDaftar += Number(item.jumlah);
         totalHadir += Number(item.jmlHadir || 0);
         totalBatal += Number(item.jmlBatal || 0);
     });
 
-    document.getElementById('adminTotalDaftar').innerHTML = `${totalDaftar} <span class="text-sm font-normal text-gray-500">Orang</span>`;
-    document.getElementById('adminTotalHadir').innerHTML = `${totalHadir} <span class="text-sm font-normal text-gray-500">Orang</span>`;
-    document.getElementById('adminTotalBatal').innerHTML = `${totalBatal} <span class="text-sm font-normal text-gray-500">Orang</span>`;
-    document.getElementById('adminBelumHadir').innerHTML = `${totalDaftar - totalHadir - totalBatal} <span class="text-sm font-normal text-gray-500">Orang</span>`;
+    document.getElementById('adminTotalDaftar').innerHTML = `${totalDaftar} <span class="text-sm font-normal text-gray-500">Tiket</span>`;
+    document.getElementById('adminTotalHadir').innerHTML = `${totalHadir} <span class="text-sm font-normal text-gray-500">Hadir</span>`;
+    document.getElementById('adminTotalBatal').innerHTML = `${totalBatal} <span class="text-sm font-normal text-gray-500">Batal</span>`;
+    document.getElementById('adminBelumHadir').innerHTML = `${totalDaftar - totalHadir - totalBatal} <span class="text-sm font-normal text-gray-500">Sisa</span>`;
 
     const filteredData = dataSesi.filter(item => {
         const noUrutStr = String(item.noUrut).padStart(3, '0');
@@ -105,56 +98,53 @@ window.renderAdminTable = function () {
         return noUrutStr.includes(searchTerm) || nama.includes(searchTerm) || anggota.includes(searchTerm);
     });
 
+    // PANGGIL RENDER STATISTIK DI SINI (BUKAN DI LUAR FUNGSI)
+    renderStatistik(filteredData);
+
     tbody.innerHTML = '';
 
     if (filteredData.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-500 font-bold">Data tidak ditemukan.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="p-10 text-center text-gray-500 font-medium">Tidak ada data yang sesuai pencarian.</td></tr>`;
     } else {
         filteredData.forEach(item => {
-            // Dinamika Tombol
-            let btnClass = "bg-dark-700 border border-white/20 text-gray-400 hover:border-gold-500";
-            let btnText = `Kelola Kehadiran`;
+            let btnClass = "bg-white/5 hover:bg-gold-500/20 text-gray-300 hover:text-gold-400 border border-white/10 hover:border-gold-500/50";
+            let btnText = `Check-In`;
 
             if (item.jmlHadir > 0) {
-                btnClass = "bg-green-600 text-white shadow-[0_0_15px_rgba(22,163,74,0.3)]";
-                btnText = `<i class="fas fa-check-double"></i> Hadir (${item.jmlHadir})`;
+                btnClass = "bg-green-500/10 text-green-400 border border-green-500/30";
+                btnText = `<i class="fas fa-check-circle"></i> Hadir (${item.jmlHadir})`;
             }
             if (item.jmlBatal === item.jumlah && item.jumlah > 0) {
-                btnClass = "bg-red-900/40 text-red-400 border border-red-500/30";
-                btnText = `<i class="fas fa-ban"></i> Batal Semua`;
+                btnClass = "bg-red-500/10 text-red-400 border border-red-500/30";
+                btnText = `<i class="fas fa-ban"></i> Batal`;
             }
 
-           // TAMBAHKAN LOGIKA PEMBERSIH WA DI SINI
-            let waBersih = String(item.wa).replace(/\D/g, ''); // Hapus semua karakter selain angka
-
-            // Koreksi otomatis berbagai format input nomor ke standar +62
+            let waBersih = String(item.wa).replace(/\D/g, ''); 
             if (waBersih.startsWith('0')) {
-                waBersih = '62' + waBersih.substring(1); // Jika mulai dari 0, ubah jadi 62
+                waBersih = '62' + waBersih.substring(1); 
             } else if (waBersih.startsWith('8')) {
-                waBersih = '62' + waBersih; // Jika langsung mulai dari 8, tambahkan 62 di depannya
+                waBersih = '62' + waBersih; 
             }
-            // Jika sudah berawalan 62 (karena user mengetik +62 atau 62), sistem tidak perlu mengubahnya lagi.
 
             tbody.innerHTML += `
-              <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
-                <td class="p-4 text-center font-black text-gold-400 text-lg">${String(item.noUrut).padStart(3, '0')}</td>
-                <td class="p-4">
+              <tr class="hover:bg-white/[0.02] transition-colors border-b border-white/5">
+                <td class="py-4 px-5 text-center font-black text-gold-500 text-lg">${String(item.noUrut).padStart(3, '0')}</td>
+                <td class="py-4 px-5">
                   <p class="font-bold text-white text-base">${item.nama}</p>
-                  <p class="text-xs text-gray-500 mt-1 max-w-[200px] truncate" title="${item.anggota}">Lainnya: ${item.anggota}</p>
+                  <p class="text-[11px] text-gray-500 mt-1 max-w-[200px] truncate" title="${item.anggota}">+ ${item.anggota}</p>
                 </td>
-                <td class="p-4 text-center">
-                  <span class="bg-dark-900 border border-white/10 px-3 py-1 rounded-lg text-white font-bold">${item.jumlah}</span>
-                  <!-- Menampilkan jumlah anak di bawah tiket utama -->
-                  ${item.anak > 0 ? `<p class="text-[10px] text-gray-400 mt-2 font-bold uppercase">Anak: <span class="text-white bg-red-600/20 px-2 py-0.5 rounded">${item.anak}</span></p>` : ''}
+                <td class="py-4 px-5 text-center">
+                  <span class="bg-dark-900 border border-white/10 px-4 py-1.5 rounded-lg text-white font-black text-sm">${item.jumlah}</span>
+                  ${item.anak > 0 ? `<p class="text-[9px] text-gray-400 mt-2 font-bold uppercase tracking-widest">Anak: <span class="text-white bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded border border-blue-500/20">${item.anak}</span></p>` : ''}
                 </td>
-                <td class="p-4 font-medium text-gray-400">${item.kendaraan}</td>
-                <td class="p-4 text-gray-400">
-                  <a href="https://wa.me/${waBersih}" target="_blank" class="hover:text-green-400">
-                    <i class="fab fa-whatsapp"></i> ${item.wa}
+                <td class="py-4 px-5 font-medium text-gray-400 text-sm">${item.kendaraan}</td>
+                <td class="py-4 px-5 text-gray-400 text-sm">
+                  <a href="https://wa.me/${waBersih}" target="_blank" class="hover:text-green-400 flex items-center gap-2 transition-colors">
+                    <i class="fab fa-whatsapp text-green-500"></i> ${item.wa}
                   </a>
                 </td>
-                <td class="p-4 text-center">
-                  <button onclick="bukaModalKelola(${item.row})" class="${btnClass} px-4 py-2 rounded-lg font-bold text-xs transition-all w-36 shadow-lg">
+                <td class="py-4 px-5 text-center">
+                  <button onclick="bukaModalKelola(${item.row})" class="${btnClass} px-5 py-2.5 rounded-xl font-bold text-xs transition-all w-32 shadow-sm">
                     ${btnText}
                   </button>
                 </td>
@@ -164,7 +154,52 @@ window.renderAdminTable = function () {
     }
 }
 
-// BUKA MODAL DAN PECAH NAMA ANGGOTA
+// RENDER ANALITIK
+function renderStatistik(data) {
+    let totalAnak = 0, mobil = 0, motor = 0, umum = 0;
+
+    (data || []).forEach(item => {
+        totalAnak += parseInt(item.anak) || 0;
+        let ken = String(item.kendaraan || "").toLowerCase();
+        if (ken.includes("mobil")) mobil++;
+        else if (ken.includes("umum")) umum++;
+        else if (ken.includes("motor")) {
+            let match = ken.match(/\((\d+)\)/);
+            motor += (match && match[1]) ? parseInt(match[1]) : 1;
+        }
+    });
+
+    const statsContainer = document.getElementById('adminStats');
+    if(statsContainer) {
+        statsContainer.innerHTML = `
+            <div class="glass-panel p-5 rounded-2xl flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400 text-xl border border-blue-500/20 shrink-0"><i class="fas fa-child"></i></div>
+                <div>
+                    <p class="text-gray-400 text-[9px] font-bold uppercase tracking-widest mb-1">Total Anak (≤ 12)</p>
+                    <h3 class="text-2xl font-black text-white leading-none">${totalAnak}</h3>
+                </div>
+            </div>
+            <div class="glass-panel p-5 rounded-2xl flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 text-xl border border-indigo-500/20 shrink-0"><i class="fas fa-car"></i></div>
+                <div>
+                    <p class="text-gray-400 text-[9px] font-bold uppercase tracking-widest mb-1">Total Mobil</p>
+                    <h3 class="text-2xl font-black text-white leading-none">${mobil}</h3>
+                </div>
+            </div>
+            <div class="glass-panel p-5 rounded-2xl flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-orange-500/20 flex items-center justify-center text-orange-400 text-xl border border-orange-500/20 shrink-0"><i class="fas fa-motorcycle"></i></div>
+                <div>
+                    <p class="text-gray-400 text-[9px] font-bold uppercase tracking-widest mb-1">Total Motor</p>
+                    <h3 class="text-2xl font-black text-white leading-none">${motor}</h3>
+                </div>
+            </div>
+        `;
+    }
+}
+
+let currentRowKelola = null;
+let currentSesiKelola = null;
+
 window.bukaModalKelola = function (rowIndex) {
     const item = adminDataCache[currentAdminTab].find(x => x.row === rowIndex);
     if (!item) return;
@@ -172,10 +207,9 @@ window.bukaModalKelola = function (rowIndex) {
     currentRowKelola = item.row;
     currentSesiKelola = currentAdminTab;
 
-    document.getElementById('kelolaTitle').innerText = `Kelola Urut #${String(item.noUrut).padStart(3, '0')}`;
+    document.getElementById('kelolaTitle').innerText = `Tiket #${String(item.noUrut).padStart(3, '0')}`;
 
-    // Pecah nama pendaftar utama dan anggota
-    let names = [{ type: 'Utama', name: item.nama }];
+    let names = [{ type: 'Pendaftar Utama', name: item.nama }];
     if (item.anggota && item.anggota !== '-') {
         item.anggota.split(',').forEach(ang => {
             names.push({ type: 'Anggota', name: ang.trim() });
@@ -188,17 +222,16 @@ window.bukaModalKelola = function (rowIndex) {
     const list = document.getElementById('kelolaList');
     list.innerHTML = '';
 
-    // Render Checklist per orang
     names.forEach((person, idx) => {
         const currentStatus = existingStatus[idx] || 'Belum';
         list.innerHTML += `
-            <div class="bg-dark-800 p-4 rounded-xl border border-white/5 flex justify-between items-center gap-4">
+            <div class="bg-black/50 p-4 rounded-xl border border-white/5 flex justify-between items-center gap-4 hover:border-gold-500/30 transition-colors">
                 <div class="overflow-hidden">
-                    <p class="text-[10px] text-gray-500 font-bold uppercase">${person.type}</p>
-                    <p class="text-white font-bold truncate">${person.name}</p>
+                    <p class="text-[9px] text-gold-500 font-bold uppercase tracking-widest">${person.type}</p>
+                    <p class="text-white font-bold truncate mt-0.5">${person.name}</p>
                 </div>
-                <select id="status_${idx}" class="bg-dark-900 border border-white/10 text-sm text-white rounded-lg px-2 py-2 focus:border-gold-500 outline-none">
-                    <option value="Belum" ${currentStatus === 'Belum' ? 'selected' : ''}>Belum Datang</option>
+                <select id="status_${idx}" class="bg-dark-900 border border-white/10 text-xs font-bold text-white rounded-lg px-3 py-2.5 focus:border-gold-500 outline-none cursor-pointer">
+                    <option value="Belum" ${currentStatus === 'Belum' ? 'selected' : ''}>⏳ Belum</option>
                     <option value="Hadir" ${currentStatus === 'Hadir' ? 'selected' : ''}>✅ Hadir</option>
                     <option value="Batal" ${currentStatus === 'Batal' ? 'selected' : ''}>❌ Batal</option>
                 </select>
@@ -209,98 +242,21 @@ window.bukaModalKelola = function (rowIndex) {
     const modal = document.getElementById('modalKelola');
     const box = document.getElementById('boxKelola');
     modal.classList.remove('hidden');
+    modal.classList.add('flex');
     setTimeout(() => { modal.classList.remove('opacity-0'); box.classList.remove('scale-95'); box.classList.add('scale-100'); }, 10);
-}
-
-// FUNGSI MENGHITUNG DAN MENAMPILKAN STATISTIK ADMIN
-renderStatistik(data);
-function renderStatistik(data) {
-    let totalPeserta = 0;
-    let totalAnak = 0;
-    let mobil = 0;
-    let motor = 0;
-    let umum = 0;
-
-    data.forEach(item => {
-        // Hitung total orang & anak
-        totalPeserta += parseInt(item.jumlah) || 0;
-        totalAnak += parseInt(item.anak) || 0;
-
-        // Hitung kendaraan
-        let ken = String(item.kendaraan || "").toLowerCase();
-        if (ken.includes("mobil")) {
-            mobil++;
-        } else if (ken.includes("umum")) {
-            umum++;
-        } else if (ken.includes("motor")) {
-            // Ekstrak jumlah motor dari format "Motor (2)"
-            let match = ken.match(/\((\d+)\)/);
-            if (match && match[1]) {
-                motor += parseInt(match[1]);
-            } else {
-                motor += 1;
-            }
-        }
-    });
-
-    const statsContainer = document.getElementById('adminStats');
-    if(statsContainer) {
-        statsContainer.innerHTML = `
-            <div class="bg-dark-800 border border-white/5 rounded-2xl p-5 flex items-center gap-4 shadow-lg relative overflow-hidden">
-                <div class="absolute right-0 top-0 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
-                <div class="w-14 h-14 rounded-2xl bg-blue-500/20 flex items-center justify-center text-blue-500 text-2xl shrink-0 border border-blue-500/30">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="relative z-10">
-                    <p class="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">Total Pendaftar</p>
-                    <h3 class="text-3xl font-black text-white leading-none">${totalPeserta} <span class="text-sm font-bold text-gray-500">Orang</span></h3>
-                </div>
-            </div>
-            
-            <div class="bg-dark-800 border border-white/5 rounded-2xl p-5 flex items-center gap-4 shadow-lg relative overflow-hidden">
-                <div class="absolute right-0 top-0 w-24 h-24 bg-green-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
-                <div class="w-14 h-14 rounded-2xl bg-green-500/20 flex items-center justify-center text-green-500 text-2xl shrink-0 border border-green-500/30">
-                    <i class="fas fa-child"></i>
-                </div>
-                <div class="relative z-10">
-                    <p class="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">Anak (≤ 12 Thn)</p>
-                    <h3 class="text-3xl font-black text-white leading-none">${totalAnak} <span class="text-sm font-bold text-gray-500">Anak</span></h3>
-                </div>
-            </div>
-
-            <div class="bg-dark-800 border border-white/5 rounded-2xl p-4 flex flex-col justify-center shadow-lg">
-                <p class="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-3 text-center">Breakdown Kendaraan</p>
-                <div class="flex justify-between items-center gap-2">
-                    <div class="text-center flex-1 bg-dark-900 py-2 rounded-xl border border-white/5 group hover:border-gold-500/50 transition-colors">
-                        <i class="fas fa-car text-gray-500 text-base mb-1 group-hover:text-gold-400 transition-colors"></i>
-                        <p class="text-white font-black text-lg leading-none">${mobil}</p>
-                    </div>
-                    <div class="text-center flex-1 bg-dark-900 py-2 rounded-xl border border-white/5 group hover:border-gold-500/50 transition-colors">
-                        <i class="fas fa-motorcycle text-gray-500 text-base mb-1 group-hover:text-gold-400 transition-colors"></i>
-                        <p class="text-white font-black text-lg leading-none">${motor}</p>
-                    </div>
-                    <div class="text-center flex-1 bg-dark-900 py-2 rounded-xl border border-white/5 group hover:border-gold-500/50 transition-colors">
-                        <i class="fas fa-bus text-gray-500 text-base mb-1 group-hover:text-gold-400 transition-colors"></i>
-                        <p class="text-white font-black text-lg leading-none">${umum}</p>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
 }
 
 window.tutupModalKelola = function () {
     const modal = document.getElementById('modalKelola');
     const box = document.getElementById('boxKelola');
     modal.classList.add('opacity-0'); box.classList.remove('scale-100'); box.classList.add('scale-95');
-    setTimeout(() => { modal.classList.add('hidden'); }, 300);
+    setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
 }
 
-// SIMPAN HASIL STATUS (HADIR/BATAL) KE SERVER
 window.simpanKelola = async function () {
     const item = adminDataCache[currentSesiKelola].find(x => x.row === currentRowKelola);
     const btn = document.getElementById('btnSimpanKelola');
-    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Menyimpan...`;
+    btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> Menyimpan...`;
     btn.disabled = true;
 
     let namesCount = 1 + (item.anggota && item.anggota !== '-' ? item.anggota.split(',').length : 0);
@@ -337,10 +293,10 @@ window.simpanKelola = async function () {
             item.jmlBatal = jmlBatal;
             renderAdminTable();
             tutupModalKelola();
-        } else { alert("Gagal mencatat data."); }
-    } catch (e) { alert("Gangguan koneksi."); }
+        } else { alert("Gagal mencatat data ke database."); }
+    } catch (e) { alert("Gangguan koneksi internet."); }
     finally {
-        btn.innerHTML = `Simpan Kehadiran`;
+        btn.innerHTML = `Simpan Data Kehadiran`;
         btn.disabled = false;
     }
 }
