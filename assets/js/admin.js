@@ -212,6 +212,83 @@ window.bukaModalKelola = function (rowIndex) {
     setTimeout(() => { modal.classList.remove('opacity-0'); box.classList.remove('scale-95'); box.classList.add('scale-100'); }, 10);
 }
 
+// FUNGSI MENGHITUNG DAN MENAMPILKAN STATISTIK ADMIN
+renderStatistik(data);
+function renderStatistik(data) {
+    let totalPeserta = 0;
+    let totalAnak = 0;
+    let mobil = 0;
+    let motor = 0;
+    let umum = 0;
+
+    data.forEach(item => {
+        // Hitung total orang & anak
+        totalPeserta += parseInt(item.jumlah) || 0;
+        totalAnak += parseInt(item.anak) || 0;
+
+        // Hitung kendaraan
+        let ken = String(item.kendaraan || "").toLowerCase();
+        if (ken.includes("mobil")) {
+            mobil++;
+        } else if (ken.includes("umum")) {
+            umum++;
+        } else if (ken.includes("motor")) {
+            // Ekstrak jumlah motor dari format "Motor (2)"
+            let match = ken.match(/\((\d+)\)/);
+            if (match && match[1]) {
+                motor += parseInt(match[1]);
+            } else {
+                motor += 1;
+            }
+        }
+    });
+
+    const statsContainer = document.getElementById('adminStats');
+    if(statsContainer) {
+        statsContainer.innerHTML = `
+            <div class="bg-dark-800 border border-white/5 rounded-2xl p-5 flex items-center gap-4 shadow-lg relative overflow-hidden">
+                <div class="absolute right-0 top-0 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+                <div class="w-14 h-14 rounded-2xl bg-blue-500/20 flex items-center justify-center text-blue-500 text-2xl shrink-0 border border-blue-500/30">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="relative z-10">
+                    <p class="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">Total Pendaftar</p>
+                    <h3 class="text-3xl font-black text-white leading-none">${totalPeserta} <span class="text-sm font-bold text-gray-500">Orang</span></h3>
+                </div>
+            </div>
+            
+            <div class="bg-dark-800 border border-white/5 rounded-2xl p-5 flex items-center gap-4 shadow-lg relative overflow-hidden">
+                <div class="absolute right-0 top-0 w-24 h-24 bg-green-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+                <div class="w-14 h-14 rounded-2xl bg-green-500/20 flex items-center justify-center text-green-500 text-2xl shrink-0 border border-green-500/30">
+                    <i class="fas fa-child"></i>
+                </div>
+                <div class="relative z-10">
+                    <p class="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">Anak (≤ 12 Thn)</p>
+                    <h3 class="text-3xl font-black text-white leading-none">${totalAnak} <span class="text-sm font-bold text-gray-500">Anak</span></h3>
+                </div>
+            </div>
+
+            <div class="bg-dark-800 border border-white/5 rounded-2xl p-4 flex flex-col justify-center shadow-lg">
+                <p class="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-3 text-center">Breakdown Kendaraan</p>
+                <div class="flex justify-between items-center gap-2">
+                    <div class="text-center flex-1 bg-dark-900 py-2 rounded-xl border border-white/5 group hover:border-gold-500/50 transition-colors">
+                        <i class="fas fa-car text-gray-500 text-base mb-1 group-hover:text-gold-400 transition-colors"></i>
+                        <p class="text-white font-black text-lg leading-none">${mobil}</p>
+                    </div>
+                    <div class="text-center flex-1 bg-dark-900 py-2 rounded-xl border border-white/5 group hover:border-gold-500/50 transition-colors">
+                        <i class="fas fa-motorcycle text-gray-500 text-base mb-1 group-hover:text-gold-400 transition-colors"></i>
+                        <p class="text-white font-black text-lg leading-none">${motor}</p>
+                    </div>
+                    <div class="text-center flex-1 bg-dark-900 py-2 rounded-xl border border-white/5 group hover:border-gold-500/50 transition-colors">
+                        <i class="fas fa-bus text-gray-500 text-base mb-1 group-hover:text-gold-400 transition-colors"></i>
+                        <p class="text-white font-black text-lg leading-none">${umum}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+}
+
 window.tutupModalKelola = function () {
     const modal = document.getElementById('modalKelola');
     const box = document.getElementById('boxKelola');
