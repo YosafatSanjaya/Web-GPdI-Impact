@@ -159,7 +159,7 @@ export default async function handler(req, res) {
 
             // Insert Data Baru
             const insertPayload = {
-                sesi, nama, wa, jumlah, anggota, kendaraan,anak,no_urut: noUrut, kode_booking: kodeBooking, hadir: false
+                sesi, nama, wa, jumlah, anggota, kendaraan, anak, no_urut: noUrut, kode_booking: kodeBooking, hadir: false
             };
 
             const insertRes = await fetch(`${SUPABASE_URL}/rest/v1/pendaftar`, {
@@ -169,6 +169,34 @@ export default async function handler(req, res) {
             });
 
             if (!insertRes.ok) throw new Error("Gagal menyimpan ke Supabase.");
+
+            // ==========================================
+            // KODE NOTIFIKASI TELEGRAM (NON-BLOCKING)
+            // ==========================================
+            const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+            const TELEGRAM_CHAT = process.env.TELEGRAM_CHAT_ID;
+            
+            if (TELEGRAM_TOKEN && TELEGRAM_CHAT) {
+                const pesanTelegram = `🎄 *Pendaftar Baru Natal GPdI Impact!*\n\n` +
+                                      `👤 *Nama:* ${nama}\n` +
+                                      `🎟️ *Sesi:* Ibadah ${sesi}\n` +
+                                      `👥 *Total:* ${jumlah} Orang\n` +
+                                      `👶 *Anak:* ${anak} Orang\n` +
+                                      `🚗 *Kendaraan:* ${kendaraan}\n` +
+                                      `📱 *WA:* ${wa}\n` +
+                                      `🎫 *No Urut:* #${String(noUrut).padStart(3, '0')}`;
+
+                fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT,
+                        text: pesanTelegram,
+                        parse_mode: 'Markdown'
+                    })
+                }).catch(err => console.error("Gagal kirim notif Telegram:", err));
+            }
+            // ==========================================
 
             return res.status(200).json({
                 status: 'success',
