@@ -1,4 +1,5 @@
 export default async function handler(req, res) {
+    const IS_PENDAFTARAN_DITUTUP = true; // SAKELAR PENDAFTARAN (Ganti ke false tahun depan untuk buka kembali)
     const SUPABASE_URL = process.env.SUPABASE_URL;
     const SUPABASE_KEY = process.env.SUPABASE_KEY;
     const RECAPTCHA_SECRET = "6Lc39yctAAAAAA7b0Gk7fi7KuNXzeyvZreE4dGQ9"; 
@@ -113,6 +114,13 @@ export default async function handler(req, res) {
             }
 
             // 2. JIKA REQUEST PENDAFTARAN WEB NATAL
+            // buat tutup 
+            if (IS_PENDAFTARAN_DITUTUP) {
+                return res.status(400).json({ 
+                    status: "error", 
+                    message: "Pendaftaran online resmi ditutup. Silakan hubungi FOH/OFFICE GPdI Impact." 
+                });
+            }
             const { sesi, nama, wa, anggota, kendaraan, recaptchaToken } = bodyData;
             const jumlah = parseInt(bodyData.jumlah) || 1;
             const anak = parseInt(bodyData.anak) || 0;
