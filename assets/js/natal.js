@@ -1,6 +1,6 @@
 /* ===================================================
    FITUR NATAL (LIVE COUNT, DINAMIS FORM & E-TICKET)
-   + LAZY LOAD RECAPTCHA, HTML2CANVAS & VIDEO HERO
+   + HERO VIDEO LOADER & LAZY SCRIPT
 =================================================== */
 const API_URL_NATAL = '/api/natal';
 const RECAPTCHA_SITE_KEY = '6Lc39yctAAAAAMFEJxjgh3GGOhxNRwpQSd3mSvpp';
@@ -11,24 +11,30 @@ document.addEventListener("DOMContentLoaded", () => {
     initLazyHeroVideo();
 });
 
-// Tunda pemuatan video Hero 6.4 MB selama 2.5 detik agar LCP & Speed Index melesat
+// Memutar video Welcome Home dengan mulus setelah FCP/LCP utama selesai dirender
 function initLazyHeroVideo() {
-    setTimeout(() => {
-        const heroVid = document.getElementById('heroVideo');
-        if (heroVid && !heroVid.getAttribute('src')) {
-            heroVid.src = 'wadah_ibadah/IBADAH_RAYA_MINGGU/ibr-3.mp4';
+    const heroVid = document.getElementById('heroVideo');
+    if (!heroVid) return;
+
+    const loadAndPlay = () => {
+        const targetSrc = heroVid.getAttribute('data-src') || 'wadah_ibadah/IBADAH_RAYA_MINGGU/ibr-3.mp4';
+        if (!heroVid.getAttribute('src')) {
+            heroVid.src = targetSrc;
             heroVid.load();
             heroVid.play().catch(() => {});
         }
-    }, 2500);
+    };
+
+    if (document.readyState === 'complete') {
+        setTimeout(loadAndPlay, 1200);
+    } else {
+        window.addEventListener('load', () => setTimeout(loadAndPlay, 1200));
+    }
 }
 
-// Muat reCAPTCHA secara dinamis HANYA saat form pendaftaran dibuka
 function ensureRecaptchaLoaded() {
     return new Promise((resolve, reject) => {
-        if (window.grecaptcha && window.grecaptcha.execute) {
-            return resolve();
-        }
+        if (window.grecaptcha && window.grecaptcha.execute) return resolve();
         if (isRecaptchaLoaded) {
             const checkInterval = setInterval(() => {
                 if (window.grecaptcha && window.grecaptcha.execute) {
@@ -48,7 +54,6 @@ function ensureRecaptchaLoaded() {
     });
 }
 
-// Muat html2canvas secara dinamis HANYA saat tombol Download Tiket diklik
 function ensureHtml2CanvasLoaded() {
     return new Promise((resolve, reject) => {
         if (window.html2canvas) return resolve();
@@ -70,25 +75,16 @@ async function fetchKuotaAwal() {
         const res = await fetch(API_URL_NATAL + '?action=getKuota');
         const data = await res.json();
         if (data.status === 'success') {
-            // Pastikan angka kuota tidak pernah minus di layar publik
             elPagi.innerText = Math.max(0, Number(data.sisaPagi) || 0);
             elSore.innerText = Math.max(0, Number(data.sisaSore) || 0);
-        } else {
-            elPagi.innerText = "0";
-            elSore.innerText = "0";
         }
     } catch (e) {
         elPagi.innerText = "0";
         elSore.innerText = "0";
-        console.warn("Kuota Belum Tersedia atau Error Jaringan.");
     }
 }
 
 function initNatalFeature() {
-    const today = new Date();
-    const currentMonth = today.getMonth(); // 0 = Jan, 8 = Sep, 9 = Okt
-
-    // Selalu tampilkan menu & seksi Natal (meskipun tombol daftar asli sedang di-comment)
     const navDesktop = document.getElementById('nav-natal-desktop');
     const navMobile = document.getElementById('nav-natal-mobile');
     const sectionNatal = document.getElementById('daftar-natal-section');
@@ -97,32 +93,15 @@ function initNatalFeature() {
     if (navMobile) navMobile.classList.remove('hidden');
     if (sectionNatal) sectionNatal.classList.remove('hidden');
 
+    // Hanya panggil API kuota jika tombol pendaftaran online sedang aktif
     const btnDaftar = document.getElementById('btnBukaFormNatal');
-
-    if (currentMonth >= 8) {
-        if (btnDaftar) {
-            btnDaftar.disabled = false;
-            btnDaftar.innerHTML = '<i class="fas fa-calendar-check mr-2"></i> DAFTAR SEKARANG';
-            btnDaftar.className = "w-full sm:w-auto bg-gradient-to-r from-red-700 to-red-500 hover:from-red-600 hover:to-red-400 px-10 py-4 rounded-xl text-lg font-black shadow-red-500/30 transform transition duration-300 text-white";
-        }
+    if (btnDaftar) {
         fetchKuotaAwal();
-    } else {
-        if (btnDaftar) {
-            btnDaftar.disabled = true;
-            btnDaftar.innerHTML = '<i class="fas fa-lock mr-2"></i> DIBUKA 1 OKTOBER';
-            btnDaftar.className = "w-full sm:w-auto bg-dark-800 border border-white/20 px-10 py-4 rounded-xl text-lg font-black text-gray-500 cursor-not-allowed shadow-none transition-all";
-            btnDaftar.onclick = null;
-        }
-        const elPagi = document.getElementById('kuotaPagiLuar');
-        const elSore = document.getElementById('kuotaSoreLuar');
-        if (elPagi) elPagi.innerText = "230";
-        if (elSore) elSore.innerText = "230";
     }
 }
 
 function renderFormAnggota() {
     let jumlah = parseInt(document.getElementById('inputJumlahNatal').value) || 1;
-
     if (jumlah > 7) {
         jumlah = 7;
         document.getElementById('inputJumlahNatal').value = 7;
@@ -150,7 +129,6 @@ window.bukaFormNatal = function () {
     setTimeout(() => { modalNatal.classList.remove('opacity-0'); boxNatal.classList.remove('scale-95'); boxNatal.classList.add('scale-100'); }, 10);
 };
 
-// Alias agar pemanggilan bukaModalNatal() maupun bukaFormNatal() sama-sama berfungsi tahun depan
 window.bukaModalNatal = window.bukaFormNatal;
 
 window.tutupFormNatal = function () {
@@ -187,11 +165,7 @@ window.submitNatal = async function (e) {
 
     const jenisKendaraan = document.getElementById('inputJenisKendaraan').value;
     const jmlKendaraan = document.getElementById('inputJmlKendaraan').value;
-    let infoKendaraan = jenisKendaraan;
-
-    if (jenisKendaraan === 'Motor') {
-        infoKendaraan = `Motor (${jmlKendaraan})`;
-    }
+    let infoKendaraan = jenisKendaraan === 'Motor' ? `Motor (${jmlKendaraan})` : jenisKendaraan;
 
     let arrAnggota = [];
     document.querySelectorAll('.input-anggota-extra').forEach(inp => {
@@ -242,9 +216,6 @@ window.submitNatal = async function (e) {
                         document.getElementById('tiketAnggota').innerText = stringAnggota;
                         document.getElementById('tiketAnak').innerText = anak > 0 ? anak + " Orang" : "-";
 
-                        if (result.sisaPagi !== undefined) document.getElementById('kuotaPagiLuar').innerText = Math.max(0, Number(result.sisaPagi) || 0);
-                        if (result.sisaSore !== undefined) document.getElementById('kuotaSoreLuar').innerText = Math.max(0, Number(result.sisaSore) || 0);
-
                         tutupFormNatal();
                         setTimeout(() => {
                             modalTiket.classList.remove('hidden');
@@ -256,7 +227,6 @@ window.submitNatal = async function (e) {
                         errorMsg.classList.remove('hidden');
                     }
                 } catch (err) {
-                    console.error(err);
                     errorMsg.innerText = "Terjadi kendala jaringan. Pastikan koneksi stabil.";
                     errorMsg.classList.remove('hidden');
                 } finally {
@@ -265,13 +235,6 @@ window.submitNatal = async function (e) {
                     loadingOverlay.classList.add('hidden');
                     loadingOverlay.classList.remove('flex');
                 }
-            }).catch(function () {
-                errorMsg.innerText = "Gagal memverifikasi reCAPTCHA. Coba matikan AdBlock.";
-                errorMsg.classList.remove('hidden');
-                btn.innerHTML = '<span>Ambil Tiket</span> <i class="fas fa-ticket-alt"></i>';
-                btn.disabled = false;
-                loadingOverlay.classList.add('hidden');
-                loadingOverlay.classList.remove('flex');
             });
         });
     } catch (err) {
