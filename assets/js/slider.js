@@ -1,89 +1,115 @@
-/* ===================================================
-   SLIDER LOGIC & API FETCH
-=================================================== */
-const sliderStates = {};
+/* =========================================================
+   OPTIMIZED SLIDER.JS - ON-DEMAND LAZY MEDIA LOADING
+   Menghentikan download paksa 50 MB video & foto di awal
+========================================================= */
+const sliderState = {};
 
-document.addEventListener("DOMContentLoaded", () => {
-    fetchMedia('IBADAH_RAYA_MINGGU', 'slider-ibadah-raya');
-    fetchMedia('IMPACT_KIDS', 'slider-impact-kids');
-    fetchMedia('KOMSEL_SUKACITA', 'slider-komsel-sukacita');
-    fetchMedia('IMPACT_GENERATION', 'slider-impact-generation');
-});
-
-async function fetchMedia(namaFolder, elementId) {
-    const container = document.getElementById(elementId);
+async function muatMediaWadah(wadahFolder, sliderId) {
+    const container = document.getElementById(sliderId);
     if (!container) return;
 
     try {
-        const response = await fetch(`/api/media?wadah=${namaFolder}`);
-        const files = await response.json();
+        const res = await fetch(`/api/media?wadah=${wadahFolder}`);
+        const data = await res.json();
+        if (!data.files || data.files.length === 0) return;
 
-        if (files.length > 0) {
-            let htmlContent = '';
-            files.forEach(file => {
-                const ext = file.split('.').pop().toLowerCase();
-                const filePath = `wadah_ibadah/${namaFolder}/${file}`;
+        sliderState[sliderId] = { currentIndex: 0, total: data.files.length };
+        container.innerHTML = '';
 
-                if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
-                    htmlContent += `<div class="slide-item h-full w-full bg-cover bg-center shrink-0 transition-transform duration-1000 hover:scale-105" style="background-image: url('${filePath}');"></div>`;
-                } else if (['mp4', 'webm'].includes(ext)) {
-                    htmlContent += `<video src="${filePath}" class="slide-item h-full w-full object-cover shrink-0" playsinline muted></video>`;
+        data.files.forEach((fileUrl, idx) => {
+            const isVideo = /\.(mp4|webm|ogg)$/i.test(fileUrl);
+            const slideDiv = document.createElement('div');
+            slideDiv.className = 'slide-item h-full w-full shrink-0 relative overflow-hidden bg-dark-900';
+
+            if (isVideo) {
+                // Video TIDAK diunduh di awal (menggunakan data-src & preload="none")
+                slideDiv.innerHTML = `
+                    <video muted loop playsinline preload="none" data-src="${fileUrl}" class="w-full h-full object-cover">
+                        <track kind="captions" src="data:text/vtt,WEBVTT" srclang="id" label="Indonesia">
+                    </video>
+                `;
+            } else {
+                // Hanya slide pertama (idx === 0) yang langsung dipasang src-nya dengan lazy load.
+                // Slide sisanya disimpan di data-src agar tidak menyedot kuota 4G di awal!
+                if (idx === 0) {
+                    slideDiv.innerHTML = `<img src="${fileUrl}" alt="Kegiatan ${wadahFolder}" loading="lazy" decoding="async" class="w-full h-full object-cover">`;
+                } else {
+                    slideDiv.innerHTML = `<img data-src="${fileUrl}" alt="Kegiatan ${wadahFolder}" loading="lazy" decoding="async" class="w-full h-full object-cover">`;
                 }
-            });
-
-            container.innerHTML = htmlContent;
-            initSlider(elementId);
-        } else {
-            showPlaceholder(container, 'Belum ada media');
-        }
-    } catch (error) {
-        console.error('Error fetching media:', error);
-        showPlaceholder(container, 'Gagal memuat media');
+            }
+            container.appendChild(slideDiv);
+        });
+    } catch (err) {
+        console.error(`Gagal memuat slider ${sliderId}:`, err);
     }
 }
 
-function showPlaceholder(container, message) {
-    container.innerHTML = `
-        <div class="flex flex-col items-center justify-center w-full h-full text-gray-500/50">
-          <i class="fas fa-image text-3xl mb-2 opacity-50"></i>
-          <span class="text-sm font-medium tracking-wide">${message}</span>
-        </div>`;
-}
-
-function initSlider(sliderId) {
+// Fungsi mengaktifkan media (foto/video) HANYA saat slide digeser
+function aktifkanSlideMedia(sliderId, index) {
     const container = document.getElementById(sliderId);
+    if (!container) return;
     const slides = container.querySelectorAll('.slide-item');
-    if (slides.length <= 1) return;
 
-    sliderStates[sliderId] = { currentIndex: 0, slides: Array.from(slides), timeoutId: null };
-    putarSlideAktif(sliderId);
-}
+    slides.forEach((slide, idx) => {
+        const img = slide.querySelector('img[data-src]');
+        const video = slide.querySelector('video');
 
-function putarSlideAktif(sliderId) {
-    const state = sliderStates[sliderId];
-    if (!state) return;
-    clearTimeout(state.timeoutId);
-    const container = document.getElementById(sliderId);
-    const currentSlide = state.slides[state.currentIndex];
-
-    state.slides.forEach(slide => { if (slide.tagName.toLowerCase() === 'video') slide.pause(); });
-    container.scrollTo({ left: currentSlide.offsetLeft, behavior: 'smooth' });
-
-    if (currentSlide.tagName.toLowerCase() === 'video') {
-        currentSlide.currentTime = 0;
-        let playPromise = currentSlide.play();
-        if (playPromise !== undefined) {
-            playPromise.catch(() => { state.timeoutId = setTimeout(() => geserSlide(sliderId, 1), 7000); });
+        if (idx === index) {
+            if (img && img.dataset.src) {
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+            }
+            if (video) {
+                if (video.dataset.src) {
+                    video.src = video.dataset.src;
+                    video.removeAttribute('data-src');
+                    video.load();
+                }
+                video.play().catch(() => {});
+            }
+        } else if (video && !video.paused) {
+            video.pause();
         }
-        currentSlide.onended = () => geserSlide(sliderId, 1);
-    } else {
-        state.timeoutId = setTimeout(() => geserSlide(sliderId, 1), 7000);
-    }
+    });
 }
 
 window.geserSlide = function (sliderId, direction) {
-    const state = sliderStates[sliderId];
-    if (!state || state.slides.length <= 1) return;
-    state.currentIndex = (state.currentIndex + direction + state.slides.length) % state.slides.length;
-    putarSlideAktif(sliderId);
+    const state = sliderState[sliderId];
+    const container = document.getElementById(sliderId);
+    if (!state || !container || state.total <= 1) return;
+
+    state.currentIndex = (state.currentIndex + direction + state.total) % state.total;
+    container.style.transform = `translateX(-${state.currentIndex * 100}%)`;
+
+    // Muat foto/video pada slide yang baru dibuka
+    aktifkanSlideMedia(sliderId, state.currentIndex);
 };
+
+// Jalankan pemuatan daftar media HANYA saat user men-scroll mendekati area Wadah Ibadah
+document.addEventListener('DOMContentLoaded', () => {
+    const daftarSlider = [
+        { folder: 'IBADAH_RAYA_MINGGU', id: 'slider-ibadah-raya' },
+        { folder: 'IMPACT_KIDS', id: 'slider-impact-kids' },
+        { folder: 'KOMSEL_SUKACITA', id: 'slider-komsel-sukacita' },
+        { folder: 'IMPACT_GENERATION', id: 'slider-impact-generation' }
+    ];
+
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const item = daftarSlider.find(s => s.id === entry.target.id);
+                    if (item) muatMediaWadah(item.folder, item.id);
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, { rootMargin: '200px' });
+
+        daftarSlider.forEach(s => {
+            const el = document.getElementById(s.id);
+            if (el) observer.observe(el);
+        });
+    } else {
+        daftarSlider.forEach(s => muatMediaWadah(s.folder, s.id));
+    }
+});
