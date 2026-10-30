@@ -19,13 +19,22 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
-  <!-- Preconnect & Preload Gambar Utama (LCP) -->
+  <!-- 1. PRECONNECT & PRELOAD LCP RESOURCES (Solusi Skor Performa 95-100) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preload" as="image" href="images/logo_hitam.png" fetchpriority="high">
+  <link rel="preload" as="image" href="images/poster_closed.jpg" fetchpriority="high">
 
-  <!-- Google Fonts Non-Blocking -->
+  <!-- 2. CRITICAL INLINE CSS (Mencegah Layar Putih / Render Blocking Saat Menunggu Tailwind CDN) -->
+  <style>
+    body { background-color: #050505; color: #ffffff; font-family: 'Inter', system-ui, -apple-system, sans-serif; margin: 0; }
+    .hidden { display: none; }
+    .slideshow-container { display: flex; width: 100%; height: 100%; transition: transform 0.5s ease-in-out; }
+    .slide-item { flex-shrink: 0; width: 100%; height: 100%; position: relative; }
+  </style>
+
+  <!-- 3. GOOGLE FONTS NON-BLOCKING -->
   <link rel="preload" as="style"
     href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap">
   <link
@@ -37,22 +46,24 @@
       rel="stylesheet">
   </noscript>
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 4. TAILWIND CSS CONFIG & CDN -->
   <script>
-    tailwind.config = {
-      theme: { extend: { colors: { gold: { 400: '#FBBF24', 500: '#F59E0B', 600: '#D97706', 700: '#B45309' }, dark: { 900: '#050505', 800: '#111111', 700: '#1A1A1A' } } } }
-    }
+    tailwind = {
+      config: {
+        theme: { extend: { colors: { gold: { 400: '#FBBF24', 500: '#F59E0B', 600: '#D97706', 700: '#B45309' }, dark: { 900: '#050505', 800: '#111111', 700: '#1A1A1A' } } } }
+      }
+    };
   </script>
+  <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- FontAwesome Non-Blocking -->
+  <!-- 5. FONTAWESOME NON-BLOCKING -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     crossorigin="anonymous" media="print" onload="this.media='all'" />
   <noscript>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   </noscript>
 
-  <!-- Extracted CSS -->
+  <!-- 6. CSS LOKAL -->
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
@@ -70,7 +81,7 @@
 
       <nav aria-label="Navigasi Utama" class="hidden md:flex items-center gap-7 font-medium text-sm text-gray-300">
         <a href="#daftar-natal-section" id="nav-natal-desktop"
-          class="nav-item hidden relative group hover:text-red-500 transition-colors duration-300">Daftar Natal<span
+          class="nav-item relative group hover:text-red-500 transition-colors duration-300">Daftar Natal<span
             class="underline-span absolute -bottom-1 left-0 h-0.5 bg-red-500 transition-all duration-300 w-0 group-hover:w-full"></span></a>
         <a href="#wadah-ibadah" class="nav-item relative group hover:text-gold-500 transition-colors duration-300">Wadah
           Ibadah<span
@@ -104,7 +115,7 @@
     <nav id="mobile-menu" aria-label="Navigasi Seluler"
       class="hidden flex-col w-full bg-dark-900 border-t border-gold-500/20 py-4 gap-4 text-center md:hidden shadow-2xl absolute top-full left-0">
       <a href="#daftar-natal-section" id="nav-natal-mobile"
-        class="hidden mobile-link text-gray-300 hover:text-red-500 font-semibold transition tracking-wide py-2">Daftar
+        class="mobile-link text-gray-300 hover:text-red-500 font-semibold transition tracking-wide py-2">Daftar
         Natal</a>
       <a href="#wadah-ibadah"
         class="mobile-link text-gray-300 hover:text-gold-500 font-semibold transition tracking-wide py-2">Wadah
@@ -124,10 +135,12 @@
   </header>
 
   <main class="container mx-auto px-4 lg:px-8 py-8 lg:py-12">
+    <!-- HERO SECTION (WELCOME HOME) -->
     <section class="mb-16 lg:mb-24 pt-2 reveal">
       <div class="relative rounded-3xl overflow-hidden shadow-2xl shadow-gold-900/30 group h-72 md:h-[450px] bg-dark-900">
-        <!-- Video Hero dimuat secara tunda (lazy) setelah layar utama tampil agar tidak menyedot 6.4 MB di awal -->
-        <video id="heroVideo" loop muted playsinline preload="none"
+        <!-- Video Hero dimuat otomatis 1.2 detik setelah halaman tampil agar LCP tidak terhambat -->
+        <video id="heroVideo" autoplay loop muted playsinline preload="none"
+          data-src="wadah_ibadah/IBADAH_RAYA_MINGGU/ibr-3.mp4"
           class="absolute inset-0 w-full h-full object-cover scale-105 transition-transform duration-[10s] group-hover:scale-100">
           <track kind="captions" src="data:text/vtt,WEBVTT" srclang="id" label="Tanpa Suara" default>
         </video>
@@ -143,59 +156,89 @@
       </div>
     </section>
 
-    <section id="daftar-natal-section" class="scroll-mt-32 hidden mb-24 reveal">
+    <!-- ======================================================================= -->
+    <!-- SEKSI DAFTAR NATAL (BANNER REGISTRATION CLOSED)                         -->
+    <!-- ======================================================================= -->
+    <section id="daftar-natal-section" class="scroll-mt-32 mb-24 reveal">
       <div class="flex items-center gap-4 mb-8 border-l-4 border-red-600 pl-4">
-        <h2 class="text-3xl font-black text-white">Daftar Ibadah Natal</h2>
+        <h2 class="text-3xl font-black text-white">Informasi Ibadah Natal</h2>
       </div>
       <div
         class="glass-card rounded-[2.5rem] p-6 md:p-10 border-red-600/30 shadow-2xl relative overflow-hidden bg-gradient-to-b from-dark-900 to-dark-800">
         <div class="absolute top-0 right-0 w-64 h-64 bg-red-600/10 rounded-full blur-3xl mix-blend-screen"></div>
+
+        <!-- TAMPILAN BANNER PENUTUPAN PENDAFTARAN NATAL 2026 -->
+        <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-12 relative z-10">
+          <!-- Banner Gambar Registration Closed (TANPA loading="lazy" + fetchpriority="high" agar LCP 100!) -->
+          <div class="w-full max-w-md lg:w-5/12 rounded-3xl overflow-hidden border border-gold-500/30 shadow-2xl bg-dark-900">
+            <img src="images/poster_closed.jpg"
+                 alt="Christmas 2026 Registration Closed - Kuota Terpenuhi"
+                 width="768" height="1024"
+                 fetchpriority="high" decoding="sync"
+                 class="w-full h-auto object-cover block"
+                 onerror="this.src='images/poster_natal.webp'">
+          </div>
+
+          <!-- Informasi & Tombol Bantuan FOH -->
+          <div class="w-full lg:w-7/12 flex flex-col justify-center text-center lg:text-left">
+            <span class="inline-block self-center lg:self-start bg-red-600/20 text-red-400 border border-red-500/30 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-4">
+              Registration Closed
+            </span>
+            <h3 class="text-3xl lg:text-5xl font-black text-white mb-3">Perayaan Natal 2026</h3>
+            <p class="text-gray-300 mb-6 font-medium">
+              <i class="fas fa-calendar-alt text-red-500 mr-2" aria-hidden="true"></i> 13 Desember 2026  • 
+              <i class="fas fa-map-marker-alt text-red-500 mx-2" aria-hidden="true"></i> GPdI Impact
+            </p>
+            <div class="bg-dark-900/90 border border-white/10 rounded-2xl p-6 mb-8 text-gray-200 text-sm md:text-base leading-relaxed space-y-3 shadow-inner">
+              <p class="font-semibold text-white">Terima kasih banyak atas antusiasme dan kasih yang luar biasa dari Bapak, Ibu, dan Saudara/i semua.</p>
+              <p class="text-gray-300">Mohon maaf bagi yang belum sempat mendaftar secara online, saat ini seluruh kuota pendaftaran online (Sesi I & Sesi II) telah terpenuhi.</p>
+              <p class="text-gold-400 font-bold pt-1">Selamat menyambut Hari Natal, Tuhan Yesus memberkati!</p>
+            </div>
+
+            <!-- Elemen hidden penampung kuota agar natal.js tidak error -->
+            <div class="hidden" aria-hidden="true">
+              <span id="kuotaPagiLuar">0</span>
+              <span id="kuotaSoreLuar">0</span>
+            </div>
+
+            <a href="https://wa.me/6285710105110?text=Halo%20FOH%20GPdI%20Impact,%20saya%20mau%20tanya%20info%20pendaftaran%20Ibadah%20Natal%202026"
+              target="_blank" rel="noopener noreferrer"
+              class="w-full bg-dark-800 border border-gold-500/40 text-gold-400 hover:bg-gold-500/10 font-black py-4 px-6 rounded-2xl flex items-center justify-center gap-3 transition-all shadow-lg text-sm uppercase tracking-wider text-center">
+              <i class="fab fa-whatsapp text-xl text-green-500" aria-hidden="true"></i> Hubungi FOH GPdI Impact (0857-1010-5110)
+            </a>
+          </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- KODE ASLI KOTAK KUOTA & TOMBOL DAFTAR (SIMPAN UNTUK TAHUN DEPAN)
         <div class="flex flex-col lg:flex-row gap-10 relative z-10">
-          <div
-            class="w-full lg:w-1/3 flex flex-col items-center justify-center bg-dark-900/50 rounded-3xl border border-white/5 p-4 relative overflow-hidden h-64 lg:h-auto">
-            <img src="images/poster_natal.webp" alt="Poster Natal GPdI Impact 2026" width="574" height="444"
-              loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover">
+          <div class="w-full lg:w-1/3 flex flex-col items-center justify-center bg-dark-900/50 rounded-3xl border border-white/5 p-4 relative overflow-hidden h-64 lg:h-auto">
+            <img src="images/poster_natal.webp" alt="Poster Natal GPdI Impact 2026" width="574" height="444" fetchpriority="high" class="absolute inset-0 w-full h-full object-cover">
           </div>
           <div class="w-full lg:w-2/3 flex flex-col justify-center text-center lg:text-left">
             <h3 class="text-3xl lg:text-4xl font-black text-white mb-2">Perayaan Natal 2026</h3>
-            <p class="text-gray-300 mb-6 font-medium"><i class="fas fa-calendar-alt text-red-500 mr-2"
-                aria-hidden="true"></i> 13 Desember 2026  •  <i
-                class="fas fa-map-marker-alt text-red-500 mx-2" aria-hidden="true"></i> GPdI Impact</p>
             <div class="flex flex-col sm:flex-row gap-5 mb-8">
               <div class="bg-dark-900 border border-red-500/30 p-5 rounded-2xl flex-1 text-center shadow-xl">
                 <p class="text-red-400 font-bold mb-2 uppercase text-sm">Sesi 1 (09.30 WIB)</p>
-                <p class="text-5xl font-black text-white flex items-center justify-center gap-2"><i
-                    class="fas fa-ticket-alt text-xl text-gray-400" aria-hidden="true"></i> <span
-                    id="kuotaPagiLuar">0</span></p>
+                <p class="text-5xl font-black text-white flex items-center justify-center gap-2"><span id="kuotaPagiLuar">230</span></p>
                 <p class="text-[10px] text-gray-300 mt-1 uppercase font-bold">Sisa Kuota</p>
               </div>
               <div class="bg-dark-900 border border-gold-500/30 p-5 rounded-2xl flex-1 text-center shadow-xl">
                 <p class="text-gold-400 font-bold mb-2 uppercase text-sm">Sesi II (16.00 WIB)</p>
-                <p class="text-5xl font-black text-white flex items-center justify-center gap-2"><i
-                    class="fas fa-ticket-alt text-xl text-gray-400" aria-hidden="true"></i> <span
-                    id="kuotaSoreLuar">0</span></p>
+                <p class="text-5xl font-black text-white flex items-center justify-center gap-2"><span id="kuotaSoreLuar">230</span></p>
                 <p class="text-[10px] text-gray-300 mt-1 uppercase font-bold">Sisa Kuota</p>
               </div>
             </div>
-
-            <!-- ======================================================= -->
-            <!-- TOMBOL ASLI (AKTIFKAN LAGI TAHUN DEPAN TINGGAL HAPUS TANDA KOMENTAR)
             <button id="btnBukaFormNatal" onclick="bukaFormNatal()" class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-3 transition-all shadow-lg text-sm uppercase tracking-wider">
               <i class="fas fa-ticket-alt" aria-hidden="true"></i> DAFTAR SEKARANG
             </button>
-            ======================================================= -->
-
-            <!-- TOMBOL SEMENTARA: KUOTA PENUH & ARAHKAN KE WA FOH -->
-            <a href="https://wa.me/6285710105110?text=Halo%20FOH%20GPdI%20Impact,%20saya%20mau%20tanya%20info%20pendaftaran%20manual%20Natal"
-              target="_blank" rel="noopener noreferrer"
-              class="w-full bg-dark-800 border border-gold-500/40 text-gold-400 hover:bg-gold-500/10 font-black py-4 px-4 rounded-2xl flex items-center justify-center gap-3 transition-all shadow-lg text-sm uppercase tracking-wider text-center">
-              <i class="fab fa-whatsapp text-lg text-green-500" aria-hidden="true"></i> Kuota Online Penuh • Hubungi FOH Untuk Info Lebih Lanjut
-            </a>
           </div>
         </div>
+        =================================================================== -->
       </div>
     </section>
 
+    <!-- WADAH IBADAH & KEGIATAN -->
     <h2 id="wadah-ibadah"
       class="scroll-mt-32 text-3xl font-black mb-8 border-l-4 border-gold-500 pl-4 text-white reveal">Wadah Ibadah &
       Kegiatan</h2>
@@ -203,10 +246,10 @@
       <div class="glass-card reveal delay-100 rounded-3xl overflow-hidden flex flex-col relative group">
         <div class="relative h-60 bg-dark-800 overflow-hidden">
           <button type="button" onclick="geserSlide('slider-ibadah-raya', -1)" aria-label="Slide Sebelumnya Ibadah Raya"
-            class="slider-nav-btn nav-left"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
-          <div id="slider-ibadah-raya" class="slideshow-container w-full h-full"></div>
+            class="slider-nav-btn nav-left z-20"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+          <div id="slider-ibadah-raya" class="slideshow-container flex w-full h-full transition-transform duration-500"></div>
           <button type="button" onclick="geserSlide('slider-ibadah-raya', 1)" aria-label="Slide Selanjutnya Ibadah Raya"
-            class="slider-nav-btn nav-right"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+            class="slider-nav-btn nav-right z-20"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
         </div>
         <div class="p-8 flex-grow">
           <h3 class="text-2xl font-black mb-2 text-gold-400 group-hover:text-gold-300 transition-colors">Ibadah Raya
@@ -225,10 +268,10 @@
       <div class="glass-card reveal delay-200 rounded-3xl overflow-hidden flex flex-col relative group">
         <div class="relative h-60 bg-dark-800 overflow-hidden">
           <button type="button" onclick="geserSlide('slider-impact-kids', -1)" aria-label="Slide Sebelumnya Impact Kids"
-            class="slider-nav-btn nav-left"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
-          <div id="slider-impact-kids" class="slideshow-container w-full h-full"></div>
+            class="slider-nav-btn nav-left z-20"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+          <div id="slider-impact-kids" class="slideshow-container flex w-full h-full transition-transform duration-500"></div>
           <button type="button" onclick="geserSlide('slider-impact-kids', 1)" aria-label="Slide Selanjutnya Impact Kids"
-            class="slider-nav-btn nav-right"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+            class="slider-nav-btn nav-right z-20"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
         </div>
         <div class="p-8 flex-grow">
           <h3 class="text-2xl font-black mb-2 text-gold-400 group-hover:text-gold-300 transition-colors">IMPACT KIDS
@@ -248,11 +291,11 @@
         class="scroll-mt-32 glass-card reveal delay-100 rounded-3xl overflow-hidden flex flex-col relative group">
         <div class="relative h-60 bg-dark-800 overflow-hidden">
           <button type="button" onclick="geserSlide('slider-komsel-sukacita', -1)"
-            aria-label="Slide Sebelumnya Komsel Sukacita" class="slider-nav-btn nav-left"><i
+            aria-label="Slide Sebelumnya Komsel Sukacita" class="slider-nav-btn nav-left z-20"><i
               class="fas fa-chevron-left" aria-hidden="true"></i></button>
-          <div id="slider-komsel-sukacita" class="slideshow-container w-full h-full"></div>
+          <div id="slider-komsel-sukacita" class="slideshow-container flex w-full h-full transition-transform duration-500"></div>
           <button type="button" onclick="geserSlide('slider-komsel-sukacita', 1)"
-            aria-label="Slide Selanjutnya Komsel Sukacita" class="slider-nav-btn nav-right"><i
+            aria-label="Slide Selanjutnya Komsel Sukacita" class="slider-nav-btn nav-right z-20"><i
               class="fas fa-chevron-right" aria-hidden="true"></i></button>
         </div>
         <div class="p-8 flex-grow">
@@ -272,11 +315,11 @@
       <div class="glass-card reveal delay-200 rounded-3xl overflow-hidden flex flex-col relative group">
         <div class="relative h-60 bg-dark-800 overflow-hidden">
           <button type="button" onclick="geserSlide('slider-impact-generation', -1)"
-            aria-label="Slide Sebelumnya Impact Generation" class="slider-nav-btn nav-left"><i
+            aria-label="Slide Sebelumnya Impact Generation" class="slider-nav-btn nav-left z-20"><i
               class="fas fa-chevron-left" aria-hidden="true"></i></button>
-          <div id="slider-impact-generation" class="slideshow-container w-full h-full"></div>
+          <div id="slider-impact-generation" class="slideshow-container flex w-full h-full transition-transform duration-500"></div>
           <button type="button" onclick="geserSlide('slider-impact-generation', 1)"
-            aria-label="Slide Selanjutnya Impact Generation" class="slider-nav-btn nav-right"><i
+            aria-label="Slide Selanjutnya Impact Generation" class="slider-nav-btn nav-right z-20"><i
               class="fas fa-chevron-right" aria-hidden="true"></i></button>
         </div>
         <div class="p-8 flex-grow">
@@ -294,6 +337,7 @@
       </div>
     </div>
 
+    <!-- LAYANAN & PENDAFTARAN -->
     <div id="layanan-diakonia" class="scroll-mt-32 flex items-center gap-4 mb-8 border-l-4 border-gold-500 pl-4 reveal">
       <h2 class="text-3xl font-black text-white">Layanan & Pendaftaran</h2>
     </div>
@@ -341,6 +385,7 @@
       </a>
     </div>
 
+    <!-- GEMBALA SIDANG -->
     <div
       class="glass-card rounded-[2.5rem] p-8 md:p-12 flex flex-col md:flex-row gap-8 items-center mb-16 border-gold-500/30 shadow-2xl relative overflow-hidden reveal">
       <div class="absolute top-0 right-0 w-72 h-72 bg-gold-500/10 rounded-full blur-3xl mix-blend-screen"></div>
@@ -362,6 +407,7 @@
       </div>
     </div>
 
+    <!-- FOOTER -->
     <footer class="mt-16 pt-16 border-t border-white/10 reveal">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
         <div id="lokasi-gereja" class="scroll-mt-32">
@@ -420,7 +466,7 @@
     </footer>
   </main>
 
-  <!-- MODAL PENDAFTARAN -->
+  <!-- MODAL PENDAFTARAN (TETAP UTUH UNTUK TAHUN DEPAN) -->
   <div id="modalNatal" role="dialog" aria-modal="true" aria-labelledby="judulModalNatal"
     class="fixed inset-0 z-[100] bg-black/80 hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
     <div
@@ -508,7 +554,7 @@
     </div>
   </div>
 
-  <!-- MODAL TIKET -->
+  <!-- MODAL TIKET (DENGAN LAYOUT RAPI ANTI-TUMPANG TINDIH) -->
   <div id="modalTiket"
     class="fixed inset-0 z-[110] bg-black/95 hidden flex-col items-center justify-start overflow-y-auto py-12 px-4 opacity-0 transition-opacity duration-500 custom-scrollbar">
     <div class="m-auto w-full max-w-[360px] flex flex-col items-center">
