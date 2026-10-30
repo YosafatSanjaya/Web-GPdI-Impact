@@ -129,9 +129,19 @@ window.renderAdminTable = function () {
             tbody.innerHTML += `
               <tr class="hover:bg-white/[0.02] transition-colors border-b border-white/5">
                 <td class="py-4 px-5 text-center font-black text-gold-500 text-lg">${String(item.noUrut).padStart(3, '0')}</td>
-                <td class="py-4 px-5">
-                  <p class="font-bold text-white text-base">${item.nama}</p>
-                  <p class="text-[11px] text-gray-500 mt-1 max-w-[200px] truncate" title="${item.anggota}">+ ${item.anggota}</p>
+              <td class="py-4 px-5">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <p class="font-bold text-white text-base">
+                      ${item.nama.replace(/\[MANUAL FOH\]|\[EDIT.*?\]/g, '').trim()}
+                    </p>
+                    ${item.nama.includes('[MANUAL FOH]') 
+                      ? `<span class="bg-amber-500/20 text-amber-400 border border-amber-500/40 text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider">Manual FOH</span>` 
+                      : ''}
+                    ${item.nama.includes('[EDIT') 
+                      ? `<span class="bg-blue-500/20 text-blue-400 border border-blue-500/40 text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider">Revisi Data</span>` 
+                      : ''}
+                  </div>
+                  <p class="text-[11px] text-gray-400 mt-1 max-w-[260px] truncate" title="${item.anggota}">+ ${item.anggota}</p>
                 </td>
                 <td class="py-4 px-5 text-center">
                   <span class="bg-dark-900 border border-white/10 px-4 py-1.5 rounded-lg text-white font-black text-sm">${item.jumlah}</span>
