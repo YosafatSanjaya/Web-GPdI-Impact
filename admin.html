@@ -4,49 +4,138 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Admin - GPdI Impact</title>
+  <title>Admin Portal - GPdI Impact</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous" />
 
   <script>
     tailwind.config = {
-      theme: { extend: { colors: { gold: { 400: '#FBBF24', 500: '#D4AF37', 600: '#AA8C2C', 700: '#806921' }, dark: { 900: '#070707', 800: '#121212', 700: '#1C1C1C' } } } }
+      theme: {
+        extend: {
+          colors: {
+            navy: {
+              950: '#060a12',
+              900: '#0b1120',
+              800: '#111827',
+              700: '#1e293b'
+            },
+            gold: {
+              400: '#FBBF24',
+              500: '#F59E0B',
+              600: '#D97706'
+            }
+          }
+        }
+      }
     }
   </script>
 
   <style>
-    /* Custom Premium Scrollbar */
+    body {
+      background-color: #060a12;
+      color: #e2e8f0;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
     ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
-    .glass-panel { background: rgba(18, 18, 18, 0.65); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); }
-    body { background: radial-gradient(circle at top right, #1a1a1a 0%, #000000 100%); background-attachment: fixed; }
+    ::-webkit-scrollbar-track { background: #060a12; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 8px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+    @keyframes shakeError {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+    .shake { animation: shakeError 0.3s ease-in-out; }
   </style>
 </head>
 
-<body class="antialiased selection:bg-gold-500 selection:text-black text-gray-200">
+<body class="antialiased selection:bg-blue-500 selection:text-white">
 
+  <!-- ========================================================= -->
+  <!-- 1. CUSTOM LOGIN SCREEN (MINIMALIST NAVY & ELEGAN)         -->
+  <!-- ========================================================= -->
+  <section id="admin-login-screen" class="fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-navy-950">
+    <div id="loginCard" class="w-full max-w-md bg-navy-900 border border-slate-800 rounded-2xl p-8 shadow-2xl transition-all duration-300">
+      
+      <div class="flex items-center gap-3.5 mb-6 pb-6 border-b border-slate-800/80">
+        <div class="w-11 h-11 rounded-xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
+          <i class="fas fa-shield-alt text-lg"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-white tracking-tight">Admin Portal</h1>
+          <p class="text-slate-400 text-xs">GPdI Impact • Manajemen Kehadiran Natal</p>
+        </div>
+      </div>
+
+      <form onsubmit="submitLoginAdmin(event)" class="space-y-5">
+        <div>
+          <label for="inputPassAdmin" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+            Password Otorisasi
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500 pointer-events-none">
+              <i class="fas fa-key text-xs"></i>
+            </span>
+            <input type="password" id="inputPassAdmin" required autofocus
+              class="w-full bg-navy-950 border border-slate-800 focus:border-blue-500 rounded-xl pl-10 pr-11 py-3.5 text-sm text-white placeholder-slate-600 focus:outline-none transition-colors"
+              placeholder="Masukkan password admin...">
+            <button type="button" onclick="toggleLihatPass()" aria-label="Tampilkan Password"
+              class="absolute inset-y-0 right-0 px-4 text-slate-500 hover:text-slate-300 focus:outline-none transition-colors">
+              <i class="fas fa-eye text-xs" id="iconMataPass"></i>
+            </button>
+          </div>
+          <p id="loginErrorMsg" class="hidden text-red-400 text-xs font-medium mt-2.5 flex items-center gap-1.5">
+            <i class="fas fa-exclamation-circle"></i> <span>Password yang dimasukkan tidak sesuai.</span>
+          </p>
+        </div>
+
+        <button type="submit" id="btnSubmitLogin"
+          class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3.5 rounded-xl text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2 shadow-lg">
+          <span>Masuk ke Dashboard</span>
+          <i class="fas fa-arrow-right text-[11px]"></i>
+        </button>
+
+        <div class="pt-2 text-center">
+          <a href="/index.html" class="inline-flex items-center gap-1.5 text-slate-500 hover:text-slate-300 text-xs font-medium transition-colors">
+            <i class="fas fa-chevron-left text-[10px]"></i> Kembali ke Halaman Utama
+          </a>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ========================================================= -->
+  <!-- 2. MAIN ADMIN DASHBOARD                                   -->
+  <!-- ========================================================= -->
   <section id="admin-dashboard" class="hidden relative z-10 min-h-screen p-4 md:p-8 max-w-7xl mx-auto">
     
     <!-- HEADER -->
-    <div class="flex flex-col md:flex-row justify-between items-center mb-10 pb-6 border-b border-white/10">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 pb-6 border-b border-slate-800">
       <div class="flex items-center gap-4">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center shadow-[0_0_20px_rgba(212,175,55,0.3)]">
-          <i class="fas fa-crown text-black text-xl"></i>
+        <div class="w-11 h-11 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-sm">
+          <i class="fas fa-clipboard-check text-lg"></i>
         </div>
         <div>
-          <h2 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 tracking-tight">Admin</h2>
-          <p class="text-gold-500 text-xs font-bold tracking-widest uppercase mt-1">Natal GPdI Impact  2026</p>
+          <h2 class="text-2xl font-bold text-white tracking-tight">Dashboard Kehadiran</h2>
+          <p class="text-slate-400 text-xs font-medium mt-0.5">Perayaan Natal GPdI Impact 2026</p>
         </div>
       </div>
       
-      <!-- TABS -->
-      <div class="mt-6 md:mt-0 flex gap-3 p-1.5 bg-dark-900/50 rounded-2xl border border-white/5 backdrop-blur-md">
-        <button onclick="switchAdminTab('Pagi')" id="tabAdminPagi" class="bg-gold-500 text-black px-8 py-2.5 rounded-xl font-bold shadow-lg transition-all text-sm">Sesi 1 (09.30)</button>
-        <button onclick="switchAdminTab('Sore')" id="tabAdminSore" class="hover:bg-white/5 text-gray-400 px-8 py-2.5 rounded-xl font-bold transition-all text-sm">Sesi II (16.00)</button>
+      <!-- TABS SESI & TOMBOL KELUAR -->
+      <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+        <div class="flex gap-1.5 p-1 bg-navy-900 rounded-xl border border-slate-800">
+          <button onclick="switchAdminTab('Pagi')" id="tabAdminPagi" class="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold transition-colors text-xs">
+            Sesi 1 (09.30)
+          </button>
+          <button onclick="switchAdminTab('Sore')" id="tabAdminSore" class="hover:bg-slate-800/60 text-slate-400 px-5 py-2 rounded-lg font-semibold transition-colors text-xs">
+            Sesi II (16.00)
+          </button>
+        </div>
+        <button onclick="keluarAdmin()" title="Kunci Kembali Portal" class="px-3.5 py-2 rounded-xl bg-navy-900 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-white text-xs font-semibold transition-colors flex items-center gap-2">
+          <i class="fas fa-lock text-[11px]"></i> <span class="hidden sm:inline">Kunci</span>
+        </button>
       </div>
     </div>
 
@@ -54,63 +143,61 @@
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
       
       <!-- LEFT COLUMN: COUNTERS -->
-      <div class="lg:col-span-1 flex flex-col gap-4">
-        <div class="glass-panel p-5 rounded-2xl relative overflow-hidden group">
-          <div class="absolute -right-6 -top-6 w-20 h-20 bg-blue-500/20 rounded-full blur-2xl group-hover:bg-blue-500/30 transition-all"></div>
-          <p class="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-1">Total Pendaftar</p>
-          <p class="text-3xl font-black text-white" id="adminTotalDaftar">0</p>
+      <div class="lg:col-span-1 flex flex-col gap-3.5">
+        <div class="bg-navy-900 border border-slate-800 p-5 rounded-xl">
+          <p class="text-slate-400 text-[11px] font-semibold uppercase tracking-wider mb-1">Total Pendaftar</p>
+          <p class="text-3xl font-bold text-white" id="adminTotalDaftar">0</p>
         </div>
-        <div class="glass-panel p-5 rounded-2xl relative overflow-hidden group border-green-500/20">
-          <div class="absolute -right-6 -top-6 w-20 h-20 bg-green-500/20 rounded-full blur-2xl group-hover:bg-green-500/30 transition-all"></div>
-          <p class="text-green-400 text-[10px] font-bold uppercase tracking-wider mb-1">Hadir</p>
-          <p class="text-3xl font-black text-white" id="adminTotalHadir">0</p>
+        <div class="bg-navy-900 border border-emerald-500/20 p-5 rounded-xl">
+          <p class="text-emerald-400 text-[11px] font-semibold uppercase tracking-wider mb-1">Hadir (Check-In)</p>
+          <p class="text-3xl font-bold text-white" id="adminTotalHadir">0</p>
         </div>
-        <div class="grid grid-cols-2 gap-4">
-          <div class="glass-panel p-4 rounded-2xl border-yellow-500/20">
-            <p class="text-yellow-500 text-[9px] font-bold uppercase tracking-wider mb-1">Belum Hadir</p>
-            <p class="text-xl font-black text-white" id="adminBelumHadir">0</p>
+        <div class="grid grid-cols-2 gap-3.5">
+          <div class="bg-navy-900 border border-amber-500/20 p-4 rounded-xl">
+            <p class="text-amber-400 text-[10px] font-semibold uppercase tracking-wider mb-1">Belum Hadir</p>
+            <p class="text-xl font-bold text-white" id="adminBelumHadir">0</p>
           </div>
-          <div class="glass-panel p-4 rounded-2xl border-red-500/20">
-            <p class="text-red-400 text-[9px] font-bold uppercase tracking-wider mb-1">Batal</p>
-            <p class="text-xl font-black text-white" id="adminTotalBatal">0</p>
+          <div class="bg-navy-900 border border-red-500/20 p-4 rounded-xl">
+            <p class="text-red-400 text-[10px] font-semibold uppercase tracking-wider mb-1">Batal</p>
+            <p class="text-xl font-bold text-white" id="adminTotalBatal">0</p>
           </div>
         </div>
-        <button onclick="loadAdminData()" class="w-full bg-dark-800 hover:bg-dark-700 border border-white/10 text-white font-bold py-3 rounded-2xl transition-colors text-sm shadow-lg flex items-center justify-center gap-2 mt-2">
-          <i class="fas fa-sync-alt" id="iconSyncAdmin"></i> Refresh
+        <button onclick="loadAdminData()" class="w-full bg-navy-900 hover:bg-slate-800 border border-slate-800 text-slate-200 font-semibold py-3 rounded-xl transition-colors text-xs flex items-center justify-center gap-2 mt-1">
+          <i class="fas fa-sync-alt text-blue-400" id="iconSyncAdmin"></i> Segarkan Data
         </button>
       </div>
 
       <!-- RIGHT COLUMN: STATS & TABLE -->
-      <div class="lg:col-span-3 flex flex-col gap-6">
+      <div class="lg:col-span-3 flex flex-col gap-5">
         
-        <!-- STATS ANALYTICS (Injected by JS) -->
-        <div id="adminStats" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+        <!-- STATS ANALYTICS (Injected by JS - 4 Kolom: Anak, Mobil, Motor, Umum) -->
+        <div id="adminStats" class="grid grid-cols-2 sm:grid-cols-4 gap-3.5"></div>
 
         <!-- SEARCH BAR -->
-        <div class="relative group">
-          <div class="absolute inset-y-0 left-0 flex items-center pl-5 pointer-events-none">
-            <i class="fas fa-search text-gold-500/50 group-focus-within:text-gold-500 transition-colors"></i>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+            <i class="fas fa-search text-slate-500 text-xs"></i>
           </div>
           <input type="text" id="adminSearchInput" oninput="renderAdminTable()"
-            class="w-full glass-panel border border-white/10 rounded-2xl pl-12 pr-5 py-4 text-white focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/50 transition-all shadow-lg text-sm"
-            placeholder="Cari berdasarkan Nama, Anggota, atau No Urut tiket...">
+            class="w-full bg-navy-900 border border-slate-800 rounded-xl pl-11 pr-4 py-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors text-sm"
+            placeholder="Cari Nama, Anggota, No Urut, atau ketik 'manual' / 'edit'...">
         </div>
 
         <!-- DATA TABLE -->
-        <div class="glass-panel rounded-3xl overflow-hidden shadow-2xl">
-          <div class="overflow-x-auto custom-scrollbar">
+        <div class="bg-navy-900 border border-slate-800 rounded-xl overflow-hidden shadow-lg">
+          <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse whitespace-nowrap">
               <thead>
-                <tr class="bg-black/40 text-gray-400 text-[10px] uppercase tracking-widest border-b border-white/5">
-                  <th class="py-4 px-5 font-bold text-center">No Urut</th>
-                  <th class="py-4 px-5 font-bold">Data Pendaftar</th>
-                  <th class="py-4 px-5 font-bold text-center">Akses</th>
-                  <th class="py-4 px-5 font-bold">Kendaraan</th>
-                  <th class="py-4 px-5 font-bold">Kontak WA</th>
-                  <th class="py-4 px-5 font-bold text-center">Status</th>
+                <tr class="bg-navy-950/60 text-slate-400 text-[11px] uppercase tracking-wider border-b border-slate-800">
+                  <th class="py-3.5 px-4 font-semibold text-center">No Urut</th>
+                  <th class="py-3.5 px-4 font-semibold">Data Pendaftar</th>
+                  <th class="py-3.5 px-4 font-semibold text-center">Dewasa / Anak</th>
+                  <th class="py-3.5 px-4 font-semibold">Kendaraan</th>
+                  <th class="py-3.5 px-4 font-semibold">Kontak WA</th>
+                  <th class="py-3.5 px-4 font-semibold text-center">Status</th>
                 </tr>
               </thead>
-              <tbody id="tabelAdminBody" class="text-sm text-gray-300 divide-y divide-white/5">
+              <tbody id="tabelAdminBody" class="text-sm text-slate-300 divide-y divide-slate-800/70">
                 <!-- Rendered by JS -->
               </tbody>
             </table>
@@ -121,27 +208,29 @@
     </div>
   </section>
 
-  <!-- MODAL KELOLA KEHADIRAN (Desain Premium) -->
-  <div id="modalKelola" class="fixed inset-0 z-[1000] bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-    <div class="glass-panel border border-gold-500/20 rounded-[2rem] shadow-[0_0_50px_rgba(212,175,55,0.1)] w-full max-w-md flex flex-col transform scale-95 transition-transform duration-300" id="boxKelola">
+  <!-- ========================================================= -->
+  <!-- 3. MODAL KELOLA KEHADIRAN                                 -->
+  <!-- ========================================================= -->
+  <div id="modalKelola" class="fixed inset-0 z-[1000] bg-black/75 hidden items-center justify-center p-4 opacity-0 transition-opacity duration-200">
+    <div class="bg-navy-900 border border-slate-800 rounded-2xl shadow-2xl w-full max-w-md flex flex-col transform scale-95 transition-transform duration-200" id="boxKelola">
       
-      <div class="p-6 border-b border-white/5 flex justify-between items-center bg-black/20 rounded-t-[2rem]">
+      <div class="p-5 border-b border-slate-800 flex justify-between items-center">
         <div>
-          <h3 class="text-xl font-black text-white" id="kelolaTitle">Kelola Kehadiran</h3>
-          <p class="text-[10px] text-gold-500 uppercase tracking-widest font-bold mt-1">Check-In</p>
+          <h3 class="text-lg font-bold text-white" id="kelolaTitle">Kelola Kehadiran</h3>
+          <p class="text-[11px] text-blue-400 font-medium mt-0.5">Verifikasi Check-In Jemaat</p>
         </div>
-        <button onclick="tutupModalKelola()" class="w-10 h-10 rounded-full bg-white/5 hover:bg-red-500/20 hover:text-red-500 text-gray-400 flex items-center justify-center transition-colors">
-          <i class="fas fa-times text-lg"></i>
+        <button type="button" onclick="tutupModalKelola()" class="w-8 h-8 rounded-lg bg-slate-800/80 hover:bg-red-500/20 hover:text-red-400 text-slate-400 flex items-center justify-center transition-colors">
+          <i class="fas fa-times text-sm"></i>
         </button>
       </div>
       
-      <div class="p-6 space-y-3 max-h-[55vh] overflow-y-auto custom-scrollbar" id="kelolaList">
+      <div class="p-5 space-y-2.5 max-h-[55vh] overflow-y-auto" id="kelolaList">
         <!-- Injected by JS -->
       </div>
       
-      <div class="p-6 border-t border-white/5 bg-black/40 rounded-b-[2rem]">
-        <button onclick="simpanKelola()" id="btnSimpanKelola" class="w-full bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-black font-black py-4 rounded-xl transition-all shadow-[0_10px_20px_rgba(212,175,55,0.2)]">
-          Save
+      <div class="p-5 border-t border-slate-800 bg-navy-950/50 rounded-b-2xl">
+        <button type="button" onclick="simpanKelola()" id="btnSimpanKelola" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl text-xs uppercase tracking-wider transition-colors shadow">
+          Simpan Data Kehadiran
         </button>
       </div>
       
