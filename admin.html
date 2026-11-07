@@ -19,6 +19,13 @@
               900: '#0a101d',
               800: '#111a2e',
               700: '#1e293b'
+            },
+            gold: {
+              300: '#FDE68A',
+              400: '#FBBF24',
+              500: '#D97706',
+              600: '#B45309',
+              700: '#92400E'
             }
           }
         }
@@ -29,7 +36,7 @@
   <style>
     body {
       background-color: #04070d;
-      background-image: radial-gradient(circle at 50% 0%, rgba(30, 58, 138, 0.15) 0%, transparent 60%);
+      background-image: radial-gradient(circle at 50% 0%, rgba(217, 119, 6, 0.12) 0%, transparent 60%);
       background-attachment: fixed;
       color: #e2e8f0;
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -37,7 +44,7 @@
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #04070d; }
     ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 8px; }
-    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+    ::-webkit-scrollbar-thumb:hover { background: #D97706; }
     @keyframes shakeError {
       0%, 100% { transform: translateX(0); }
       25% { transform: translateX(-6px); }
@@ -49,58 +56,122 @@
       transition: background-color 0.15s ease, transform 0.1s ease;
     }
     .row-interactive:active {
-      background-color: rgba(59, 130, 246, 0.12) !important;
+      background-color: rgba(245, 158, 11, 0.14) !important;
+    }
+    .gold-gradient-btn {
+      background: linear-gradient(135deg, #FBBF24 0%, #D97706 55%, #B45309 100%);
+      color: #09090b;
+    }
+    .gold-gradient-btn:hover {
+      background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 55%, #D97706 100%);
+    }
+    .panitia-slide {
+      transition: opacity 1.2s ease-in-out, transform 6s ease-out;
     }
   </style>
 </head>
 
-<body class="antialiased selection:bg-blue-600 selection:text-white">
+<body class="antialiased selection:bg-amber-500 selection:text-black">
 
   <!-- ========================================================= -->
-  <!-- 1. CUSTOM LOGIN SCREEN (TYPOGRAPHIC EXECUTIVE NAVY)       -->
+  <!-- 1. MOBILE-FIRST GOLD GRADIENT & PANITIA LOGIN SCREEN      -->
   <!-- ========================================================= -->
-  <section id="admin-login-screen" class="fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-navy-950">
-    <div id="loginCard" class="w-full max-w-md bg-navy-900/95 backdrop-blur-xl border border-slate-800/90 rounded-2xl p-8 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] transition-all duration-300">
-      
-      <div class="mb-7 pb-6 border-b border-slate-800/80">
-        <div class="flex items-center gap-2 mb-2">
-          <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-          <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-400">System Authorization</span>
+  <section id="admin-login-screen" class="fixed inset-0 z-[2000] flex flex-col justify-end sm:justify-center items-center sm:p-4 bg-navy-950 overflow-hidden">
+
+    <!-- Latar Belakang Full-Bleed untuk Tampilan Mobile & Desktop -->
+    <div class="absolute inset-0 z-0 overflow-hidden bg-gradient-to-br from-amber-700 via-yellow-600 to-navy-950">
+      <!-- Foto Panitia 1 (Teal) -->
+      <img id="bgPanitia1" src="images/SAK01542.jpg" alt="Panitia Natal GPdI Impact"
+        class="panitia-slide absolute inset-0 w-full h-[58%] sm:h-full object-cover object-center opacity-75 scale-105"
+        onerror="this.style.display='none'">
+      <!-- Foto Panitia 2 (Terracotta) -->
+      <img id="bgPanitia2" src="images/teracot.jpg" alt="Panitia GPdI Impact"
+        class="panitia-slide absolute inset-0 w-full h-[58%] sm:h-full object-cover object-center opacity-0 scale-100"
+        onerror="this.style.display='none'">
+      <!-- Overlay Gradasi Emas Mewah -->
+      <div class="absolute inset-0 bg-gradient-to-b from-amber-600/55 via-amber-900/70 to-navy-950 sm:via-navy-950/85 sm:to-navy-950"></div>
+    </div>
+
+    <!-- Container Utama bergaya Kartu Aplikasi Mobile (Jobsly Style) -->
+    <div id="loginCard" class="relative z-10 w-full max-w-md sm:rounded-[2.25rem] overflow-hidden sm:border sm:border-amber-500/25 sm:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.85)] flex flex-col justify-between min-h-screen sm:min-h-0">
+
+      <!-- Bagian Atas: Header Gold Gradient + Foto Panitia -->
+      <div class="relative pt-10 pb-8 px-7 sm:pt-9 sm:pb-7 flex flex-col justify-between">
+        <!-- Bar Navigasi Atas -->
+        <div class="flex items-center justify-between mb-8">
+          <a href="/index.html" class="inline-flex items-center gap-1.5 text-white/90 hover:text-white text-xs font-semibold bg-black/25 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 transition-colors">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span>Beranda</span>
+          </a>
+          <span class="text-[10px] font-extrabold uppercase tracking-widest text-amber-200 bg-black/30 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-amber-300/25">
+            Natal 2026
+          </span>
         </div>
-        <h1 class="text-2xl font-extrabold text-white tracking-tight">Administrasi</h1>
-        <p class="text-slate-400 text-xs mt-1">GPdI Impact • Kehadiran Natal 2026</p>
+
+        <!-- Judul Brand di Atas Kartu -->
+        <div class="text-center my-2">
+          <p class="text-[11px] font-bold uppercase tracking-[0.25em] text-amber-200/90 drop-shadow">Portal Panitia & Usher</p>
+          <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight drop-shadow-md mt-1">GPdI Impact</h1>
+          <!-- Indikator Slide Foto Panitia -->
+          <div class="flex items-center justify-center gap-1.5 mt-4">
+            <span id="dotSlide1" class="w-5 h-1.5 rounded-full bg-amber-300 transition-all duration-300"></span>
+            <span id="dotSlide2" class="w-1.5 h-1.5 rounded-full bg-white/40 transition-all duration-300"></span>
+          </div>
+        </div>
       </div>
 
-      <form onsubmit="submitLoginAdmin(event)" class="space-y-5">
-        <div>
-          <label for="inputPassAdmin" class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
-            Akses Admin
-          </label>
-          <div class="relative">
-            <input type="password" id="inputPassAdmin" required autofocus
-              class="w-full bg-navy-950 border border-slate-800 focus:border-blue-500 rounded-xl pl-4 pr-20 py-3.5 text-sm text-white placeholder-slate-600 focus:outline-none transition-colors"
-              placeholder="Masukkan kata sandi...">
-            <button type="button" onclick="toggleLihatPass()" id="btnTogglePass"
-              class="absolute inset-y-0 right-0 px-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 hover:text-slate-300 focus:outline-none transition-colors">
-              Lihat
-            </button>
+      <!-- Bagian Bawah: Bottom-Sheet Putih/Gelap Melengkung (Rounded Top Card) -->
+      <div class="bg-navy-900/95 backdrop-blur-2xl rounded-t-[2.25rem] px-7 pt-8 pb-10 sm:pb-8 border-t border-amber-500/20 shadow-[0_-15px_40px_rgba(0,0,0,0.5)]">
+        <div class="mb-6">
+          <h2 class="text-2xl font-extrabold text-white tracking-tight">Welcome</h2>
+          <p class="text-slate-400 text-xs mt-1">Masukkan kata sandi untuk membuka absensi jemaat.</p>
+        </div>
+
+        <form onsubmit="submitLoginAdmin(event)" class="space-y-5">
+          <!-- Input Password dengan Floating-Style Label & Ikon Mata SVG -->
+          <div class="bg-navy-950/90 border border-slate-800 focus-within:border-amber-500 rounded-2xl px-4 py-3 transition-colors">
+            <label for="inputPassAdmin" class="block text-[10px] font-bold uppercase tracking-wider text-amber-400/90 mb-1">
+              Password Akses Admin
+            </label>
+            <div class="relative flex items-center">
+              <input type="password" id="inputPassAdmin" required autofocus
+                class="w-full bg-transparent pr-10 py-1 text-sm text-white placeholder-slate-600 focus:outline-none"
+                placeholder="••••••••••••">
+              <button type="button" onclick="toggleLihatPass()" id="btnTogglePass" aria-label="Tampilkan atau Sembunyikan Password"
+                class="absolute right-0 p-1.5 text-slate-400 hover:text-amber-400 focus:outline-none transition-colors">
+                <!-- Ikon Mata Terbuka (Default) -->
+                <svg id="eyeIconOpen" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <!-- Ikon Mata Dicoret (Saat Password Terlihat) -->
+                <svg id="eyeIconClosed" class="w-5 h-5 hidden text-amber-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                </svg>
+              </button>
+            </div>
           </div>
-          <p id="loginErrorMsg" class="hidden text-red-400 text-xs font-medium mt-2.5">
-            Password yang dimasukkan tidak sesuai tanya Ka Yos.
+
+          <p id="loginErrorMsg" class="hidden text-red-400 text-xs font-medium text-center">
+            Password yang dimasukkan tidak sesuai.
           </p>
-        </div>
 
-        <button type="submit" id="btnSubmitLogin"
-          class="w-full bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-widest transition-all shadow-lg shadow-blue-600/20">
-          Masuk ke Dashboard
-        </button>
+          <!-- Tombol Sign In Gradasi Gold -->
+          <button type="submit" id="btnSubmitLogin"
+            class="gold-gradient-btn w-full font-extrabold py-4 rounded-2xl text-xs uppercase tracking-widest transition-all shadow-lg shadow-amber-500/25 active:scale-[0.99]">
+            Dashboard
+          </button>
 
-        <div class="pt-2 text-center">
-          <a href="/index.html" class="inline-block text-slate-500 hover:text-slate-300 text-xs font-medium transition-colors">
-            Kembali ke Halaman Utama
-          </a>
-        </div>
-      </form>
+          <div class="pt-3 border-t border-slate-800/80 text-center">
+            <p class="text-[11px] text-slate-500 font-medium">
+              Verifikasi Kehadiran Jemaat • GPdI Impact
+            </p>
+          </div>
+        </form>
+      </div>
+
     </div>
   </section>
 
@@ -109,30 +180,35 @@
   <!-- ========================================================= -->
   <section id="admin-dashboard" class="hidden relative z-10 min-h-screen p-4 md:p-8 max-w-7xl mx-auto">
     
-    <!-- HEADER -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-5 mb-8 pb-6 border-b border-slate-800/80">
-      <div>
-        <div class="flex items-center gap-2 mb-1.5">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Live Attendance System</span>
+    <!-- HEADER DENGAN AKSEN BANNER PANITIA & EMAS -->
+    <div class="relative rounded-2xl overflow-hidden mb-8 border border-amber-500/25 bg-navy-900 shadow-xl">
+      <img src="images/SAK01542.jpg" alt="Header Panitia" class="absolute inset-0 w-full h-full object-cover object-center opacity-20 pointer-events-none" onerror="this.style.display='none'">
+      <div class="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/90 to-amber-900/30 pointer-events-none"></div>
+
+      <div class="relative z-10 p-5 md:p-7 flex flex-col md:flex-row justify-between items-start md:items-center gap-5">
+        <div>
+          <div class="flex items-center gap-2 mb-1.5">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+            <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-400">Live Attendance System</span>
+          </div>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">Dashboard Kehadiran</h2>
+          <p class="text-slate-300 text-xs font-medium mt-0.5">Perayaan Natal GPdI Impact 2026</p>
         </div>
-        <h2 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">Dashboard Kehadiran</h2>
-        <p class="text-slate-400 text-xs font-medium mt-0.5">Perayaan Natal GPdI Impact 2026</p>
-      </div>
-      
-      <!-- TABS SESI & TOMBOL KUNCI -->
-      <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-between md:justify-end">
-        <div class="flex gap-1.5 p-1 bg-navy-900 rounded-xl border border-slate-800">
-          <button onclick="switchAdminTab('Pagi')" id="tabAdminPagi" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-bold transition-all text-xs tracking-wide shadow">
-            Sesi I (09.30)
-          </button>
-          <button onclick="switchAdminTab('Sore')" id="tabAdminSore" class="hover:bg-slate-800/60 text-slate-400 px-5 py-2.5 rounded-lg font-bold transition-all text-xs tracking-wide">
-            Sesi II (16.00)
+        
+        <!-- TABS SESI & TOMBOL KUNCI -->
+        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+          <div class="flex gap-1.5 p-1 bg-navy-950/90 rounded-xl border border-slate-800">
+            <button onclick="switchAdminTab('Pagi')" id="tabAdminPagi" class="gold-gradient-btn px-5 py-2.5 rounded-lg font-extrabold transition-all text-xs tracking-wide shadow">
+              Sesi I (09.30)
+            </button>
+            <button onclick="switchAdminTab('Sore')" id="tabAdminSore" class="hover:bg-slate-800/60 text-slate-400 px-5 py-2.5 rounded-lg font-bold transition-all text-xs tracking-wide">
+              Sesi II (16.00)
+            </button>
+          </div>
+          <button onclick="keluarAdmin()" title="Kunci Kembali Portal" class="px-4 py-2.5 rounded-xl bg-navy-950/90 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-amber-400 text-xs font-bold uppercase tracking-wider transition-colors">
+            Lock
           </button>
         </div>
-        <button onclick="keluarAdmin()" title="Kunci Kembali Portal" class="px-4 py-2.5 rounded-xl bg-navy-900 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">
-          Lock
-        </button>
       </div>
     </div>
 
@@ -141,7 +217,7 @@
       
       <!-- LEFT COLUMN: COUNTERS -->
       <div class="lg:col-span-3 flex flex-col gap-3.5">
-        <div class="bg-navy-900/90 border border-slate-800/90 border-l-4 border-l-blue-500 p-5 rounded-xl shadow-sm">
+        <div class="bg-navy-900/90 border border-slate-800/90 border-l-4 border-l-amber-400 p-5 rounded-xl shadow-sm">
           <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1.5">Total Terdaftar</p>
           <p class="text-3xl font-extrabold text-white tracking-tight" id="adminTotalDaftar">0</p>
         </div>
@@ -159,24 +235,24 @@
             <p class="text-2xl font-extrabold text-white" id="adminTotalBatal">0</p>
           </div>
         </div>
-        <button onclick="loadAdminData()" id="btnRefreshAdmin" class="w-full bg-navy-800 hover:bg-slate-800 active:bg-slate-700 border border-slate-700/80 text-slate-200 font-bold py-3.5 rounded-xl transition-all text-xs uppercase tracking-widest mt-1 shadow">
-          Refresh
+        <button onclick="loadAdminData()" id="btnRefreshAdmin" class="w-full gold-gradient-btn font-extrabold py-3.5 rounded-xl transition-all text-xs uppercase tracking-widest mt-1 shadow-lg shadow-amber-500/15">
+          Refresh Data
         </button>
       </div>
 
       <!-- RIGHT COLUMN: STATS & TABLE -->
       <div class="lg:col-span-9 flex flex-col gap-5">
         
-        <!-- STATS ANALYTICS (Injected by JS - Tanpa Clip Art) -->
+        <!-- STATS ANALYTICS -->
         <div id="adminStats" class="grid grid-cols-2 sm:grid-cols-4 gap-3.5"></div>
 
-        <!-- SEARCH BAR & PETUNJUK MOBILE -->
+        <!-- SEARCH BAR -->
         <div class="flex flex-col gap-2">
           <div class="relative">
             <input type="text" id="adminSearchInput" oninput="renderAdminTable()"
-              class="w-full bg-navy-900 border border-slate-800 focus:border-blue-500 rounded-xl px-4 py-3.5 text-white placeholder-slate-500 focus:outline-none transition-colors text-sm shadow-inner"
+              class="w-full bg-navy-900 border border-slate-800 focus:border-amber-500 rounded-xl px-4 py-3.5 text-white placeholder-slate-500 focus:outline-none transition-colors text-sm shadow-inner"
               placeholder="Ketik No Urut, Nama Jemaat, Anggota, atau ketik 'manual' / 'edit'...">
-            <button type="button" onclick="resetPencarianAdmin()" id="btnClearSearch" class="hidden absolute inset-y-0 right-0 px-4 text-xs font-bold uppercase tracking-wider text-slate-400 hover:text-white">
+            <button type="button" onclick="resetPencarianAdmin()" id="btnClearSearch" class="hidden absolute inset-y-0 right-0 px-4 text-xs font-bold uppercase tracking-wider text-amber-400 hover:text-white">
               Reset
             </button>
           </div>
@@ -187,7 +263,7 @@
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse whitespace-nowrap">
               <thead>
-                <tr class="bg-navy-950/90 text-slate-400 text-[10px] uppercase tracking-widest border-b border-slate-800">
+                <tr class="bg-navy-950/90 text-amber-400/90 text-[10px] uppercase tracking-widest border-b border-slate-800">
                   <th class="py-4 px-4 font-bold text-center w-20">No Urut</th>
                   <th class="py-4 px-4 font-bold">Data Pendaftar</th>
                   <th class="py-4 px-4 font-bold text-center">Kuota</th>
@@ -211,11 +287,11 @@
   <!-- 3. MODAL KELOLA KEHADIRAN                                 -->
   <!-- ========================================================= -->
   <div id="modalKelola" onclick="if(event.target === this) tutupModalKelola()" class="fixed inset-0 z-[1000] bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 opacity-0 transition-opacity duration-200">
-    <div class="bg-navy-900 border border-slate-700/80 rounded-2xl shadow-2xl w-full max-w-md flex flex-col transform scale-95 transition-transform duration-200 overflow-hidden" id="boxKelola">
+    <div class="bg-navy-900 border border-amber-500/30 rounded-2xl shadow-2xl w-full max-w-md flex flex-col transform scale-95 transition-transform duration-200 overflow-hidden" id="boxKelola">
       
       <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-navy-950/50">
         <div>
-          <span class="text-[10px] text-blue-400 font-bold uppercase tracking-widest block">Verifikasi Kehadiran</span>
+          <span class="text-[10px] text-amber-400 font-bold uppercase tracking-widest block">Verifikasi Kehadiran</span>
           <h3 class="text-xl font-extrabold text-white mt-0.5" id="kelolaTitle">Tiket #000</h3>
         </div>
         <button type="button" onclick="tutupModalKelola()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors">
@@ -239,8 +315,8 @@
         <button type="button" onclick="tutupModalKelola()" class="w-1/3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider transition-colors">
           Batal
         </button>
-        <button type="button" onclick="simpanKelola()" id="btnSimpanKelola" class="w-2/3 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-widest transition-colors shadow-lg shadow-blue-600/20">
-          Simpan Kehadiran
+        <button type="button" onclick="simpanKelola()" id="btnSimpanKelola" class="w-2/3 gold-gradient-btn font-extrabold py-3.5 rounded-xl text-xs uppercase tracking-widest transition-all shadow-lg shadow-amber-500/20">
+          Simpan
         </button>
       </div>
       
