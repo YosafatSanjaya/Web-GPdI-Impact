@@ -1,5 +1,5 @@
 /* ===================================================
-   FITUR ADMIN DASHBOARD (GOLD THEME, EYE SVG & FULL ROW CLICK)
+   FITUR ADMIN DASHBOARD (100 PERFORMANCE & FULL ROW CLICK)
 =================================================== */
 const API_URL_NATAL = '/api/natal';
 let adminDataCache = { Pagi: [], Sore: [] };
@@ -7,12 +7,10 @@ let currentAdminTab = 'Pagi';
 let adminPasswordTemp = "";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const passInput = document.getElementById('inputPassAdmin');
-    if (passInput) passInput.focus();
     initLoginPanitiaSlider();
 });
 
-// Slideshow otomatis bergantian antara kedua foto panitia (SAK01542.jpg & teracot.jpg)
+// Slideshow pintar: Foto ke-2 (teracot.jpg) baru dimuat saat dibutuhkan agar LCP super cepat
 function initLoginPanitiaSlider() {
     const img1 = document.getElementById('bgPanitia1');
     const img2 = document.getElementById('bgPanitia2');
@@ -21,21 +19,41 @@ function initLoginPanitiaSlider() {
     if (!img1 || !img2) return;
 
     let showFirst = true;
+    let img2Loaded = false;
+
     setInterval(() => {
+        // Jangan jalankan animasi jika layar login sudah ditutup
+        const loginScreen = document.getElementById('admin-login-screen');
+        if (loginScreen && loginScreen.classList.contains('hidden')) return;
+
+        if (!img2Loaded) {
+            img2Loaded = true;
+            const vercelSrc = img2.getAttribute('data-vercel-src');
+            const rawSrc = img2.getAttribute('data-raw-src');
+            img2.onerror = function () {
+                if (this.src.includes('_next') && rawSrc) {
+                    this.src = rawSrc;
+                } else {
+                    this.style.display = 'none';
+                }
+            };
+            img2.src = vercelSrc || rawSrc;
+        }
+
         showFirst = !showFirst;
         if (showFirst) {
             img1.style.opacity = '0.75';
             img2.style.opacity = '0';
             if (dot1 && dot2) {
-                dot1.className = 'w-5 h-1.5 rounded-full bg-amber-300 transition-all duration-300';
-                dot2.className = 'w-1.5 h-1.5 rounded-full bg-white/40 transition-all duration-300';
+                dot1.className = 'w-5 h-1.5 rounded-full bg-amber-300';
+                dot2.className = 'w-1.5 h-1.5 rounded-full bg-white/40';
             }
         } else {
             img1.style.opacity = '0';
             img2.style.opacity = '0.75';
             if (dot1 && dot2) {
-                dot2.className = 'w-5 h-1.5 rounded-full bg-amber-300 transition-all duration-300';
-                dot1.className = 'w-1.5 h-1.5 rounded-full bg-white/40 transition-all duration-300';
+                dot2.className = 'w-5 h-1.5 rounded-full bg-amber-300';
+                dot1.className = 'w-1.5 h-1.5 rounded-full bg-white/40';
             }
         }
     }, 5000);
@@ -86,6 +104,12 @@ window.submitLoginAdmin = async function (e) {
 
             document.getElementById('admin-login-screen').classList.add('hidden');
             document.getElementById('admin-dashboard').classList.remove('hidden');
+
+            // Muat gambar banner header dashboard setelah login berhasil
+            const headerBanner = document.getElementById('headerBannerPanitia');
+            if (headerBanner && headerBanner.dataset.src && !headerBanner.getAttribute('src')) {
+                headerBanner.src = headerBanner.dataset.src;
+            }
 
             renderAdminTable();
         } else {
@@ -166,8 +190,8 @@ window.switchAdminTab = function (sesi) {
     currentAdminTab = sesi;
     const tabPagi = document.getElementById('tabAdminPagi');
     const tabSore = document.getElementById('tabAdminSore');
-    const activeClass = "gold-gradient-btn px-5 py-2.5 rounded-lg font-extrabold transition-all text-xs tracking-wide shadow";
-    const inactiveClass = "hover:bg-slate-800/60 text-slate-400 px-5 py-2.5 rounded-lg font-bold transition-all text-xs tracking-wide";
+    const activeClass = "gold-gradient-btn px-5 py-2.5 rounded-lg font-extrabold text-xs tracking-wide shadow";
+    const inactiveClass = "hover:bg-slate-800/60 text-slate-400 px-5 py-2.5 rounded-lg font-bold text-xs tracking-wide";
 
     if (sesi === 'Pagi') {
         tabPagi.className = activeClass;
@@ -248,7 +272,6 @@ window.renderAdminTable = function () {
 
             const hasValidWA = waBersih.length >= 9;
 
-            // SELURUH BARIS <tr> BISA DIKLIK LANGSUNG DARI NOMOR URUT / NAMA DI HP
             tbody.innerHTML += `
               <tr onclick="bukaModalKelola(${item.row})" class="row-interactive group hover:bg-slate-800/50 ${rowAccent}">
                 <td class="py-4 px-4 text-center">
@@ -259,7 +282,7 @@ window.renderAdminTable = function () {
                 </td>
                 <td class="py-4 px-4">
                   <div class="flex items-center gap-2 flex-wrap">
-                    <p class="font-bold text-white group-hover:text-amber-300 transition-colors text-sm">
+                    <p class="font-bold text-white group-hover:text-amber-300 text-sm">
                       ${item.nama.replace(/\[MANUAL FOH\]|\[EDIT.*?\]/g, '').trim()}
                     </p>
                     ${item.nama.includes('[MANUAL FOH]')
@@ -280,13 +303,13 @@ window.renderAdminTable = function () {
                 <td class="py-4 px-4 font-semibold text-slate-300 text-xs">${item.kendaraan}</td>
                 <td class="py-4 px-4 text-slate-300 text-xs">
                   ${hasValidWA
-                    ? `<a href="https://wa.me/${waBersih}" target="_blank" onclick="event.stopPropagation()" class="hover:text-emerald-400 underline decoration-slate-700 hover:decoration-emerald-400 underline-offset-4 transition-colors font-medium">
+                    ? `<a href="https://wa.me/${waBersih}" target="_blank" onclick="event.stopPropagation()" class="hover:text-emerald-400 underline decoration-slate-700 hover:decoration-emerald-400 underline-offset-4 font-medium">
                          ${item.wa}
                        </a>`
                     : `<span class="text-slate-600">-</span>`}
                 </td>
                 <td class="py-4 px-4 text-center">
-                  <button type="button" onclick="event.stopPropagation(); bukaModalKelola(${item.row})" class="${btnClass} px-4 py-2 rounded-lg font-bold text-xs transition-all w-32">
+                  <button type="button" onclick="event.stopPropagation(); bukaModalKelola(${item.row})" class="${btnClass} px-4 py-2 rounded-lg font-bold text-xs w-32">
                     ${btnText}
                   </button>
                 </td>
