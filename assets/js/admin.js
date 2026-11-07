@@ -1,5 +1,5 @@
 /* ===================================================
-   FITUR ADMIN DASHBOARD (FULL ROW CLICK & CLEAN UI)
+   FITUR ADMIN DASHBOARD (GOLD THEME, EYE SVG & FULL ROW CLICK)
 =================================================== */
 const API_URL_NATAL = '/api/natal';
 let adminDataCache = { Pagi: [], Sore: [] };
@@ -9,22 +9,53 @@ let adminPasswordTemp = "";
 document.addEventListener("DOMContentLoaded", () => {
     const passInput = document.getElementById('inputPassAdmin');
     if (passInput) passInput.focus();
+    initLoginPanitiaSlider();
 });
 
-// Fitur Tampilkan / Sembunyikan Password Tanpa Ikon Clip-Art
+// Slideshow otomatis bergantian antara kedua foto panitia (SAK01542.jpg & teracot.jpg)
+function initLoginPanitiaSlider() {
+    const img1 = document.getElementById('bgPanitia1');
+    const img2 = document.getElementById('bgPanitia2');
+    const dot1 = document.getElementById('dotSlide1');
+    const dot2 = document.getElementById('dotSlide2');
+    if (!img1 || !img2) return;
+
+    let showFirst = true;
+    setInterval(() => {
+        showFirst = !showFirst;
+        if (showFirst) {
+            img1.style.opacity = '0.75';
+            img2.style.opacity = '0';
+            if (dot1 && dot2) {
+                dot1.className = 'w-5 h-1.5 rounded-full bg-amber-300 transition-all duration-300';
+                dot2.className = 'w-1.5 h-1.5 rounded-full bg-white/40 transition-all duration-300';
+            }
+        } else {
+            img1.style.opacity = '0';
+            img2.style.opacity = '0.75';
+            if (dot1 && dot2) {
+                dot2.className = 'w-5 h-1.5 rounded-full bg-amber-300 transition-all duration-300';
+                dot1.className = 'w-1.5 h-1.5 rounded-full bg-white/40 transition-all duration-300';
+            }
+        }
+    }, 5000);
+}
+
+// Fitur Tampilkan / Sembunyikan Password Menggunakan Ikon Mata SVG
 window.toggleLihatPass = function () {
     const input = document.getElementById('inputPassAdmin');
-    const btn = document.getElementById('btnTogglePass');
-    if (!input || !btn) return;
+    const eyeOpen = document.getElementById('eyeIconOpen');
+    const eyeClosed = document.getElementById('eyeIconClosed');
+    if (!input || !eyeOpen || !eyeClosed) return;
 
     if (input.type === 'password') {
         input.type = 'text';
-        btn.innerText = 'Sembunyi';
-        btn.classList.add('text-blue-400');
+        eyeOpen.classList.add('hidden');
+        eyeClosed.classList.remove('hidden');
     } else {
         input.type = 'password';
-        btn.innerText = 'Lihat';
-        btn.classList.remove('text-blue-400');
+        eyeClosed.classList.add('hidden');
+        eyeOpen.classList.remove('hidden');
     }
 };
 
@@ -58,7 +89,7 @@ window.submitLoginAdmin = async function (e) {
 
             renderAdminTable();
         } else {
-            errMsg.innerText = "Akses Ditolak: Kata sandi tidak sesuai.";
+            errMsg.innerText = "Akses Ditolak: Kata sandi tidak sesuai, tanya Ka Yos.";
             errMsg.classList.remove('hidden');
             card.classList.add('shake');
             input.value = '';
@@ -107,7 +138,7 @@ window.loadAdminData = async function () {
         btnRefresh.innerText = 'Sinkronisasi...';
     }
     if (tbody) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-10 text-center text-blue-400 font-bold text-xs uppercase tracking-widest">Sinkronisasi Database...</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="p-10 text-center text-amber-400 font-bold text-xs uppercase tracking-widest">Sinkronisasi Database...</td></tr>`;
     }
 
     try {
@@ -126,7 +157,7 @@ window.loadAdminData = async function () {
     } finally {
         if (btnRefresh) {
             btnRefresh.disabled = false;
-            btnRefresh.innerText = 'Segarkan Data';
+            btnRefresh.innerText = 'Refresh Data';
         }
     }
 };
@@ -135,7 +166,7 @@ window.switchAdminTab = function (sesi) {
     currentAdminTab = sesi;
     const tabPagi = document.getElementById('tabAdminPagi');
     const tabSore = document.getElementById('tabAdminSore');
-    const activeClass = "bg-blue-600 text-white px-5 py-2.5 rounded-lg font-bold transition-all text-xs tracking-wide shadow";
+    const activeClass = "gold-gradient-btn px-5 py-2.5 rounded-lg font-extrabold transition-all text-xs tracking-wide shadow";
     const inactiveClass = "hover:bg-slate-800/60 text-slate-400 px-5 py-2.5 rounded-lg font-bold transition-all text-xs tracking-wide";
 
     if (sesi === 'Pagi') {
@@ -190,7 +221,7 @@ window.renderAdminTable = function () {
         tbody.innerHTML = `<tr><td colspan="6" class="p-10 text-center text-slate-500 text-xs font-medium">Tidak ada data yang sesuai dengan pencarian.</td></tr>`;
     } else {
         filteredData.forEach(item => {
-            let btnClass = "bg-slate-800/90 group-hover:bg-blue-600 text-slate-200 group-hover:text-white border border-slate-700 group-hover:border-blue-500";
+            let btnClass = "bg-slate-800/90 group-hover:bg-amber-500 text-slate-200 group-hover:text-black border border-slate-700 group-hover:border-amber-400";
             let btnText = `Check-In`;
             let rowAccent = "border-l-4 border-l-transparent";
             let mobileStatusDot = `<span class="inline-block w-2 h-2 rounded-full bg-slate-600" title="Belum Hadir"></span>`;
@@ -217,18 +248,18 @@ window.renderAdminTable = function () {
 
             const hasValidWA = waBersih.length >= 9;
 
-            // SELURUH BARIS <tr> MEMILIKI onclick="bukaModalKelola(...)" AGAR DI MOBILE BISA LANGSUNG DIKLIK DARI NOMOR/NAMA
+            // SELURUH BARIS <tr> BISA DIKLIK LANGSUNG DARI NOMOR URUT / NAMA DI HP
             tbody.innerHTML += `
               <tr onclick="bukaModalKelola(${item.row})" class="row-interactive group hover:bg-slate-800/50 ${rowAccent}">
                 <td class="py-4 px-4 text-center">
-                  <div class="inline-flex items-center justify-center gap-1.5 bg-navy-950 border border-slate-800 group-hover:border-blue-500/50 px-2.5 py-1.5 rounded-lg">
+                  <div class="inline-flex items-center justify-center gap-1.5 bg-navy-950 border border-slate-800 group-hover:border-amber-500/50 px-2.5 py-1.5 rounded-lg">
                     ${mobileStatusDot}
-                    <span class="font-extrabold text-blue-400 text-sm tracking-tight">#${String(item.noUrut).padStart(3, '0')}</span>
+                    <span class="font-extrabold text-amber-400 text-sm tracking-tight">#${String(item.noUrut).padStart(3, '0')}</span>
                   </div>
                 </td>
                 <td class="py-4 px-4">
                   <div class="flex items-center gap-2 flex-wrap">
-                    <p class="font-bold text-white group-hover:text-blue-300 transition-colors text-sm">
+                    <p class="font-bold text-white group-hover:text-amber-300 transition-colors text-sm">
                       ${item.nama.replace(/\[MANUAL FOH\]|\[EDIT.*?\]/g, '').trim()}
                     </p>
                     ${item.nama.includes('[MANUAL FOH]')
@@ -244,7 +275,7 @@ window.renderAdminTable = function () {
                 </td>
                 <td class="py-4 px-4 text-center">
                   <span class="bg-navy-950 border border-slate-800 px-3 py-1 rounded-md text-white font-bold text-xs">${item.jumlah} Dewasa</span>
-                  ${item.anak > 0 ? `<p class="text-[10px] text-slate-400 mt-1.5 font-semibold">Anak: <span class="text-blue-400 font-bold">${item.anak}</span></p>` : ''}
+                  ${item.anak > 0 ? `<p class="text-[10px] text-slate-400 mt-1.5 font-semibold">Anak: <span class="text-amber-400 font-bold">${item.anak}</span></p>` : ''}
                 </td>
                 <td class="py-4 px-4 font-semibold text-slate-300 text-xs">${item.kendaraan}</td>
                 <td class="py-4 px-4 text-slate-300 text-xs">
@@ -286,21 +317,21 @@ function renderStatistik(data) {
             <div class="bg-navy-900/90 border border-slate-800 p-4 rounded-xl flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Anak (≤12 Thn)</span>
-                    <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                    <span class="w-2 h-2 rounded-full bg-amber-400"></span>
                 </div>
                 <h3 class="text-2xl font-extrabold text-white leading-none">${totalAnak}</h3>
             </div>
             <div class="bg-navy-900/90 border border-slate-800 p-4 rounded-xl flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Unit Mobil</span>
-                    <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
+                    <span class="w-2 h-2 rounded-full bg-blue-400"></span>
                 </div>
                 <h3 class="text-2xl font-extrabold text-white leading-none">${mobil}</h3>
             </div>
             <div class="bg-navy-900/90 border border-slate-800 p-4 rounded-xl flex flex-col justify-between">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Unit Motor</span>
-                    <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                    <span class="w-2 h-2 rounded-full bg-orange-400"></span>
                 </div>
                 <h3 class="text-2xl font-extrabold text-white leading-none">${motor}</h3>
             </div>
@@ -345,10 +376,10 @@ window.bukaModalKelola = function (rowIndex) {
         list.innerHTML += `
             <div class="bg-navy-950 p-3.5 rounded-xl border border-slate-800 flex justify-between items-center gap-4">
                 <div class="overflow-hidden">
-                    <p class="text-[10px] text-blue-400 font-bold uppercase tracking-wider">${person.type}</p>
+                    <p class="text-[10px] text-amber-400 font-bold uppercase tracking-wider">${person.type}</p>
                     <p class="text-white font-bold text-sm truncate mt-0.5">${person.name}</p>
                 </div>
-                <select id="status_${idx}" class="status-select-item bg-navy-900 border border-slate-700 text-xs font-bold text-white rounded-lg px-3 py-2.5 focus:border-blue-500 outline-none cursor-pointer shrink-0">
+                <select id="status_${idx}" class="status-select-item bg-navy-900 border border-slate-700 text-xs font-bold text-white rounded-lg px-3 py-2.5 focus:border-amber-500 outline-none cursor-pointer shrink-0">
                     <option value="Belum" ${currentStatus === 'Belum' ? 'selected' : ''}>Belum Hadir</option>
                     <option value="Hadir" ${currentStatus === 'Hadir' ? 'selected' : ''}>Hadir</option>
                     <option value="Batal" ${currentStatus === 'Batal' ? 'selected' : ''}>Batal</option>
