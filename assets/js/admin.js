@@ -1,5 +1,5 @@
 /* ===================================================
-   FITUR ADMIN DASHBOARD (CUSTOM LOGIN & LOGIKA PENUH)
+   FITUR ADMIN DASHBOARD (FULL ROW CLICK & CLEAN UI)
 =================================================== */
 const API_URL_NATAL = '/api/natal';
 let adminDataCache = { Pagi: [], Sore: [] };
@@ -11,22 +11,24 @@ document.addEventListener("DOMContentLoaded", () => {
     if (passInput) passInput.focus();
 });
 
-// Fitur Tampilkan / Sembunyikan Password
+// Fitur Tampilkan / Sembunyikan Password Tanpa Ikon Clip-Art
 window.toggleLihatPass = function () {
     const input = document.getElementById('inputPassAdmin');
-    const icon = document.getElementById('iconMataPass');
-    if (!input || !icon) return;
+    const btn = document.getElementById('btnTogglePass');
+    if (!input || !btn) return;
 
     if (input.type === 'password') {
         input.type = 'text';
-        icon.className = 'fas fa-eye-slash text-xs text-blue-400';
+        btn.innerText = 'Sembunyi';
+        btn.classList.add('text-blue-400');
     } else {
         input.type = 'password';
-        icon.className = 'fas fa-eye text-xs';
+        btn.innerText = 'Lihat';
+        btn.classList.remove('text-blue-400');
     }
 };
 
-// Proses Login dari Custom Login Card (Tanpa prompt browser)
+// Proses Login dari Custom Login Card
 window.submitLoginAdmin = async function (e) {
     e.preventDefault();
     const input = document.getElementById('inputPassAdmin');
@@ -41,7 +43,7 @@ window.submitLoginAdmin = async function (e) {
     errMsg.classList.add('hidden');
     card.classList.remove('shake');
     btn.disabled = true;
-    btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> <span>Memverifikasi...</span>`;
+    btn.innerText = 'Memverifikasi Akses...';
 
     try {
         const response = await fetch(API_URL_NATAL + '?action=getAdminData&pass=' + encodeURIComponent(adminPasswordTemp));
@@ -56,18 +58,18 @@ window.submitLoginAdmin = async function (e) {
 
             renderAdminTable();
         } else {
-            errMsg.querySelector('span').innerText = "Akses Ditolak: Password salah!";
+            errMsg.innerText = "Akses Ditolak: Kata sandi tidak sesuai.";
             errMsg.classList.remove('hidden');
             card.classList.add('shake');
             input.value = '';
             input.focus();
         }
     } catch (err) {
-        errMsg.querySelector('span').innerText = "Gagal terhubung ke server.";
+        errMsg.innerText = "Gagal terhubung ke server.";
         errMsg.classList.remove('hidden');
     } finally {
         btn.disabled = false;
-        btn.innerHTML = `<span>Masuk ke Dashboard</span> <i class="fas fa-arrow-right text-[11px]"></i>`;
+        btn.innerText = 'Masuk ke Dashboard';
     }
 };
 
@@ -85,14 +87,27 @@ window.keluarAdmin = function () {
     }
 };
 
+// Reset Kotak Pencarian
+window.resetPencarianAdmin = function () {
+    const searchInput = document.getElementById('adminSearchInput');
+    if (searchInput) {
+        searchInput.value = '';
+        renderAdminTable();
+        searchInput.focus();
+    }
+};
+
 // Muat Ulang Data dari Database
 window.loadAdminData = async function () {
-    const icon = document.getElementById('iconSyncAdmin');
+    const btnRefresh = document.getElementById('btnRefreshAdmin');
     const tbody = document.getElementById('tabelAdminBody');
 
-    if (icon) icon.classList.add('fa-spin');
+    if (btnRefresh) {
+        btnRefresh.disabled = true;
+        btnRefresh.innerText = 'Sinkronisasi...';
+    }
     if (tbody) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-10 text-center text-blue-400 font-semibold text-xs uppercase tracking-wider"><i class="fas fa-circle-notch fa-spin mr-2"></i> Sinkronisasi Database...</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="p-10 text-center text-blue-400 font-bold text-xs uppercase tracking-widest">Sinkronisasi Database...</td></tr>`;
     }
 
     try {
@@ -109,7 +124,10 @@ window.loadAdminData = async function () {
     } catch (err) {
         alert("Gagal terhubung ke database Supabase.");
     } finally {
-        if (icon) icon.classList.remove('fa-spin');
+        if (btnRefresh) {
+            btnRefresh.disabled = false;
+            btnRefresh.innerText = 'Segarkan Data';
+        }
     }
 };
 
@@ -117,8 +135,8 @@ window.switchAdminTab = function (sesi) {
     currentAdminTab = sesi;
     const tabPagi = document.getElementById('tabAdminPagi');
     const tabSore = document.getElementById('tabAdminSore');
-    const activeClass = "bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold transition-colors text-xs";
-    const inactiveClass = "hover:bg-slate-800/60 text-slate-400 px-5 py-2 rounded-lg font-semibold transition-colors text-xs";
+    const activeClass = "bg-blue-600 text-white px-5 py-2.5 rounded-lg font-bold transition-all text-xs tracking-wide shadow";
+    const inactiveClass = "hover:bg-slate-800/60 text-slate-400 px-5 py-2.5 rounded-lg font-bold transition-all text-xs tracking-wide";
 
     if (sesi === 'Pagi') {
         tabPagi.className = activeClass;
@@ -134,7 +152,13 @@ window.renderAdminTable = function () {
     const tbody = document.getElementById('tabelAdminBody');
     const dataSesi = adminDataCache[currentAdminTab] || [];
     const searchInput = document.getElementById('adminSearchInput');
+    const btnClear = document.getElementById('btnClearSearch');
     const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+
+    if (btnClear) {
+        if (searchTerm.length > 0) btnClear.classList.remove('hidden');
+        else btnClear.classList.add('hidden');
+    }
 
     let totalDaftar = 0;
     let totalHadir = 0;
@@ -146,10 +170,10 @@ window.renderAdminTable = function () {
         totalBatal += Number(item.jmlBatal || 0);
     });
 
-    document.getElementById('adminTotalDaftar').innerHTML = `${totalDaftar} <span class="text-xs font-normal text-slate-400">Dewasa</span>`;
-    document.getElementById('adminTotalHadir').innerHTML = `${totalHadir} <span class="text-xs font-normal text-slate-400">Hadir</span>`;
-    document.getElementById('adminTotalBatal').innerHTML = `${totalBatal} <span class="text-xs font-normal text-slate-400">Batal</span>`;
-    document.getElementById('adminBelumHadir').innerHTML = `${Math.max(0, totalDaftar - totalHadir - totalBatal)} <span class="text-xs font-normal text-slate-400">Sisa</span>`;
+    document.getElementById('adminTotalDaftar').innerHTML = `${totalDaftar} <span class="text-xs font-medium text-slate-400">Dewasa</span>`;
+    document.getElementById('adminTotalHadir').innerHTML = `${totalHadir} <span class="text-xs font-medium text-slate-400">Hadir</span>`;
+    document.getElementById('adminTotalBatal').innerHTML = `${totalBatal} <span class="text-xs font-medium text-slate-400">Batal</span>`;
+    document.getElementById('adminBelumHadir').innerHTML = `${Math.max(0, totalDaftar - totalHadir - totalBatal)} <span class="text-xs font-medium text-slate-400">Sisa</span>`;
 
     const filteredData = dataSesi.filter(item => {
         const noUrutStr = String(item.noUrut).padStart(3, '0');
@@ -166,16 +190,22 @@ window.renderAdminTable = function () {
         tbody.innerHTML = `<tr><td colspan="6" class="p-10 text-center text-slate-500 text-xs font-medium">Tidak ada data yang sesuai dengan pencarian.</td></tr>`;
     } else {
         filteredData.forEach(item => {
-            let btnClass = "bg-slate-800 hover:bg-blue-600 text-slate-200 hover:text-white border border-slate-700 hover:border-blue-500";
+            let btnClass = "bg-slate-800/90 group-hover:bg-blue-600 text-slate-200 group-hover:text-white border border-slate-700 group-hover:border-blue-500";
             let btnText = `Check-In`;
+            let rowAccent = "border-l-4 border-l-transparent";
+            let mobileStatusDot = `<span class="inline-block w-2 h-2 rounded-full bg-slate-600" title="Belum Hadir"></span>`;
 
             if (item.jmlHadir > 0) {
-                btnClass = "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25";
-                btnText = `<i class="fas fa-check-circle mr-1"></i> Hadir (${item.jmlHadir})`;
+                btnClass = "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30";
+                btnText = `Hadir (${item.jmlHadir}/${item.jumlah})`;
+                rowAccent = "border-l-4 border-l-emerald-500 bg-emerald-950/10";
+                mobileStatusDot = `<span class="inline-block w-2 h-2 rounded-full bg-emerald-400" title="Sudah Hadir"></span>`;
             }
             if (item.jmlBatal === item.jumlah && item.jumlah > 0) {
                 btnClass = "bg-red-500/15 text-red-400 border border-red-500/30";
-                btnText = `<i class="fas fa-ban mr-1"></i> Batal`;
+                btnText = `Batal`;
+                rowAccent = "border-l-4 border-l-red-500 bg-red-950/10 opacity-75";
+                mobileStatusDot = `<span class="inline-block w-2 h-2 rounded-full bg-red-400" title="Batal"></span>`;
             }
 
             let waBersih = String(item.wa || '').replace(/\D/g, '');
@@ -187,37 +217,45 @@ window.renderAdminTable = function () {
 
             const hasValidWA = waBersih.length >= 9;
 
+            // SELURUH BARIS <tr> MEMILIKI onclick="bukaModalKelola(...)" AGAR DI MOBILE BISA LANGSUNG DIKLIK DARI NOMOR/NAMA
             tbody.innerHTML += `
-              <tr class="hover:bg-slate-800/40 transition-colors">
-                <td class="py-3.5 px-4 text-center font-bold text-blue-400 text-base">#${String(item.noUrut).padStart(3, '0')}</td>
-                <td class="py-3.5 px-4">
+              <tr onclick="bukaModalKelola(${item.row})" class="row-interactive group hover:bg-slate-800/50 ${rowAccent}">
+                <td class="py-4 px-4 text-center">
+                  <div class="inline-flex items-center justify-center gap-1.5 bg-navy-950 border border-slate-800 group-hover:border-blue-500/50 px-2.5 py-1.5 rounded-lg">
+                    ${mobileStatusDot}
+                    <span class="font-extrabold text-blue-400 text-sm tracking-tight">#${String(item.noUrut).padStart(3, '0')}</span>
+                  </div>
+                </td>
+                <td class="py-4 px-4">
                   <div class="flex items-center gap-2 flex-wrap">
-                    <p class="font-semibold text-white text-sm">
+                    <p class="font-bold text-white group-hover:text-blue-300 transition-colors text-sm">
                       ${item.nama.replace(/\[MANUAL FOH\]|\[EDIT.*?\]/g, '').trim()}
                     </p>
                     ${item.nama.includes('[MANUAL FOH]')
-                      ? `<span class="bg-amber-500/15 text-amber-400 border border-amber-500/30 text-[10px] font-semibold px-2 py-0.5 rounded uppercase">Manual FOH</span>`
+                      ? `<span class="bg-amber-500/15 text-amber-400 border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Manual FOH</span>`
                       : ''}
                     ${item.nama.includes('[EDIT')
-                      ? `<span class="bg-blue-500/15 text-blue-400 border border-blue-500/30 text-[10px] font-semibold px-2 py-0.5 rounded uppercase">Revisi Data</span>`
+                      ? `<span class="bg-blue-500/15 text-blue-400 border border-blue-500/30 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Revisi Data</span>`
                       : ''}
                   </div>
-                  <p class="text-xs text-slate-400 mt-1 max-w-[260px] truncate" title="${item.anggota}">+ ${item.anggota}</p>
+                  <p class="text-xs text-slate-400 mt-1 max-w-[240px] sm:max-w-[320px] truncate" title="${item.anggota}">
+                    ${item.anggota && item.anggota !== '-' ? `+ ${item.anggota}` : 'Pendaftar Tunggal'}
+                  </p>
                 </td>
-                <td class="py-3.5 px-4 text-center">
-                  <span class="bg-navy-950 border border-slate-800 px-3 py-1 rounded-md text-white font-semibold text-xs">${item.jumlah} Dewasa</span>
-                  ${item.anak > 0 ? `<p class="text-[10px] text-slate-400 mt-1.5 font-medium">Anak: <span class="text-blue-400 font-semibold">${item.anak}</span></p>` : ''}
+                <td class="py-4 px-4 text-center">
+                  <span class="bg-navy-950 border border-slate-800 px-3 py-1 rounded-md text-white font-bold text-xs">${item.jumlah} Dewasa</span>
+                  ${item.anak > 0 ? `<p class="text-[10px] text-slate-400 mt-1.5 font-semibold">Anak: <span class="text-blue-400 font-bold">${item.anak}</span></p>` : ''}
                 </td>
-                <td class="py-3.5 px-4 font-medium text-slate-300 text-xs">${item.kendaraan}</td>
-                <td class="py-3.5 px-4 text-slate-300 text-xs">
+                <td class="py-4 px-4 font-semibold text-slate-300 text-xs">${item.kendaraan}</td>
+                <td class="py-4 px-4 text-slate-300 text-xs">
                   ${hasValidWA
-                    ? `<a href="https://wa.me/${waBersih}" target="_blank" class="hover:text-emerald-400 inline-flex items-center gap-1.5 transition-colors">
-                         <i class="fab fa-whatsapp text-emerald-500 text-sm"></i> ${item.wa}
+                    ? `<a href="https://wa.me/${waBersih}" target="_blank" onclick="event.stopPropagation()" class="hover:text-emerald-400 underline decoration-slate-700 hover:decoration-emerald-400 underline-offset-4 transition-colors font-medium">
+                         ${item.wa}
                        </a>`
-                    : `<span class="text-slate-500">-</span>`}
+                    : `<span class="text-slate-600">-</span>`}
                 </td>
-                <td class="py-3.5 px-4 text-center">
-                  <button onclick="bukaModalKelola(${item.row})" class="${btnClass} px-4 py-2 rounded-lg font-semibold text-xs transition-colors w-28">
+                <td class="py-4 px-4 text-center">
+                  <button type="button" onclick="event.stopPropagation(); bukaModalKelola(${item.row})" class="${btnClass} px-4 py-2 rounded-lg font-bold text-xs transition-all w-32">
                     ${btnText}
                   </button>
                 </td>
@@ -227,7 +265,7 @@ window.renderAdminTable = function () {
     }
 };
 
-// RENDER ANALITIK (4 KARTU: ANAK, MOBIL, MOTOR, UMUM)
+// RENDER ANALITIK (4 KARTU TANPA CLIP ART / EMOTIKON)
 function renderStatistik(data) {
     let totalAnak = 0, mobil = 0, motor = 0, umum = 0;
 
@@ -245,33 +283,33 @@ function renderStatistik(data) {
     const statsContainer = document.getElementById('adminStats');
     if (statsContainer) {
         statsContainer.innerHTML = `
-            <div class="bg-navy-900 border border-slate-800 p-4 rounded-xl flex items-center gap-3.5">
-                <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400 text-base border border-blue-500/20 shrink-0"><i class="fas fa-child"></i></div>
-                <div>
-                    <p class="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Anak (≤12)</p>
-                    <h3 class="text-xl font-bold text-white leading-tight mt-0.5">${totalAnak}</h3>
+            <div class="bg-navy-900/90 border border-slate-800 p-4 rounded-xl flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Anak (≤12 Thn)</span>
+                    <span class="w-2 h-2 rounded-full bg-blue-400"></span>
                 </div>
+                <h3 class="text-2xl font-extrabold text-white leading-none">${totalAnak}</h3>
             </div>
-            <div class="bg-navy-900 border border-slate-800 p-4 rounded-xl flex items-center gap-3.5">
-                <div class="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-400 text-base border border-indigo-500/20 shrink-0"><i class="fas fa-car"></i></div>
-                <div>
-                    <p class="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Mobil</p>
-                    <h3 class="text-xl font-bold text-white leading-tight mt-0.5">${mobil}</h3>
+            <div class="bg-navy-900/90 border border-slate-800 p-4 rounded-xl flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Unit Mobil</span>
+                    <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
                 </div>
+                <h3 class="text-2xl font-extrabold text-white leading-none">${mobil}</h3>
             </div>
-            <div class="bg-navy-900 border border-slate-800 p-4 rounded-xl flex items-center gap-3.5">
-                <div class="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400 text-base border border-amber-500/20 shrink-0"><i class="fas fa-motorcycle"></i></div>
-                <div>
-                    <p class="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Motor</p>
-                    <h3 class="text-xl font-bold text-white leading-tight mt-0.5">${motor}</h3>
+            <div class="bg-navy-900/90 border border-slate-800 p-4 rounded-xl flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Unit Motor</span>
+                    <span class="w-2 h-2 rounded-full bg-amber-400"></span>
                 </div>
+                <h3 class="text-2xl font-extrabold text-white leading-none">${motor}</h3>
             </div>
-            <div class="bg-navy-900 border border-slate-800 p-4 rounded-xl flex items-center gap-3.5">
-                <div class="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-base border border-emerald-500/20 shrink-0"><i class="fas fa-bus"></i></div>
-                <div>
-                    <p class="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Umum</p>
-                    <h3 class="text-xl font-bold text-white leading-tight mt-0.5">${umum}</h3>
+            <div class="bg-navy-900/90 border border-slate-800 p-4 rounded-xl flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Kendaraan Umum</span>
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
                 </div>
+                <h3 class="text-2xl font-extrabold text-white leading-none">${umum}</h3>
             </div>
         `;
     }
@@ -287,12 +325,12 @@ window.bukaModalKelola = function (rowIndex) {
     currentRowKelola = item.row;
     currentSesiKelola = currentAdminTab;
 
-    document.getElementById('kelolaTitle').innerText = `Tiket #${String(item.noUrut).padStart(3, '0')}`;
+    document.getElementById('kelolaTitle').innerText = `Tiket #${String(item.noUrut).padStart(3, '0')} — ${item.nama.replace(/\[MANUAL FOH\]|\[EDIT.*?\]/g, '').trim()}`;
 
     let names = [{ type: 'Pendaftar Utama', name: item.nama.replace(/\[MANUAL FOH\]|\[EDIT.*?\]/g, '').trim() }];
     if (item.anggota && item.anggota !== '-') {
         item.anggota.split(',').forEach(ang => {
-            names.push({ type: 'Anggota', name: ang.trim() });
+            names.push({ type: 'Anggota Rombongan', name: ang.trim() });
         });
     }
 
@@ -307,10 +345,10 @@ window.bukaModalKelola = function (rowIndex) {
         list.innerHTML += `
             <div class="bg-navy-950 p-3.5 rounded-xl border border-slate-800 flex justify-between items-center gap-4">
                 <div class="overflow-hidden">
-                    <p class="text-[10px] text-blue-400 font-semibold uppercase tracking-wider">${person.type}</p>
-                    <p class="text-white font-semibold text-sm truncate mt-0.5">${person.name}</p>
+                    <p class="text-[10px] text-blue-400 font-bold uppercase tracking-wider">${person.type}</p>
+                    <p class="text-white font-bold text-sm truncate mt-0.5">${person.name}</p>
                 </div>
-                <select id="status_${idx}" class="bg-navy-900 border border-slate-700 text-xs font-semibold text-white rounded-lg px-3 py-2 focus:border-blue-500 outline-none cursor-pointer">
+                <select id="status_${idx}" class="status-select-item bg-navy-900 border border-slate-700 text-xs font-bold text-white rounded-lg px-3 py-2.5 focus:border-blue-500 outline-none cursor-pointer shrink-0">
                     <option value="Belum" ${currentStatus === 'Belum' ? 'selected' : ''}>Belum Hadir</option>
                     <option value="Hadir" ${currentStatus === 'Hadir' ? 'selected' : ''}>Hadir</option>
                     <option value="Batal" ${currentStatus === 'Batal' ? 'selected' : ''}>Batal</option>
@@ -326,6 +364,13 @@ window.bukaModalKelola = function (rowIndex) {
     setTimeout(() => { modal.classList.remove('opacity-0'); box.classList.remove('scale-95'); box.classList.add('scale-100'); }, 10);
 };
 
+// Fungsi Pintas Tandai Semua Anggota Hadir
+window.setSemuaStatusKelola = function (statusValue) {
+    document.querySelectorAll('#kelolaList .status-select-item').forEach(sel => {
+        sel.value = statusValue;
+    });
+};
+
 window.tutupModalKelola = function () {
     const modal = document.getElementById('modalKelola');
     const box = document.getElementById('boxKelola');
@@ -338,7 +383,7 @@ window.tutupModalKelola = function () {
 window.simpanKelola = async function () {
     const item = adminDataCache[currentSesiKelola].find(x => x.row === currentRowKelola);
     const btn = document.getElementById('btnSimpanKelola');
-    btn.innerHTML = `<i class="fas fa-circle-notch fa-spin mr-1"></i> Menyimpan...`;
+    btn.innerText = `Menyimpan...`;
     btn.disabled = true;
 
     let namesCount = 1 + (item.anggota && item.anggota !== '-' ? item.anggota.split(',').length : 0);
@@ -381,7 +426,7 @@ window.simpanKelola = async function () {
     } catch (e) {
         alert("Gangguan koneksi internet.");
     } finally {
-        btn.innerHTML = `Simpan Data Kehadiran`;
+        btn.innerText = `Simpan Kehadiran`;
         btn.disabled = false;
     }
 };
